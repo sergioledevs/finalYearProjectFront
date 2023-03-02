@@ -13,11 +13,16 @@ var USER_STATE = {
   
   const allergyReducer = (state = USER_STATE, action) => {
     switch (action.type) {
-      case "ALLERGY_ING":
+      case "ALLERGY_ADD":
         return {
           ...state,
           allergyArray: state.allergyArray.concat(action.payload),
         }
+      case "ALLERGY_DELETE":
+        removeItemOnce(state.allergyArray, action.payload);
+      return {
+        ...state,
+      };
       default:
         return state;
     }

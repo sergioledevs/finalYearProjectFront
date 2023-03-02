@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Wrapper } from "./allergies.style";
+import { Wrapper, Grid } from "./allergies.style";
 import { useDispatch, connect } from "react-redux";
 
 function AllergiesPage(props) {
@@ -22,24 +22,8 @@ function AllergiesPage(props) {
     }
   }, []);
 
-  const addIngredient = () => {};
 
-  const checkArray = () => {
-    initialState.map((recipe: any) => {
-      let name;
-      // eslint-disable-next-line no-lone-blocks
-      {
-        if (arrayAllergies.includes(recipe.name)) {
-          name = <div style={{ color: "red" }}>{recipe.name}</div>;
-        } else {
-          name = <div style={{ color: "green" }}>{recipe.name}</div>;
-        }
-      }
-      return <div>{name}</div>;
-    });
-  };
-
-  const CharactersGrid = initialState
+  const IngredientsGrid = initialState
     .filter((val: any) => {
       if (searchTerm === "") {
         return val;
@@ -48,17 +32,30 @@ function AllergiesPage(props) {
       }
     })
     .map((recipe: any) => {
+      var classChange = true;
+      if (props.allergyState.includes(recipe.name)) {
+        classChange = true;
+      } else if (!props.allergyState.includes(recipe.name)) {
+        classChange = !classChange;
+      }
       return (
-        <div onClick={() => console.log(arrayAllergies)}>
+        <div>
           <p
-            onClick={() =>
-              {dispatch({
-                type: "ALLERGY_ING",
-                payload: recipe.name,
-              })
-              recipe.style={color:"red"}
-            }
-            }
+            onClick={() => {
+              setArrayAlergies(arrayAllergies.concat(recipe.name)); //weird stuff happening here, double check it
+              if (props.allergyState.includes(recipe.name)) {
+                dispatch({
+                  type: "ALLERGY_DELETE",
+                  payload: recipe.name,
+                });
+              } else {
+                dispatch({
+                  type: "ALLERGY_ADD",
+                  payload: recipe.name,
+                });
+              }
+            }}
+            className={classChange ? "selected" : "notSelected"}
           >
             {recipe.name}
           </p>
@@ -68,16 +65,30 @@ function AllergiesPage(props) {
 
   return (
     <Wrapper>
-      <input
-        type="text"
-        placeholder="Search..."
-        onChange={(event) => {
-          setSearchTerm(event.target.value);
-        }}
-      ></input>
-      {CharactersGrid}
+       <input
+          type="text"
+          placeholder="Search..."
+          onChange={(event) => {
+            setSearchTerm(event.target.value);
+          }}
+          ></input>
+      <Grid>
+        {IngredientsGrid}
+      </Grid>
+      <button>Go back</button>
+      <button>Continue</button>
     </Wrapper>
   );
 }
 
-export default AllergiesPage;
+interface RootState {
+  allergyReducer: any;
+}
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    allergyState: state.allergyReducer.allergyArray,
+  };
+};
+
+export default connect(mapStateToProps)(AllergiesPage);
