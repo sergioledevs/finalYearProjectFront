@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Wrapper, Grid } from "./allergies.style";
 import { useDispatch, connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function AllergiesPage(props) {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -10,6 +11,7 @@ function AllergiesPage(props) {
   const [arrayAllergies, setArrayAlergies] = React.useState<string[]>([]);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -21,6 +23,10 @@ function AllergiesPage(props) {
       console.log("");
     }
   }, []);
+
+  const handleSub = () => {
+    navigate("/recipes")
+  };
 
 
   const IngredientsGrid = initialState
@@ -76,7 +82,7 @@ function AllergiesPage(props) {
         {IngredientsGrid}
       </Grid>
       <button>Go back</button>
-      <button>Continue</button>
+      <button onClick={handleSub}>Continue</button>
     </Wrapper>
   );
 }

@@ -4,7 +4,10 @@ var USER_STATE = {
   userWeight:"",
   userHeight:"",
   userAge:"",
-  levelOfActivity:""
+  levelOfActivity:"",
+  caloriesIntake:"",
+  proteinIntake:"",
+  carbsIntake:"",
 };
 
 function removeItemOnce(arr, value) {
@@ -37,7 +40,21 @@ const UserInfo = (state = USER_STATE, action) => {
         ...state,
         levelOfActivity: action.payload,
       }
-      
+      case "CALORIES_INTAKE":
+      return {
+        ...state,
+        caloriesIntake: action.payload,
+      }
+      case "PROTEIN_INTAKE":
+      return {
+        ...state,
+        proteinIntake: action.payload,
+      }
+      case "CARBS_INTAKE":
+      return {
+        ...state,
+        carbsIntake: action.payload,
+      }
 
     default:
       return state;

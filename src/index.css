@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: "InterBold";
+  src: url("../src/media/fonts/Inter-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "InterExtraBold";
+  src: url("../src/media/fonts/Inter-ExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "InterMedium";
+  src: url("../src/media/fonts/Inter-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "InterRegular";
+  src: url("../src/media/fonts/Inter-Regular.ttf") format("truetype");
+}

@@ -5,6 +5,7 @@ import AllergiesPage from "./pages/allergies/allergiesPage";
 import CreateAccount from "./pages/createAccount/createAccount";
 import Ingredients from "./pages/familiarIngredients/ingredients";
 import HomePage from "./pages/homePage/homePage";
+import Landing from "./pages/landingPage/landing";
 import LogIn from "./pages/logIn/logIn.tsx";
 import Recipes from "./pages/recipes/recipes";
 import UserProfile from "./pages/userProfile/userProfile";
@@ -24,6 +25,12 @@ export const Router = () => {
         key="homepage" 
         path="/home" 
         element={<HomePage/>} 
+        />
+
+<Route 
+        key="homepage" 
+        path="/" 
+        element={<Landing/>} 
         />
 
         <Route 
