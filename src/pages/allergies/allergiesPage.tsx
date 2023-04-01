@@ -25,62 +25,75 @@ function AllergiesPage(props) {
   }, []);
 
   const handleSub = () => {
-    navigate("/recipes")
+    navigate("/recipes");
   };
 
-
   const IngredientsGrid = initialState
-    .filter((val: any) => {
-      if (searchTerm === "") {
-        return val;
-      } else if (val.name.toLowerCase().startsWith(searchTerm.toLowerCase())) {
-        return val;
-      }
-    })
-    .map((recipe: any) => {
-      var classChange = true;
-      if (props.allergyState.includes(recipe.name)) {
-        classChange = true;
-      } else if (!props.allergyState.includes(recipe.name)) {
-        classChange = !classChange;
-      }
-      return (
-        <div>
-          <p
-            onClick={() => {
-              setArrayAlergies(arrayAllergies.concat(recipe.name)); //weird stuff happening here, double check it
-              if (props.allergyState.includes(recipe.name)) {
-                dispatch({
-                  type: "ALLERGY_DELETE",
-                  payload: recipe.name,
-                });
-              } else {
-                dispatch({
-                  type: "ALLERGY_ADD",
-                  payload: recipe.name,
-                });
-              }
-            }}
-            className={classChange ? "selected" : "notSelected"}
-          >
-            {recipe.name}
-          </p>
-        </div>
+  .filter((ingredient: any) => {
+    if (searchTerm === "") {
+      return true;
+    } else {
+      return ingredient.contains.some((containedIngredient: string) =>
+        containedIngredient.toLowerCase().startsWith(searchTerm.toLowerCase())
       );
-    });
+    }
+  })
+  .map((ingredient: any) => {
+    const filteredContains = ingredient.contains.filter((containedIngredient: string) =>
+      containedIngredient.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+      <>
+        {filteredContains.map((containedIngredient: string) => {
+          const isSelected = arrayAllergies.includes(containedIngredient);
+          return (
+            <div>
+              <p
+                onClick={() => {
+                  const newAllergies = isSelected
+                    ? arrayAllergies.filter(
+                        (allergy) => allergy !== containedIngredient
+                      )
+                    : [...arrayAllergies, containedIngredient];
+                  setArrayAlergies(newAllergies);
+                  if (isSelected || props.allergyState.includes(containedIngredient)) {
+                    dispatch({
+                      type: "ALLERGY_DELETE",
+                      payload: containedIngredient,
+                    });
+                  } else {
+                    dispatch({
+                      type: "ALLERGY_ADD",
+                      payload: containedIngredient,
+                    });
+                  }
+                }}
+                className={
+                  props.allergyState.includes(containedIngredient)
+                    ? "selected"
+                    : "notSelected"
+                }
+              >
+                {containedIngredient}
+              </p>
+            </div>
+          );
+        })}
+      </>
+    );
+  });
 
   return (
     <Wrapper>
-       <input
-          type="text"
-          placeholder="Search..."
-          onChange={(event) => {
-            setSearchTerm(event.target.value);
-          }}
-          ></input>
-      <Grid>
-        {IngredientsGrid}
-      </Grid>
+      <input
+        type="text"
+        placeholder="Search..."
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+        }}
+      ></input>
+      <Grid>{IngredientsGrid}</Grid>
       <button>Go back</button>
       <button onClick={handleSub}>Continue</button>
     </Wrapper>

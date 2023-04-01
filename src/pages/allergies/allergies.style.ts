@@ -47,7 +47,6 @@ export const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width:100%;
   height: 100vh;
 
   overflow: hidden;
@@ -60,8 +59,8 @@ export const Grid = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width:100%;
 
   overflow: hidden;
 
 `;
+

@@ -10,6 +10,7 @@ import LogIn from "./pages/logIn/logIn.tsx";
 import Recipes from "./pages/recipes/recipes";
 import UserProfile from "./pages/userProfile/userProfile";
 import TypeOfMeal from "./pages/whatMeal/typeOfMeal";
+import IndivRecipe from "./pages/indivRecipe/indivRecipe";
 
 export const Router = () => {
   return (
@@ -20,24 +21,14 @@ export const Router = () => {
           path="/allergies"
           element={<AllergiesPage />}
         />
-        
-        <Route 
-        key="homepage" 
-        path="/home" 
-        element={<HomePage/>} 
-        />
 
-<Route 
-        key="homepage" 
-        path="/" 
-        element={<Landing/>} 
-        />
+        <Route key="homepage" path="/home" element={<HomePage />} />
 
-        <Route 
-        key="logIn"
-        path="/logIn" 
-        element={<LogIn />} 
-        />
+        <Route key="homepage" path="/" element={<Landing />} />
+
+        <Route path="/indivRecipe/:id" element={<IndivRecipe />} />
+
+        <Route key="logIn" path="/logIn" element={<LogIn />} />
 
         <Route
           key="create new user account"
