@@ -17,16 +17,15 @@ import {
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
   const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>([]);
-  console.log(selectedRecipes)
 
   useEffect(() => {
     try {
       axios.get("http://localhost:9000/getRecipes").then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         setInitialState(response.data);
       });
     } catch (error) {
-      console.log("");
+      //console.log("");
     }
   }, []);
 
@@ -66,10 +65,10 @@ function Recipes(props) {
 
       if (recipe.typeOfMeal === "breakfast") {
         const proteinAmount = Math.round(
-          (props.proteinIntake * 0.15 * 100) / maxProteinAmount
+          (props.proteinIntake * 0.1 * 100) / maxProteinAmount
         );
         const carbAmount = Math.round(
-          (props.carbsIntake * 0.15 * 100) / maxCarbAmount
+          (props.carbsIntake * 0.1 * 100) / maxCarbAmount
         );
 
         const isSelected = selectedRecipes.includes(recipe._id);
@@ -170,6 +169,13 @@ function Recipes(props) {
 
         const isSelected = selectedRecipes.includes(recipe._id);
 
+        const proteinIngredientCalories =
+        proteinIngredient?.calories * (proteinAmount / 100) || 0;
+      const carbIngredientCalories =
+        carbIngredient?.calories * (carbAmount / 100) || 0;
+      const totalCalories =
+        proteinIngredientCalories + carbIngredientCalories;
+
         return (
           <RecipeCard className={isSelected ? "selected" : "notSelected"}>
             <LinkDiv to={`/indivRecipe/${recipe._id}`}>
@@ -203,6 +209,7 @@ function Recipes(props) {
                     </Ingredient>
                   )}
                 </>
+                <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
               </Description>
             </LinkDiv>
           </RecipeCard>
@@ -210,7 +217,8 @@ function Recipes(props) {
       }
     });
 
-  const RecipesGridDinner = initialState
+    const RecipesGridDinner = initialState
+    // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
       const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
@@ -221,44 +229,59 @@ function Recipes(props) {
         allergyIngredients.includes(allergy.toLowerCase())
       );
     })
+    // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
+      // Get the maximum protein and carb amounts of the recipe
       const proteinAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.protein
       );
       const maxProteinAmount = Math.max(...proteinAmounts);
-
+  
       const carbAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.carbs
       );
       const maxCarbAmount = Math.max(...carbAmounts);
-
+  
+      // Get the ingredient with the highest protein amount
       const proteinIngredient = recipe.ingredients.find(
         (ingredient) => ingredient.protein === maxProteinAmount.toString()
       );
       const proteinIngredientName = proteinIngredient
         ? proteinIngredient.name
         : "";
-
+  
+      // Get the ingredient with the highest carb amount
       const carbIngredient = recipe.ingredients.find(
         (ingredient) => ingredient.carbs === maxCarbAmount.toString()
       );
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
-
+  
+      //if it is a meal, display the recipe
       if (recipe.typeOfMeal === "meal") {
+        // Calculate the recommended amount of protein and carbs to consume
         const proteinAmount = Math.round(
-          (props.proteinIntake * 0.3 * 100) / maxProteinAmount
+          (props.proteinIntake * 0.35 * 100) / maxProteinAmount
         );
         const carbAmount = Math.round(
-          (props.carbsIntake * 0.3 * 100) / maxCarbAmount
+          (props.carbsIntake * 0.35 * 100) / maxCarbAmount
         );
-
+  
         const isSelected = selectedRecipes.includes(recipe._id);
-
+  
+        // Calculate total number of calories in protein and carbs
+        const proteinIngredientCalories =
+          proteinIngredient?.calories * (proteinAmount / 100) || 0;
+        const carbIngredientCalories =
+          carbIngredient?.calories * (carbAmount / 100) || 0;
+        const totalCalories =
+          proteinIngredientCalories + carbIngredientCalories;
+  
         return (
           <RecipeCard className={isSelected ? "selected" : "notSelected"}>
             <LinkDiv to={`/indivRecipe/${recipe._id}`}>
               <ImageDiv
                 onClick={() => {
+                  // Update selected recipes
                   const newSelectedRecipes = isSelected
                     ? selectedRecipes.filter(
                         (recipeId) => recipeId !== recipe._id
@@ -275,17 +298,21 @@ function Recipes(props) {
               >
                 <RecipeTitle>{recipe.recipeName}</RecipeTitle>
                 <>
+                  {/* Display the ingredient with the highest protein amount */}
                   {proteinIngredientName && (
                     <Ingredient>
                       {proteinIngredientName + " " + proteinAmount + "g"}
                     </Ingredient>
                   )}
+                  {/* Display the ingredient with the highest carb amount */}
                   {carbIngredientName && (
                     <Ingredient>
                       {carbIngredientName + " " + carbAmount + "g"}
                     </Ingredient>
                   )}
                 </>
+                {/* Display total number of calories in protein and carbs */}
+                <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
               </Description>
             </LinkDiv>
           </RecipeCard>
