@@ -29,6 +29,7 @@ function AllergiesPage(props) {
   };
 
   const IngredientsGrid = initialState
+  
   .filter((ingredient: any) => {
     if (searchTerm === "") {
       return true;
@@ -38,6 +39,7 @@ function AllergiesPage(props) {
       );
     }
   })
+  .slice(0,3)
   .map((ingredient: any) => {
     const filteredContains = ingredient.contains.filter((containedIngredient: string) =>
       containedIngredient.toLowerCase().includes(searchTerm.toLowerCase())

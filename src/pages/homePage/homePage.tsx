@@ -71,7 +71,7 @@ function HomePage(props: StyledInputs) {
         payload: levelOfActive,
       });
 
-      navigate("/whatMeal");
+      navigate("/allergies");
     }
     //registerUser();
     setValidated(true);

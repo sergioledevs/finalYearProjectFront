@@ -35,7 +35,6 @@ export const Div2 = styled.div`
   }
 `;
 
-
 export const SmallDiv = styled.div`
   .selected {
     display: flex;
@@ -45,8 +44,8 @@ export const SmallDiv = styled.div`
     border-radius: 20px;
     flex-direction: column;
 
-    width: 55%;
-    height: 400px;
+    width: 330px;
+    height: 330px;
     margin: 50px;
     transition: box-shadow 0.2s;
     background-color: grey;
@@ -66,9 +65,9 @@ export const SmallDiv = styled.div`
     border-radius: 20px;
     flex-direction: column;
 
-    width: 55%;
-    height: 400px;
-    margin: 50px;
+    width: 330px;
+    height: 330px;
+    margin-top: 50px;
     transition: box-shadow 0.2s;
     background-color: aliceblue;
 
@@ -81,11 +80,11 @@ export const SmallDiv = styled.div`
 `;
 
 export const RecipeCard = styled.div`
-  .notVisible{
+  .notVisible {
     opacity: 1; /* Initially hide the description */
   }
 
-  .visible{ 
+  .visible {
     /* Add a transition effect */
   }
 `;
@@ -110,9 +109,6 @@ export const Description = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  
-  
 `;
 
 export const ImageDiv = styled.div`
@@ -134,6 +130,48 @@ export const Ingredient = styled.p`
   margin-bottom: 0;
   margin-left: 2%;
   font-family: "InterRegular", sans-serif;
+`;
+
+export const Checkbox = styled.input.attrs({ type: "checkbox" })`   /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  appearance: none;
+  /* For iOS < 15 */
+  background-color: var(--form-background);
+  /* Not removed via appearance */
+  margin: 0;
+
+  font: inherit;
+  color: currentColor;
+  width: 2em;
+  height: 2em;
+  border: 0.05em solid currentColor;
+  transform: translateY(-0.075em);
+  background-color: white;
+  border-radius: 35px;
+  margin-top: 20px;
+  margin-left: 250px;
+
+  display: grid;
+  place-content: center;
+
+  &::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--form-control-color);
+    /* Windows High Contrast Mode */
+    background-color: green;
+  }
+
+  &:checked::before {
+    transform: scale(1);
+  }
 `;
 
 export {};
