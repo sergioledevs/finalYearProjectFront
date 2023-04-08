@@ -127,6 +127,8 @@ function HomePage(props: StyledInputs) {
       proteinMultiplier = 1.8;
     } else if (userGoal == "Lose weight") {
       proteinMultiplier = 1.2;
+    } else if (userGoal === "Mantain weight") {
+      proteinMultiplier = 1.4;
     }
 
     var proteinIntake = parseInt(weight) * proteinMultiplier;
@@ -136,6 +138,8 @@ function HomePage(props: StyledInputs) {
       carbsIntake = totalCalorieIntake * 0.6 * 0.13; //if bulking, 60% of calories are carbs, which then convert to grams
     } else if (userGoal == "Lose weight") {
       carbsIntake = totalCalorieIntake * 0.4 * 0.13; //if losing weight, 40% of calories are carbs
+    } else if (userGoal == "Mantain weight") {
+      carbsIntake = totalCalorieIntake * 0.55 * 0.13; //if mantaining weight, 55% of calories are carbs
     }
 
     dispatch({
@@ -259,6 +263,7 @@ function HomePage(props: StyledInputs) {
                 }
                 onChange={(e) => setLevelOfActive(e.target.value)}
               >
+                <option>Select option</option>
                 <option>No exercise</option>
                 <option>Exercise 1-2 times a week</option>
                 <option>Exercise 3-4 times a week</option>
@@ -278,6 +283,8 @@ function HomePage(props: StyledInputs) {
                 }
                 onChange={(e) => setUserGoal(e.target.value)}
               >
+              
+                <option>Select option</option>
                 <option>Mantain weight</option>
                 <option>Bulk</option>
                 <option>Lose weight</option>

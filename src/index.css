@@ -31,3 +31,8 @@ code {
   font-family: "InterRegular";
   src: url("../src/media/fonts/Inter-Regular.ttf") format("truetype");
 }
+
+@font-face {
+  font-family: "InterSemi";
+  src: url("../src/media/fonts/Inter-SemiBold.ttf") format("truetype");
+}

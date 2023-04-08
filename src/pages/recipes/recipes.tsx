@@ -14,11 +14,20 @@ import {
   Ingredient,
   Checkbox,
   Div2,
+  BigWrapper,
+  Header,
+  FloatingText,
+  MealInfo,
+  MealInfoHeader,
+  MealInfoText,
 } from "./recipes.style";
+import NavBar from "../../components/navBar/navBar";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
   const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>([]);
+  const [isHovering, setIsHovering] = React.useState(false);
+  const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
 
   useEffect(() => {
     try {
@@ -31,115 +40,16 @@ function Recipes(props) {
     }
   }, []);
 
+  let carbsInBreakfast;
+  let proteinInBreakfast;
+
+  let proteinInLunch;
+  let carbsInLunch;
+
+  let carbsInDinner;
+  let proteinInDinner;
+
   const RecipesBreakfastGrid = initialState
-    .filter((recipe: any) => {
-      // Check if the recipe contains any ingredients the user is allergic to
-      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
-        ...ingredient.contains,
-        ingredient.name,
-      ]);
-      return !props.allergyState.some((allergy) =>
-        allergyIngredients.includes(allergy.toLowerCase())
-      );
-    })
-    .map((recipe: any) => {
-      const proteinAmounts = recipe.ingredients.map(
-        (ingredient) => ingredient.protein
-      );
-      const maxProteinAmount = Math.max(...proteinAmounts);
-
-      const carbAmounts = recipe.ingredients.map(
-        (ingredient) => ingredient.carbs
-      );
-      const maxCarbAmount = Math.max(...carbAmounts);
-
-      const proteinIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.protein === maxProteinAmount.toString()
-      );
-      const proteinIngredientName = proteinIngredient
-        ? proteinIngredient.name
-        : "";
-
-      const carbIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.carbs === maxCarbAmount.toString()
-      );
-      const carbIngredientName = carbIngredient ? carbIngredient.name : "";
-
-      if (recipe.typeOfMeal === "breakfast") {
-        const proteinAmount = Math.round(
-          (props.proteinIntake * 0.1 * 100) / maxProteinAmount
-        );
-        const carbAmount = Math.round(
-          (props.carbsIntake * 0.1 * 100) / maxCarbAmount
-        );
-
-        const isSelected = selectedRecipes.includes(recipe._id);
-
-        // Calculate total number of calories in protein and carbs
-        const proteinIngredientCalories =
-          proteinIngredient?.calories * (proteinAmount / 100) || 0;
-        const carbIngredientCalories =
-          carbIngredient?.calories * (carbAmount / 100) || 0;
-        const totalCalories =
-          proteinIngredientCalories + carbIngredientCalories;
-
-        console.log(selectedRecipes);
-
-        return (
-          <Div2>
-            <RecipeCard className={isSelected ? "selected" : "notSelected"}>
-              <Checkbox
-                checked={isSelected}
-                onChange={() => {
-                  // Update selected recipes
-                  const newSelectedRecipes = isSelected
-                    ? selectedRecipes.filter(
-                        (recipeId) => recipeId !== recipe._id
-                      )
-                    : [...selectedRecipes, recipe._id];
-                  setSelectedRecipes(newSelectedRecipes);
-                }}
-              />
-              <LinkDiv to={`/indivRecipe/${recipe._id}`}></LinkDiv>
-            </RecipeCard>
-            <Description
-              key={recipe.id}
-              onMouseEnter={() => handleMouseEnter(recipe)}
-              onMouseLeave={() => handleMouseLeave()}
-            >
-              <ImageDiv></ImageDiv>
-              <RecipeTitle>{recipe.recipeName}</RecipeTitle>
-              <>
-                {proteinIngredientName && (
-                  <Ingredient>
-                    {"Protein" + " " + proteinAmount + "g"}
-                  </Ingredient>
-                )}
-                {carbIngredientName && (
-                  <Ingredient>{"Carbs" + " " + carbAmount + "g"}</Ingredient>
-                )}
-              </>
-              <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
-            </Description>
-          </Div2>
-        );
-      }
-    });
-
-  const [isHovering, setIsHovering] = React.useState(false);
-  const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
-
-  const handleMouseEnter = (recipe) => {
-    setIsHovering(true);
-    setHoveredRecipe(recipe);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-    setHoveredRecipe(null);
-  };
-
-  const RecipesGridLunch = initialState
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
       const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
@@ -152,42 +62,46 @@ function Recipes(props) {
       return !contains;
     })
     .map((recipe: any) => {
-      const proteinAmounts = recipe.ingredients.map(
+      const proteinIngredientAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.protein
       );
-      const maxProteinAmount = Math.max(...proteinAmounts);
+      const proteinPerHundredGrams = Math.max(...proteinIngredientAmounts);
 
-      const carbAmounts = recipe.ingredients.map(
+      const carbIngredientAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.carbs
       );
-      const maxCarbAmount = Math.max(...carbAmounts);
+      const carbsPerHundredGrams = Math.max(...carbIngredientAmounts);
 
       const proteinIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.protein === maxProteinAmount.toString()
+        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
       );
       const proteinIngredientName = proteinIngredient
         ? proteinIngredient.name
         : "";
 
       const carbIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.carbs === maxCarbAmount.toString()
+        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
       );
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
-      if (recipe.typeOfMeal === "meal") {
-        const proteinAmount = Math.round(
-          (props.proteinIntake * 0.55 * 100) / maxProteinAmount
+      if (recipe.typeOfMeal === "breakfast") {
+        const proteinIngredientAmount = Math.round(
+          (props.proteinIntake * 0.15 * 100) / proteinPerHundredGrams
         );
-        const carbAmount = Math.round(
-          (props.carbsIntake * 0.55 * 100) / maxCarbAmount
+        const carbIngredientAmount = Math.round(
+          (props.carbsIntake * 0.15 * 100) / carbsPerHundredGrams
         );
+
+        proteinInBreakfast =
+          (proteinIngredientAmount / 100) * proteinPerHundredGrams;
+        carbsInBreakfast = (carbIngredientAmount / 100) * carbsPerHundredGrams;
 
         const isSelected = selectedRecipes.includes(recipe._id);
 
         const proteinIngredientCalories =
-          proteinIngredient?.calories * (proteinAmount / 100) || 0;
+          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
         const carbIngredientCalories =
-          carbIngredient?.calories * (carbAmount / 100) || 0;
+          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
         const totalCalories =
           proteinIngredientCalories + carbIngredientCalories;
 
@@ -224,20 +138,148 @@ function Recipes(props) {
               key={recipe.id}
               onMouseEnter={() => handleMouseEnter(recipe)}
               onMouseLeave={() => handleMouseLeave()}
-              className={isHovering ? "visible" : "notVisible"}
+              //className={isHovering ? "visible" : "notVisible"}
             >
               <RecipeTitle>{recipe.recipeName}</RecipeTitle>
               <>
                 {proteinIngredientName && (
                   <Ingredient>
-                    {"Protein" + " " + proteinAmount + "g"}
+                    {proteinIngredientName +
+                      " " +
+                      proteinIngredientAmount +
+                      "g"}
                   </Ingredient>
                 )}
                 {carbIngredientName && (
-                  <Ingredient>{"Carbs" + " " + carbAmount + "g"}</Ingredient>
+                  <Ingredient>
+                    {carbIngredientName + " " + carbIngredientAmount + "g"}
+                  </Ingredient>
                 )}
               </>
-              <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
+            </Description>
+          </Div2>
+        );
+      }
+    });
+
+  const handleMouseEnter = (recipe) => {
+    setIsHovering(true);
+    setHoveredRecipe(recipe);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setHoveredRecipe(null);
+  };
+
+  const RecipesGridLunch = initialState
+    .filter((recipe: any) => {
+      // Check if the recipe contains any ingredients the user is allergic to
+      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
+        ...ingredient.contains,
+        ingredient.name,
+      ]);
+      const contains = props.allergyState.some((allergy) =>
+        allergyIngredients.includes(allergy.toLowerCase())
+      );
+      return !contains;
+    })
+    .map((recipe: any) => {
+      const proteinIngredientAmounts = recipe.ingredients.map(
+        (ingredient) => ingredient.protein
+      );
+      const proteinPerHundredGrams = Math.max(...proteinIngredientAmounts);
+
+      const carbIngredientAmounts = recipe.ingredients.map(
+        (ingredient) => ingredient.carbs
+      );
+      const carbsPerHundredGrams = Math.max(...carbIngredientAmounts);
+
+      const proteinIngredient = recipe.ingredients.find(
+        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
+      );
+      const proteinIngredientName = proteinIngredient
+        ? proteinIngredient.name
+        : "";
+
+      const carbIngredient = recipe.ingredients.find(
+        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
+      );
+      const carbIngredientName = carbIngredient ? carbIngredient.name : "";
+
+      const proteinIngredientAmount = Math.round(
+        (props.proteinIntake * 0.5 * 100) / proteinPerHundredGrams
+      );
+      const carbIngredientAmount = Math.round(
+        (props.carbsIntake * 0.5 * 100) / carbsPerHundredGrams
+      );
+
+      proteinInLunch = (proteinIngredientAmount / 100) * proteinPerHundredGrams;
+      carbsInLunch = (carbIngredientAmount / 100) * carbsPerHundredGrams;
+
+      if (recipe.typeOfMeal === "meal") {
+        const isSelected = selectedRecipes.includes(recipe._id);
+
+        const proteinIngredientCalories =
+          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
+        const carbIngredientCalories =
+          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
+        const totalCalories =
+          proteinIngredientCalories + carbIngredientCalories;
+
+        return (
+          <Div2>
+            <RecipeCard className={isSelected ? "selected" : "notSelected"}>
+              <Checkbox
+                checked={isSelected}
+                onChange={() => {
+                  // Update selected recipes
+                  const newSelectedRecipes = isSelected
+                    ? selectedRecipes.filter(
+                        (recipeId) => recipeId !== recipe._id
+                      )
+                    : [...selectedRecipes, recipe._id];
+                  setSelectedRecipes(newSelectedRecipes);
+                }}
+              />
+              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
+                <ImageDiv
+                  onClick={() => {
+                    const newSelectedRecipes = isSelected
+                      ? selectedRecipes.filter(
+                          (recipeId) => recipeId !== recipe._id
+                        )
+                      : [...selectedRecipes, recipe._id];
+                    setSelectedRecipes(newSelectedRecipes);
+                  }}
+                ></ImageDiv>
+              </LinkDiv>
+            </RecipeCard>
+
+            <Description
+              key={recipe.id}
+              onMouseEnter={() => handleMouseEnter(recipe)}
+              onMouseLeave={() => handleMouseLeave()}
+              //className={isHovering ? "visible" : "notVisible"}
+            >
+              <RecipeTitle>{recipe.recipeName}</RecipeTitle>
+              <>
+                {proteinIngredientName && (
+                  <Ingredient>
+                    {proteinIngredientName +
+                      " " +
+                      proteinIngredientAmount +
+                      "g"}
+                  </Ingredient>
+                )}
+                {carbIngredientName && (
+                  <Ingredient>
+                    {carbIngredientName + " " + carbIngredientAmount + "g"}
+                  </Ingredient>
+                )}
+              </>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -259,19 +301,19 @@ function Recipes(props) {
     // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
       // Get the maximum protein and carb amounts of the recipe
-      const proteinAmounts = recipe.ingredients.map(
+      const proteinIngredientAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.protein
       );
-      const maxProteinAmount = Math.max(...proteinAmounts);
+      const proteinPerHundredGrams = Math.max(...proteinIngredientAmounts);
 
-      const carbAmounts = recipe.ingredients.map(
+      const carbIngredientAmounts = recipe.ingredients.map(
         (ingredient) => ingredient.carbs
       );
-      const maxCarbAmount = Math.max(...carbAmounts);
+      const carbsPerHundredGrams = Math.max(...carbIngredientAmounts);
 
       // Get the ingredient with the highest protein amount
       const proteinIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.protein === maxProteinAmount.toString()
+        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
       );
       const proteinIngredientName = proteinIngredient
         ? proteinIngredient.name
@@ -279,27 +321,31 @@ function Recipes(props) {
 
       // Get the ingredient with the highest carb amount
       const carbIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.carbs === maxCarbAmount.toString()
+        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
       );
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
-      //if it is a meal, display the recipe
-      if (recipe.typeOfMeal === "meal") {
-        // Calculate the recommended amount of protein and carbs to consume
-        const proteinAmount = Math.round(
-          (props.proteinIntake * 0.35 * 100) / maxProteinAmount
-        );
-        const carbAmount = Math.round(
-          (props.carbsIntake * 0.35 * 100) / maxCarbAmount
-        );
+      // Calculate the recommended amount of protein and carbs to consume
+      const proteinIngredientAmount = Math.round(
+        (props.proteinIntake * 0.35 * 100) / proteinPerHundredGrams
+      );
+      const carbIngredientAmount = Math.round(
+        (props.carbsIntake * 0.35 * 100) / carbsPerHundredGrams
+      );
 
+      proteinInDinner =
+        (proteinIngredientAmount / 100) * proteinPerHundredGrams;
+      carbsInDinner = (carbIngredientAmount / 100) * carbsPerHundredGrams;
+
+      //if it is a meal, display the recipe
+      if (recipe.typeOfMeal === "dinner") {
         const isSelected = selectedRecipes.includes(recipe._id);
 
         // Calculate total number of calories in protein and carbs
         const proteinIngredientCalories =
-          proteinIngredient?.calories * (proteinAmount / 100) || 0;
+          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
         const carbIngredientCalories =
-          carbIngredient?.calories * (carbAmount / 100) || 0;
+          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
         const totalCalories =
           proteinIngredientCalories + carbIngredientCalories;
 
@@ -344,15 +390,17 @@ function Recipes(props) {
                 {/* Display the ingredient with the highest protein amount */}
                 {proteinIngredientName && (
                   <Ingredient>
-                    {"Protein" + " " + proteinAmount + "g"}
+                    {proteinIngredientName + " " + proteinIngredientAmount + "g"}
                   </Ingredient>
                 )}
                 {carbIngredientName && (
-                  <Ingredient>{"Carbs" + " " + carbAmount + "g"}</Ingredient>
+                  <Ingredient>
+                    {carbIngredientName + " " + carbIngredientAmount + "g"}
+                  </Ingredient>
                 )}
               </>
               {/* Display total number of calories in protein and carbs */}
-              <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -374,19 +422,23 @@ function Recipes(props) {
     // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
       // Get the maximum protein and carb amounts of the recipe
-      const proteinAmounts = recipe.ingredients.map(
-        (ingredient) => ingredient.protein
-      );
-      const maxProteinAmount = Math.max(...proteinAmounts);
+      const proteinIngredientAmounts = recipe.ingredients
+        .map((ingredient) => parseFloat(ingredient.protein))
+        .filter((value) => !isNaN(value));
+      const proteinPerHundredGrams = proteinIngredientAmounts.length
+        ? Math.max(...proteinIngredientAmounts)
+        : 0;
 
-      const carbAmounts = recipe.ingredients.map(
-        (ingredient) => ingredient.carbs
-      );
-      const maxCarbAmount = Math.max(...carbAmounts);
+      const carbIngredientAmounts = recipe.ingredients
+        .map((ingredient) => parseFloat(ingredient.carbs))
+        .filter((value) => !isNaN(value));
+      const carbsPerHundredGrams = carbIngredientAmounts.length
+        ? Math.max(...carbIngredientAmounts)
+        : 0;
 
       // Get the ingredient with the highest protein amount
       const proteinIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.protein === maxProteinAmount.toString()
+        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
       );
       const proteinIngredientName = proteinIngredient
         ? proteinIngredient.name
@@ -394,27 +446,32 @@ function Recipes(props) {
 
       // Get the ingredient with the highest carb amount
       const carbIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.carbs === maxCarbAmount.toString()
+        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
       );
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
       //if it is a meal, display the recipe
-      if (recipe.typeOfMeal === "meal") {
+      if (recipe.typeOfMeal === "snack") {
         // Calculate the recommended amount of protein and carbs to consume
-        const proteinAmount = Math.round(
-          (props.proteinIntake * 0.35 * 100) / maxProteinAmount
+        const proteinIngredientAmount = Math.round(
+          (props.proteinIntake * 0.1 * 100) / proteinPerHundredGrams
         );
-        const carbAmount = Math.round(
-          (props.carbsIntake * 0.35 * 100) / maxCarbAmount
+        const carbIngredientAmount = Math.round(
+          (props.carbsIntake * 0.1 * 100) / carbsPerHundredGrams
         );
+
+        const proteinInRecipe =
+          (proteinIngredientAmount / 100) * proteinPerHundredGrams;
+        const carbsInRecipe =
+          (carbIngredientAmount / 100) * carbsPerHundredGrams;
 
         const isSelected = selectedRecipes.includes(recipe._id);
 
         // Calculate total number of calories in protein and carbs
         const proteinIngredientCalories =
-          proteinIngredient?.calories * (proteinAmount / 100) || 0;
+          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
         const carbIngredientCalories =
-          carbIngredient?.calories * (carbAmount / 100) || 0;
+          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
         const totalCalories =
           proteinIngredientCalories + carbIngredientCalories;
 
@@ -448,15 +505,17 @@ function Recipes(props) {
                 {/* Display the ingredient with the highest protein amount */}
                 {proteinIngredientName && (
                   <Ingredient>
-                    {"Protein" + " " + proteinAmount + "g"}
+                    {proteinIngredientName + " " + proteinIngredientAmount + "g"}
                   </Ingredient>
                 )}
                 {carbIngredientName && (
-                  <Ingredient>{"Carbs" + " " + carbAmount + "g"}</Ingredient>
+                  <Ingredient>
+                    {carbIngredientName + " " + carbIngredientAmount + "g"}
+                  </Ingredient>
                 )}
               </>
               {/* Display total number of calories in protein and carbs */}
-              <p>{`Total Calories: ${totalCalories.toFixed(0)}`}</p>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -464,32 +523,48 @@ function Recipes(props) {
     });
 
   return (
-    <Wrapper>
-      <BigDiv>
-        <SmallDiv>
-          <h3>Breakfast</h3>
-          {RecipesBreakfastGrid}
-        </SmallDiv>
-      </BigDiv>
-      <BigDiv>
-        <SmallDiv>
-          <h3>Lunch</h3>
-          {RecipesGridLunch}
-        </SmallDiv>
-      </BigDiv>
-      <BigDiv>
-        <SmallDiv>
-          <h3>Dinner</h3>
-          {RecipesGridDinner}
-        </SmallDiv>
-      </BigDiv>
-      <BigDiv>
-        <SmallDiv>
-          <h3>Snacks</h3>
-          {RecipesSnacks}
-        </SmallDiv>
-      </BigDiv>
-    </Wrapper>
+    <BigWrapper>
+      <NavBar></NavBar>
+      <FloatingText>See your requirements</FloatingText>
+      <Header>
+        <p>Breakfast</p>
+        <p>Lunch</p>
+        <p>Dinner</p>
+        <p>Snacks</p>
+      </Header>
+      <MealInfoHeader>
+        <MealInfo>
+          <MealInfoText>{"Protein in breakfast: " + proteinInBreakfast?.toFixed(0) + "g"}</MealInfoText>
+          <MealInfoText>{"Carbs in breakfast: " + carbsInBreakfast?.toFixed(0) + "g"}</MealInfoText>
+        </MealInfo>
+        <MealInfo>
+          <MealInfoText>{"Protein in lunch: " + proteinInLunch?.toFixed(0) + "g"}</MealInfoText>
+          <MealInfoText>{"Carbs in lunch: " + carbsInLunch?.toFixed(0) + "g"}</MealInfoText>
+        </MealInfo>
+        <MealInfo>
+          <MealInfoText>{"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}</MealInfoText>
+          <MealInfoText>{"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}</MealInfoText>
+        </MealInfo>
+        <MealInfo>
+          <p></p>
+          <p></p>
+        </MealInfo>
+      </MealInfoHeader>
+      <Wrapper>
+        <BigDiv>
+          <SmallDiv>{RecipesBreakfastGrid}</SmallDiv>
+        </BigDiv>
+        <BigDiv>
+          <SmallDiv>{RecipesGridLunch}</SmallDiv>
+        </BigDiv>
+        <BigDiv>
+          <SmallDiv>{RecipesGridDinner}</SmallDiv>
+        </BigDiv>
+        <BigDiv>
+          <SmallDiv>{RecipesSnacks}</SmallDiv>
+        </BigDiv>
+      </Wrapper>
+    </BigWrapper>
   );
 }
 

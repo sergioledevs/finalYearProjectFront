@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Link } from "react-router-dom";
+import { keyframes } from 'styled-components';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -13,6 +14,21 @@ export const Wrapper = styled.div`
   overflow: hidden;
 `;
 
+export const BigWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color:#FFFFF5;
+
+  overflow: hidden;
+`;
+
+
+
+
 export const BigDiv = styled.div`
   width: 33%;
   height: 100vh;
@@ -23,6 +39,28 @@ export const BigDiv = styled.div`
   }
 `;
 
+export const Header = styled.div`
+  width: 100%;
+  height:10%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align:center;
+  margin-top:75px;
+  font-family: "InterExtraBold", sans-serif;
+  font-size:22px;
+`;
+
+export const MealInfoHeader = styled.div`
+  width: 100%;
+  height:10%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  text-align:center;
+  font-family: "InterMedium", sans-serif;
+  font-size:15px;
+  margin:0;
+`;
+
 export const Div2 = styled.div`
   display: flex;
   flex-direction: column;
@@ -30,6 +68,7 @@ export const Div2 = styled.div`
   justify-content: center;
 
   overflow-y: scroll;
+
   &::-webkit-scrollbar {
     width: 1px;
   }
@@ -46,7 +85,7 @@ export const SmallDiv = styled.div`
 
     width: 330px;
     height: 330px;
-    margin: 50px;
+    margin-top: 50px;
     transition: box-shadow 0.2s;
     background-color: grey;
 
@@ -111,6 +150,20 @@ export const Description = styled.div`
   align-items: center;
 `;
 
+export const MealInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin:0;
+`;
+
+export const MealInfoText = styled.p`
+  margin:0;
+  opacity:70%
+`;
+
 export const ImageDiv = styled.div`
   height: 100%;
   width: 100%;
@@ -121,7 +174,7 @@ export const RecipeTitle = styled.h2`
   margin-top: 2%;
   margin-left: 2%;
   font-size: 1.5em;
-  font-family: "InterMedium", sans-serif;
+  font-family: "InterSemi", sans-serif;
 `;
 
 export const Ingredient = styled.p`
@@ -129,7 +182,9 @@ export const Ingredient = styled.p`
   margin-top: 0;
   margin-bottom: 0;
   margin-left: 2%;
-  font-family: "InterRegular", sans-serif;
+  opacity: 70%;
+  font-size:0.9em;
+  font-family: "InterMedium", sans-serif;
 `;
 
 export const Checkbox = styled.input.attrs({ type: "checkbox" })`   /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
@@ -173,5 +228,27 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`   /*https://mo
     transform: scale(1);
   }
 `;
+
+
+
+const floatAnimation = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+export const FloatingText = styled.p`
+  animation: ${floatAnimation} 2s ease-in-out infinite;
+  z-index:1;
+  margin-top:-60px;
+  cursor:pointer;
+`;
+
 
 export {};

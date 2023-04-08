@@ -39,7 +39,7 @@ function AllergiesPage(props) {
       );
     }
   })
-  .slice(0,3)
+  .slice(0,7)
   .map((ingredient: any) => {
     const filteredContains = ingredient.contains.filter((containedIngredient: string) =>
       containedIngredient.toLowerCase().includes(searchTerm.toLowerCase())
@@ -88,6 +88,7 @@ function AllergiesPage(props) {
 
   return (
     <Wrapper>
+      <h2>Do you have any allergies or dislike any ingredient?</h2>
       <input
         type="text"
         placeholder="Search..."
