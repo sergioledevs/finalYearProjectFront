@@ -1,7 +1,18 @@
 import React from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form";
-import { BigDiv, FormDiv, StyledForm, StyledInput } from "./home.style";
+import {
+  BigDiv,
+  FormDiv,
+  FormField,
+  FormGroup2,
+  StyledForm,
+  StyledInput,
+  WeightInputGroupTextLeft,
+  InputFormControl,
+  WeightInputGroupTextRight,
+  InputGroupCustom,
+} from "./home.style";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -11,6 +22,8 @@ import { useDispatch, connect } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import { userWeight } from "./home.actions";
+
+import NavBar from "../../components/navBar/navBar";
 
 type StyledInputs = {
   height: Number;
@@ -79,7 +92,7 @@ function HomePage(props: StyledInputs) {
 
   useEffect(() => {
     try {
-      axios.get("http://localhost:9000/getDatabase").then((response) => {
+      axios.get("https://finalyearprojectapi.onrender.com/getDatabase").then((response) => {
         console.log(response.data);
         setInitialState(response.data);
       });
@@ -161,140 +174,179 @@ function HomePage(props: StyledInputs) {
   };
 
   return (
-    <BigDiv>
-      <FormDiv>
-        <StyledForm noValidate validated={validated} onSubmit={handleSub}>
-          <FormGroup>
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Gender
-              </InputGroup.Text>
-              <Form.Select
-                size="sm"
-                value={gender}
-                isInvalid={
-                  parseInt(age) < 5 || (parseInt(age) < 5 && validated)
-                }
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option>Male</option>
-                <option>Female</option>
-              </Form.Select>
-            </InputGroup>
+    <div>
+      <NavBar></NavBar>
+      <BigDiv>
+        <FormDiv>
+          <StyledForm noValidate validated={validated} onSubmit={handleSub}>
+            <FormGroup>
+              <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Gender
+                </InputGroup.Text>
+                <Form.Select
+                  size="sm"
+                  value={gender}
+                  isInvalid={
+                    gender=="" && validated || gender=="Select option" && validated
+                  }
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option>Select option</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Select your gender
+                </Form.Control.Feedback>
+              </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Height
-              </InputGroup.Text>
-              <Form.Control
-                {...register("height", { required: true })}
-                type="number"
-                name="height"
-                aria-label="Height"
-                aria-describedby="inputGroup-sizing-default"
-                required
-                value={height}
-                isInvalid={
-                  parseInt(height) < 5 || (parseInt(height) < 5 && validated)
-                }
-                onChange={(e) => setHeight(e.target.value)}
-              />
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Cm
-              </InputGroup.Text>
-              <Form.Control.Feedback type="invalid">
-                Please introduce your height.
-              </Form.Control.Feedback>
-            </InputGroup>
+              {/*<InputGroup>
+                <FormGroup2>
+                  <span>Height</span>
+                  <InputFormControl
+                    value={height}
+                    required
+                    onChange={(e) => setHeight(e.target.value)}
+                    type="text"
+                    isInvalid={
+                      parseInt(height) < 100 ||
+                      (parseInt(height) < 100 && validated)
+                    }
+                    placeholder="domain.tld"
+                  ></InputFormControl>
+                  <span>Cm</span>
+                  
+                </FormGroup2>
+                <Form.Control.Feedback type="invalid">
+                    Please introduce your height.
+                  </Form.Control.Feedback>
+                  </InputGroup>*/}
 
-            <InputGroup hasValidation className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Weight
-              </InputGroup.Text>
-              <Form.Control
-                type="number"
-                aria-label="Height"
-                aria-describedby="inputGroup-sizing-default"
-                {...register("weight", { required: true })}
-                required
-                value={weight}
-                isInvalid={
-                  parseInt(weight) < 5 || (parseInt(weight) < 5 && validated)
-                }
-                onChange={(e) => setWeight(e.target.value)}
-              />
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Kg
-              </InputGroup.Text>
-              <Form.Control.Feedback type="invalid">
-                Please introduce your weight.
-              </Form.Control.Feedback>
-            </InputGroup>
+              <InputGroupCustom className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
+                  Height
+                </WeightInputGroupTextRight>
+                <InputFormControl
+                  {...register("height", { required: true })}
+                  type="number"
+                  name="height"
+                  aria-label="Height"
+                  aria-describedby="inputGroup-sizing-default"
+                  required
+                  value={height}
+                  isInvalid={
+                    parseInt(height) < 100 || height=="" && validated ||
+                    (parseInt(height) < 100 && validated)
+                  }
+                  onChange={(e) => setHeight(e.target.value)}
+                />
+                <WeightInputGroupTextLeft id="inputGroup-sizing-default">
+                  Cm
+                </WeightInputGroupTextLeft>
 
-            <InputGroup hasValidation className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Age
-              </InputGroup.Text>
-              <Form.Control
-                type="number"
-                aria-label="Height"
-                aria-describedby="inputGroup-sizing-default"
-                required
-                value={age}
-                isInvalid={
-                  parseInt(age) < 5 || (parseInt(age) < 5 && validated)
-                }
-                onChange={(e) => setAge(e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please introduce your weight.
-              </Form.Control.Feedback>
-            </InputGroup>
+                <Form.Control.Feedback type="invalid">
+                  Height has to be bigger than 100cm
+                </Form.Control.Feedback>
+              </InputGroupCustom>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Level of Activity
-              </InputGroup.Text>
-              <Form.Select
-                size="sm"
-                value={levelOfActive}
-                isInvalid={
-                  parseInt(age) < 5 || (parseInt(age) < 5 && validated)
-                }
-                onChange={(e) => setLevelOfActive(e.target.value)}
-              >
-                <option>Select option</option>
-                <option>No exercise</option>
-                <option>Exercise 1-2 times a week</option>
-                <option>Exercise 3-4 times a week</option>
-                <option>Exercise 5-7 times a week</option>
-              </Form.Select>
-            </InputGroup>
+              <InputGroup hasValidation className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Weight
+                </InputGroup.Text>
+                <Form.Control
+                  type="number"
+                  aria-label="Height"
+                  aria-describedby="inputGroup-sizing-default"
+                  {...register("weight", { required: true })}
+                  required
+                  value={weight}
+                  isInvalid={
+                    parseInt(weight) < 40 ||weight=="" && validated ||
+                    (parseInt(weight) < 40 && validated)
+                  }
+                  onChange={(e) => setWeight(e.target.value)}
+                />
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Kg
+                </InputGroup.Text>
+                <Form.Control.Feedback type="invalid">
+                  Weight has to be bigger than 40kg
+                </Form.Control.Feedback>
+              </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Fitness goal
-              </InputGroup.Text>
-              <Form.Select
-                size="sm"
-                value={userGoal}
-                isInvalid={
-                  parseInt(age) < 5 || (parseInt(age) < 5 && validated)
-                }
-                onChange={(e) => setUserGoal(e.target.value)}
-              >
-              
-                <option>Select option</option>
-                <option>Mantain weight</option>
-                <option>Bulk</option>
-                <option>Lose weight</option>
-              </Form.Select>
-            </InputGroup>
-          </FormGroup>
-          <Button type="submit">Submit form</Button>
-        </StyledForm>
-      </FormDiv>
-    </BigDiv>
+              <InputGroup hasValidation className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Age
+                </InputGroup.Text>
+                <Form.Control
+                  type="number"
+                  aria-label="Height"
+                  aria-describedby="inputGroup-sizing-default"
+                  required
+                  value={age}
+                  isInvalid={
+                    parseInt(age) < 12 || (parseInt(age) < 12 && validated)
+                  }
+                  onChange={(e) => setAge(e.target.value)}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Have to be older than 12
+                </Form.Control.Feedback>
+              </InputGroup>
+
+              <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Level of Activity
+                </InputGroup.Text>
+                <Form.Select
+                  size="sm"
+                  value={levelOfActive}
+                  isInvalid={
+                    levelOfActive == "Select option" || levelOfActive=="" && validated||
+                    (levelOfActive == "Select option" && validated)
+                  }
+                  onChange={(e) => setLevelOfActive(e.target.value)}
+                >
+                  <option>Select option</option>
+                  <option>No exercise</option>
+                  <option>Exercise 1-2 times a week</option>
+                  <option>Exercise 3-4 times a week</option>
+                  <option>Exercise 5-7 times a week</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Select a level of activity
+                </Form.Control.Feedback>
+              </InputGroup>
+
+              <InputGroup className="mb-3">
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  Fitness goal
+                </InputGroup.Text>
+                <Form.Select
+                  size="sm"
+                  value={userGoal}
+                  isInvalid={
+                    userGoal == "Select option" || userGoal=="" && validated||
+                    (userGoal == "Select option" && validated)
+                  }
+                  onChange={(e) => setUserGoal(e.target.value)}
+                >
+                  <option>Select option</option>
+                  <option>Mantain weight</option>
+                  <option>Bulk</option>
+                  <option>Lose weight</option>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  Select your goal
+                </Form.Control.Feedback>
+              </InputGroup>
+            </FormGroup>
+            <Button type="submit">Submit form</Button>
+          </StyledForm>
+        </FormDiv>
+      </BigDiv>
+    </div>
   );
 }
 

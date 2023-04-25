@@ -1,14 +1,28 @@
 import React from "react";
-import { AboutUs, LeftWrapper, LogIn, Logo, Wrapper } from "./navBar.style";
+import {
+  AboutUs,
+  LeftWrapper,
+  LogIn,
+  Logo,
+  Wrapper,
+  LinkDiv,
+} from "./navBar.style";
 
 function NavBar(props) {
   return (
     <Wrapper>
       <LeftWrapper>
-        <Logo>CUKFIT</Logo>
+        <LinkDiv to={`/`}>
+          <Logo>CUKFIT</Logo>
+        </LinkDiv>
+      <LinkDiv >
         <AboutUs>About us</AboutUs>
+      </LinkDiv>
       </LeftWrapper>
+
+      <LinkDiv to={`/logIn`}>
       <LogIn>LogIn</LogIn>
+      </LinkDiv>
     </Wrapper>
   );
 }

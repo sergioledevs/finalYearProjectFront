@@ -1,9 +1,10 @@
 import React from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Wrapper, Grid } from "./allergies.style";
+import { Wrapper, Grid, WrapperBack } from "./allergies.style";
 import { useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../../components/navBar/navBar";
 
 function AllergiesPage(props) {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -87,6 +88,10 @@ function AllergiesPage(props) {
   });
 
   return (
+    <div>
+      <NavBar></NavBar>
+    <WrapperBack>
+      
     <Wrapper>
       <h2>Do you have any allergies or dislike any ingredient?</h2>
       <input
@@ -100,6 +105,9 @@ function AllergiesPage(props) {
       <button>Go back</button>
       <button onClick={handleSub}>Continue</button>
     </Wrapper>
+    </WrapperBack>
+    </div>
+     
   );
 }
 

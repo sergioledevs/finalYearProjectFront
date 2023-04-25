@@ -13,7 +13,7 @@ import allergyReducer from "./pages/allergies/allergies.reducer";
 
 const allReducers = combineReducers({
   UserInfo,
-  allergyReducer
+  allergyReducer,
 });
 
 const store = createStore(
@@ -25,11 +25,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <Auth0Provider
-        domain="dev-s016gihn6cxe73pi.eu.auth0.com"
-        clientId="t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4"
-        redirectUri={window.location.origin}
-      >
+    <Auth0Provider
+    domain="dev-s016gihn6cxe73pi.eu.auth0.com"
+    clientId="t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4"
+    authorizationParams={{
+      redirect_uri: window.location.origin
+    }}
+  >
         <App />
       </Auth0Provider>
     </React.StrictMode>

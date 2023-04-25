@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Link } from "react-router-dom";
-import { keyframes } from 'styled-components';
+import { keyframes } from "styled-components";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -21,13 +21,10 @@ export const BigWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color:#FFFFF5;
+  background-color: #fffff5;
 
   overflow: hidden;
 `;
-
-
-
 
 export const BigDiv = styled.div`
   width: 33%;
@@ -41,24 +38,24 @@ export const BigDiv = styled.div`
 
 export const Header = styled.div`
   width: 100%;
-  height:10%;
+  height: 10%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  text-align:center;
-  margin-top:75px;
+  text-align: center;
+  margin-top: 75px;
   font-family: "InterExtraBold", sans-serif;
-  font-size:22px;
+  font-size: 22px;
 `;
 
 export const MealInfoHeader = styled.div`
   width: 100%;
-  height:10%;
+  height: 10%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  text-align:center;
+  text-align: center;
   font-family: "InterMedium", sans-serif;
-  font-size:15px;
-  margin:0;
+  font-size: 15px;
+  margin: 0;
 `;
 
 export const Div2 = styled.div`
@@ -156,12 +153,12 @@ export const MealInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin:0;
+  margin: 0;
 `;
 
 export const MealInfoText = styled.p`
-  margin:0;
-  opacity:70%
+  margin: 0;
+  opacity: 70%;
 `;
 
 export const ImageDiv = styled.div`
@@ -183,11 +180,12 @@ export const Ingredient = styled.p`
   margin-bottom: 0;
   margin-left: 2%;
   opacity: 70%;
-  font-size:0.9em;
+  font-size: 0.9em;
   font-family: "InterMedium", sans-serif;
 `;
 
-export const Checkbox = styled.input.attrs({ type: "checkbox" })`   /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
+export const Checkbox = styled.input.attrs({ type: "checkbox" })`
+  /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
   /* Add if not using autoprefixer */
   -webkit-appearance: none;
   /* Remove most all native input styles */
@@ -229,8 +227,6 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`   /*https://mo
   }
 `;
 
-
-
 const floatAnimation = keyframes`
   0% {
     transform: translateY(0);
@@ -245,10 +241,35 @@ const floatAnimation = keyframes`
 
 export const FloatingText = styled.p`
   animation: ${floatAnimation} 2s ease-in-out infinite;
-  z-index:1;
-  margin-top:-60px;
-  cursor:pointer;
+  z-index: 3;
+  margin-top: 50px;
+  cursor: pointer;
 `;
 
+export const DropdownMenu = styled.div`
+  position: fixed;
+  top: ${(props) => (props.visible ? "0" : "-100%")};
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 150px;
+  background-color: gray;
+  transition: all 0.5s ease;
+  z-index: 998;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+`;
+
+export const Text = styled.div`
+  position: fixed;
+  top: ${(props) => (props.visible ? "160px" : "-30%")};
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+  z-index: 998;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  cursor: pointer;
+`;
 
 export {};
