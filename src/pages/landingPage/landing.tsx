@@ -10,6 +10,8 @@ import {
   Content,
 } from "./landing.style";
 
+import NavBar from "../../components/navBar/navBar";
+
 function Landing() {
   const navigate = useNavigate();
   const handleSub = () => {
@@ -18,7 +20,9 @@ function Landing() {
 
   return (
     <Container>
+            <NavBar></NavBar>
       <BigDiv>
+
         <Content>
           <Slogan>Gains are made in the kitchen</Slogan>
           <SloganDescription>

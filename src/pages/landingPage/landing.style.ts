@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import food_background from '../../media/food_background.jpg'
 
 
-
 export const Container= styled.div`
 background-color: rgba(219, 234, 239, 1);
 `

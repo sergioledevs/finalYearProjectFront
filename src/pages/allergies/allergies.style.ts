@@ -1,11 +1,8 @@
 import styled from "styled-components";
-
+import wave from "../../media/wave.svg";
+import background from "../../media/figma_test.png";
 
 export const Wrapper = styled.div`
-
-background-size: 150% auto;
-background-position: right 70% top 69%;
-background-repeat: no-repeat;
   .selected {
     display: flex;
     justify-content: center;
@@ -19,7 +16,7 @@ background-repeat: no-repeat;
     margin-top: 10px;
     margin-bottom: 30px;
     transition: box-shadow 0.2s;
-    background-color: dodgerblue;
+    background-color: lightgreen;
     color: white;
 
     &:hover {
@@ -55,7 +52,7 @@ background-repeat: no-repeat;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
 
   overflow: hidden;
 `;
@@ -63,4 +60,22 @@ background-repeat: no-repeat;
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+export const WrapperBack = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+
+  background-image: url(${background});
+  background-size: 100% 100%;
+
+  background-repeat: no-repeat;
 `;

@@ -17,8 +17,10 @@ import {
   BigWrapper,
   Header,
   FloatingText,
+  DropdownMenu,
   MealInfo,
   MealInfoHeader,
+  Text,
   MealInfoText,
 } from "./recipes.style";
 import NavBar from "../../components/navBar/navBar";
@@ -522,10 +524,26 @@ function Recipes(props) {
       }
     });
 
+    const [dropdownVisible, setDropdownVisible] = React.useState(false);
+
+    const toggleDropdown = () => {
+      setDropdownVisible(!dropdownVisible);
+    }
   return (
-    <BigWrapper>
+    <div>
       <NavBar></NavBar>
-      <FloatingText>See your requirements</FloatingText>
+    
+    <BigWrapper>
+      
+      <FloatingText onClick={toggleDropdown}>See your daily requirementes</FloatingText>
+      <DropdownMenu visible={dropdownVisible}>
+        <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
+        <p>Protein: {Math.round(props?.proteinIntake)}g</p>
+        <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
+      </DropdownMenu>
+      <Text onClick={toggleDropdown} visible={dropdownVisible}>
+        <p>Hide requirements</p>
+      </Text>
       <Header>
         <p>Breakfast</p>
         <p>Lunch</p>
@@ -545,10 +563,7 @@ function Recipes(props) {
           <MealInfoText>{"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}</MealInfoText>
           <MealInfoText>{"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}</MealInfoText>
         </MealInfo>
-        <MealInfo>
-          <p></p>
-          <p></p>
-        </MealInfo>
+      
       </MealInfoHeader>
       <Wrapper>
         <BigDiv>
@@ -565,6 +580,7 @@ function Recipes(props) {
         </BigDiv>
       </Wrapper>
     </BigWrapper>
+    </div>
   );
 }
 
@@ -577,6 +593,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     proteinIntake: state.UserInfo.proteinIntake,
     carbsIntake: state.UserInfo.carbsIntake,
+    caloriesIntake: state.UserInfo.caloriesIntake,
     allergyState: state.allergyReducer.allergyArray,
   };
 };
