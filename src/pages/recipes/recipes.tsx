@@ -33,7 +33,7 @@ function Recipes(props) {
 
   useEffect(() => {
     try {
-      axios.get("http://localhost:9000/getRecipes").then((response) => {
+      axios.get("https://finalyearprojectapi.onrender.com/getRecipes").then((response) => {
         //console.log(response.data);
         setInitialState(response.data);
       });
@@ -158,7 +158,9 @@ function Recipes(props) {
                   </Ingredient>
                 )}
               </>
-              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+                0
+              )}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -281,7 +283,9 @@ function Recipes(props) {
                   </Ingredient>
                 )}
               </>
-              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+                0
+              )}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -392,7 +396,10 @@ function Recipes(props) {
                 {/* Display the ingredient with the highest protein amount */}
                 {proteinIngredientName && (
                   <Ingredient>
-                    {proteinIngredientName + " " + proteinIngredientAmount + "g"}
+                    {proteinIngredientName +
+                      " " +
+                      proteinIngredientAmount +
+                      "g"}
                   </Ingredient>
                 )}
                 {carbIngredientName && (
@@ -402,7 +409,9 @@ function Recipes(props) {
                 )}
               </>
               {/* Display total number of calories in protein and carbs */}
-              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+                0
+              )}`}</Ingredient>
             </Description>
           </Div2>
         );
@@ -507,7 +516,10 @@ function Recipes(props) {
                 {/* Display the ingredient with the highest protein amount */}
                 {proteinIngredientName && (
                   <Ingredient>
-                    {proteinIngredientName + " " + proteinIngredientAmount + "g"}
+                    {proteinIngredientName +
+                      " " +
+                      proteinIngredientAmount +
+                      "g"}
                   </Ingredient>
                 )}
                 {carbIngredientName && (
@@ -517,69 +529,82 @@ function Recipes(props) {
                 )}
               </>
               {/* Display total number of calories in protein and carbs */}
-              <Ingredient>{`Total Calories: ${totalCalories.toFixed(0)}`}</Ingredient>
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+                0
+              )}`}</Ingredient>
             </Description>
           </Div2>
         );
       }
     });
 
-    const [dropdownVisible, setDropdownVisible] = React.useState(false);
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
-    const toggleDropdown = () => {
-      setDropdownVisible(!dropdownVisible);
-    }
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
   return (
     <div>
       <NavBar></NavBar>
-    
-    <BigWrapper>
-      
-      <FloatingText onClick={toggleDropdown}>See your daily requirementes</FloatingText>
-      <DropdownMenu visible={dropdownVisible}>
-        <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
-        <p>Protein: {Math.round(props?.proteinIntake)}g</p>
-        <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
-      </DropdownMenu>
-      <Text onClick={toggleDropdown} visible={dropdownVisible}>
-        <p>Hide requirements</p>
-      </Text>
-      <Header>
-        <p>Breakfast</p>
-        <p>Lunch</p>
-        <p>Dinner</p>
-        <p>Snacks</p>
-      </Header>
-      <MealInfoHeader>
-        <MealInfo>
-          <MealInfoText>{"Protein in breakfast: " + proteinInBreakfast?.toFixed(0) + "g"}</MealInfoText>
-          <MealInfoText>{"Carbs in breakfast: " + carbsInBreakfast?.toFixed(0) + "g"}</MealInfoText>
-        </MealInfo>
-        <MealInfo>
-          <MealInfoText>{"Protein in lunch: " + proteinInLunch?.toFixed(0) + "g"}</MealInfoText>
-          <MealInfoText>{"Carbs in lunch: " + carbsInLunch?.toFixed(0) + "g"}</MealInfoText>
-        </MealInfo>
-        <MealInfo>
-          <MealInfoText>{"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}</MealInfoText>
-          <MealInfoText>{"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}</MealInfoText>
-        </MealInfo>
-      
-      </MealInfoHeader>
-      <Wrapper>
-        <BigDiv>
-          <SmallDiv>{RecipesBreakfastGrid}</SmallDiv>
-        </BigDiv>
-        <BigDiv>
-          <SmallDiv>{RecipesGridLunch}</SmallDiv>
-        </BigDiv>
-        <BigDiv>
-          <SmallDiv>{RecipesGridDinner}</SmallDiv>
-        </BigDiv>
-        <BigDiv>
-          <SmallDiv>{RecipesSnacks}</SmallDiv>
-        </BigDiv>
-      </Wrapper>
-    </BigWrapper>
+      <BigWrapper>
+        <FloatingText onClick={toggleDropdown}>
+          See your daily requirementes
+        </FloatingText>
+        <DropdownMenu visible={dropdownVisible}>
+          <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
+          <p>Protein: {Math.round(props?.proteinIntake)}g</p>
+          <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
+        </DropdownMenu>
+        <Text onClick={toggleDropdown} visible={dropdownVisible}>
+          <p>Hide requirements</p>
+        </Text>
+        <Header>
+          <p>Breakfast</p>
+          <p>Lunch</p>
+          <p>Dinner</p>
+          <p>Snacks</p>
+        </Header>
+        <MealInfoHeader>
+          <MealInfo>
+            <MealInfoText>
+              {"Protein in breakfast: " + proteinInBreakfast?.toFixed(0) + "g"}
+            </MealInfoText>
+            <MealInfoText>
+              {"Carbs in breakfast: " + carbsInBreakfast?.toFixed(0) + "g"}
+            </MealInfoText>
+          </MealInfo>
+          <MealInfo>
+            <MealInfoText>
+              {"Protein in lunch: " + proteinInLunch?.toFixed(0) + "g"}
+            </MealInfoText>
+            <MealInfoText>
+              {"Carbs in lunch: " + carbsInLunch?.toFixed(0) + "g"}
+            </MealInfoText>
+          </MealInfo>
+          <MealInfo>
+            <MealInfoText>
+              {"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}
+            </MealInfoText>
+            <MealInfoText>
+              {"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}
+            </MealInfoText>
+          </MealInfo>
+        </MealInfoHeader>
+        <Wrapper>
+          <BigDiv>
+            <SmallDiv>{RecipesBreakfastGrid}</SmallDiv>
+          </BigDiv>
+          <BigDiv>
+            <SmallDiv>{RecipesGridLunch}</SmallDiv>
+          </BigDiv>
+          <BigDiv>
+            <SmallDiv>{RecipesGridDinner}</SmallDiv>
+          </BigDiv>
+          <BigDiv>
+            <SmallDiv>{RecipesSnacks}</SmallDiv>
+          </BigDiv>
+        </Wrapper>
+      </BigWrapper>
     </div>
   );
 }

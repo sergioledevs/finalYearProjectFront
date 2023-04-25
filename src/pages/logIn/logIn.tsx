@@ -1,26 +1,10 @@
-import React from 'react'
-import { useForm, SubmitHandler } from "react-hook-form";
-import { BigDiv, StyledForm } from './logIn.style';
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 
-type Inputs = {
-  height: Number,
-  weight: Number,
-  levelOfActive: String,
-  heightUnits: String,
-  weightUnits: String
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  return <button onClick={() => loginWithRedirect()}>Log In</button>;
 };
 
-
-const LogIn = () => {
-
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
-
-
-  return (
-  <div></div>
-  );
-
-}
-
-  export default LogIn;
+export default LoginButton;

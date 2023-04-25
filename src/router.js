@@ -11,6 +11,7 @@ import Recipes from "./pages/recipes/recipes";
 import UserProfile from "./pages/userProfile/userProfile";
 import TypeOfMeal from "./pages/whatMeal/typeOfMeal";
 import IndivRecipe from "./pages/indivRecipe/indivRecipe";
+import LoginButton from "./pages/logIn/logIn.tsx";
 
 export const Router = () => {
   return (
@@ -28,7 +29,7 @@ export const Router = () => {
 
         <Route path="/indivRecipe/:id" element={<IndivRecipe />} />
 
-        <Route key="logIn" path="/logIn" element={<LogIn />} />
+        <Route key="logIn" path="/logIn" element={<LoginButton />} />
 
         <Route
           key="create new user account"

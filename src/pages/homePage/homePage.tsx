@@ -92,7 +92,7 @@ function HomePage(props: StyledInputs) {
 
   useEffect(() => {
     try {
-      axios.get("http://localhost:9000/getDatabase").then((response) => {
+      axios.get("https://finalyearprojectapi.onrender.com/getDatabase").then((response) => {
         console.log(response.data);
         setInitialState(response.data);
       });
