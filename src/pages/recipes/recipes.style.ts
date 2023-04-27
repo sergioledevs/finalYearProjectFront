@@ -139,6 +139,29 @@ export const LinkDiv = styled(Link)`
   }
 `;
 
+export const LinkCalendar = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: black;
+  }
+`;
+
+export const CreateCalendarButton = styled.button`
+  position: fixed;
+  
+  bottom: 120px;
+  z-index: 2;
+  width: 130px;
+  height: 50px;
+  margin: 0;
+`;
+
 export const Description = styled.div`
   width: 100%;
   display: flex;
@@ -213,9 +236,8 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
     content: "";
     width: 1em;
     height: 1em;
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    clip-path: polygon(28% 38%, 41% 53%, 75% 24%, 86% 38%, 40% 78%, 15% 50%);
     transform: scale(0);
-    transform-origin: bottom left;
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em var(--form-control-color);
     /* Windows High Contrast Mode */
@@ -223,7 +245,7 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   }
 
   &:checked::before {
-    transform: scale(1);
+    transform: scale(1.5);
   }
 `;
 

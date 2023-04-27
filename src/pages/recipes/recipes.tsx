@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   BigDiv,
@@ -22,14 +22,21 @@ import {
   MealInfoHeader,
   Text,
   MealInfoText,
+  CreateCalendarButton,
+  LinkCalendar
 } from "./recipes.style";
 import NavBar from "../../components/navBar/navBar";
+import Calendar from "../calendar/calendar";
+import { Link } from "react-router-dom";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
   const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>([]);
   const [isHovering, setIsHovering] = React.useState(false);
   const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
+
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     try {
@@ -120,6 +127,17 @@ function Recipes(props) {
                       )
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
+                  
+                }}
+
+                onClick={()=>{
+                  isSelected ? dispatch({
+                    type: "RECIPES_DELETE",
+                    payload: recipe._id,
+                  }) :dispatch({
+                    type: "SELECTED_RECIPES",
+                    payload: recipe._id,
+                  }) ;
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
@@ -222,7 +240,7 @@ function Recipes(props) {
       proteinInLunch = (proteinIngredientAmount / 100) * proteinPerHundredGrams;
       carbsInLunch = (carbIngredientAmount / 100) * carbsPerHundredGrams;
 
-      if (recipe.typeOfMeal === "meal") {
+      if (recipe.typeOfMeal === "lunch") {
         const isSelected = selectedRecipes.includes(recipe._id);
 
         const proteinIngredientCalories =
@@ -245,6 +263,15 @@ function Recipes(props) {
                       )
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
+                }}
+                onClick={()=>{
+                  isSelected ? dispatch({
+                    type: "RECIPES_DELETE",
+                    payload: recipe._id,
+                  }) :dispatch({
+                    type: "SELECTED_RECIPES",
+                    payload: recipe._id,
+                  }) ;
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
@@ -368,6 +395,16 @@ function Recipes(props) {
                       )
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
+                }}
+
+                onClick={()=>{
+                  isSelected ? dispatch({
+                    type: "RECIPES_DELETE",
+                    payload: recipe._id,
+                  }) :dispatch({
+                    type: "SELECTED_RECIPES",
+                    payload: recipe._id,
+                  }) ;
                 }}
               />
 
@@ -500,6 +537,8 @@ function Recipes(props) {
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
                 }}
+
+                
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
                 <ImageDiv></ImageDiv>
@@ -604,6 +643,7 @@ function Recipes(props) {
             <SmallDiv>{RecipesSnacks}</SmallDiv>
           </BigDiv>
         </Wrapper>
+        <LinkCalendar to={`/calendar`}><CreateCalendarButton>Create weekly plan</CreateCalendarButton></LinkCalendar>
       </BigWrapper>
     </div>
   );

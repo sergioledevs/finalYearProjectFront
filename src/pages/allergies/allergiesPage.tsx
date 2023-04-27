@@ -16,7 +16,7 @@ function AllergiesPage(props) {
 
   useEffect(() => {
     try {
-      axios.get("http://localhost:9000/getIngredients").then((response) => {
+      axios.get("https://finalyearprojectapi.onrender.com/getIngredients").then((response) => {
         console.log(response.data);
         setInitialState(response.data);
       });

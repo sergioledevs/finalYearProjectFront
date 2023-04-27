@@ -10,10 +10,12 @@ import { Provider } from "react-redux";
 import { combineReducers } from "redux";
 import UserInfo from "./pages/homePage/home.reducer";
 import allergyReducer from "./pages/allergies/allergies.reducer";
+import selectedRecipesReducer from "./pages/recipes/recipes.reducer";
 
 const allReducers = combineReducers({
   UserInfo,
   allergyReducer,
+  selectedRecipesReducer
 });
 
 const store = createStore(
@@ -29,7 +31,7 @@ root.render(
     domain="dev-s016gihn6cxe73pi.eu.auth0.com"
     clientId="t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4"
     authorizationParams={{
-      redirect_uri: window.location.origin
+      redirect_uri: "https://cukfit.netlify.app/"
     }}
   >
         <App />
