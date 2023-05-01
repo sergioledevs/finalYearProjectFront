@@ -23,6 +23,10 @@ function NavBar(props) {
       <LinkDiv to={`/logIn`}>
       <LogIn>LogIn</LogIn>
       </LinkDiv>
+
+      <LinkDiv to={`/profile`}>
+      <LogIn>Profile</LogIn>
+      </LinkDiv>
     </Wrapper>
   );
 }

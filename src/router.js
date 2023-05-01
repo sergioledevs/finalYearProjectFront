@@ -13,6 +13,7 @@ import TypeOfMeal from "./pages/whatMeal/typeOfMeal";
 import IndivRecipe from "./pages/indivRecipe/indivRecipe";
 import LoginButton from "./pages/logIn/logIn.tsx";
 import Calendar from "./pages/calendar/calendar";
+import Profile from "./pages/profile/profile";
 
 export const Router = () => {
   return (
@@ -69,6 +70,12 @@ export const Router = () => {
           key="what ingredients is the user familiar with"
           path="/familiarIngredients"
           element={<Ingredients />}
+        />
+
+<Route
+          key="what ingredients is the user familiar with"
+          path="/profile"
+          element={<Profile />}
         />
       </Routes>
     </BrowserRouter>

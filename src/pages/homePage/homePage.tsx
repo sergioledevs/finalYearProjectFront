@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useAuth0 } from "@auth0/auth0-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import {
   BigDiv,
@@ -52,6 +52,8 @@ function HomePage(props: StyledInputs) {
   const [levelOfActive, setLevelOfActive] = React.useState("");
   const [userGoal, setUserGoal] = React.useState("");
 
+  const { user, getAccessTokenSilently } = useAuth0();
+
   const [calorieIntake, setCalorieIntake] = React.useState("");
   const [proteinIntake, setProteinIntake] = React.useState("");
   const [carbsIntake, setCarbsIntake] = React.useState("");
@@ -60,7 +62,7 @@ function HomePage(props: StyledInputs) {
 
   const navigate = useNavigate();
 
-  const handleSub = (event) => {
+  const handleSub =  async(event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -85,17 +87,41 @@ function HomePage(props: StyledInputs) {
       });
 
       navigate("/allergies");
-    }
+      try {
+        const token = await getAccessTokenSilently();
+        console.log("Token:", token);
+        const apiUrl = `https://finalyearprojectapi.onrender.com/api/user/${user?.sub}`;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const body = {
+          weight: weight,
+          height: height,
+          levelOfActivity: levelOfActive,
+          age: age,
+          fitnessGoal: userGoal,
+        };
+        console.log("Request body:", body);
+        console.log("Request config:", config);
+        const response = await axios.patch(apiUrl, body, config);
+        console.log("Response:", response.data);
+      } catch (error) {
+        console.error(error);
+      }
     //registerUser();
     setValidated(true);
   };
 
   useEffect(() => {
     try {
-      axios.get("https://finalyearprojectapi.onrender.com/getDatabase").then((response) => {
-        console.log(response.data);
-        setInitialState(response.data);
-      });
+      axios
+        .get("https://finalyearprojectapi.onrender.com/getDatabase")
+        .then((response) => {
+          console.log(response.data);
+          setInitialState(response.data);
+        });
     } catch (error) {
       console.log("");
     }
@@ -188,7 +214,8 @@ function HomePage(props: StyledInputs) {
                   size="sm"
                   value={gender}
                   isInvalid={
-                    gender=="" && validated || gender=="Select option" && validated
+                    (gender == "" && validated) ||
+                    (gender == "Select option" && validated)
                   }
                   onChange={(e) => setGender(e.target.value)}
                 >
@@ -236,7 +263,8 @@ function HomePage(props: StyledInputs) {
                   required
                   value={height}
                   isInvalid={
-                    parseInt(height) < 100 || height=="" && validated ||
+                    parseInt(height) < 100 ||
+                    (height == "" && validated) ||
                     (parseInt(height) < 100 && validated)
                   }
                   onChange={(e) => setHeight(e.target.value)}
@@ -262,7 +290,8 @@ function HomePage(props: StyledInputs) {
                   required
                   value={weight}
                   isInvalid={
-                    parseInt(weight) < 40 ||weight=="" && validated ||
+                    parseInt(weight) < 40 ||
+                    (weight == "" && validated) ||
                     (parseInt(weight) < 40 && validated)
                   }
                   onChange={(e) => setWeight(e.target.value)}
@@ -303,7 +332,8 @@ function HomePage(props: StyledInputs) {
                   size="sm"
                   value={levelOfActive}
                   isInvalid={
-                    levelOfActive == "Select option" || levelOfActive=="" && validated||
+                    levelOfActive == "Select option" ||
+                    (levelOfActive == "" && validated) ||
                     (levelOfActive == "Select option" && validated)
                   }
                   onChange={(e) => setLevelOfActive(e.target.value)}
@@ -327,7 +357,8 @@ function HomePage(props: StyledInputs) {
                   size="sm"
                   value={userGoal}
                   isInvalid={
-                    userGoal == "Select option" || userGoal=="" && validated||
+                    userGoal == "Select option" ||
+                    (userGoal == "" && validated) ||
                     (userGoal == "Select option" && validated)
                   }
                   onChange={(e) => setUserGoal(e.target.value)}
