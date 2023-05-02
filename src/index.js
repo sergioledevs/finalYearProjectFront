@@ -31,6 +31,7 @@ root.render(
         domain="dev-s016gihn6cxe73pi.eu.auth0.com"
         clientId="t7lApWOLfYunn0Yd4rOXEtG9dYnM9vM4"
         redirectUri={window.location.origin}
+        audience="https://finalyearprojectapi.onrender.com"
       >
         <App />
       </Auth0Provider>

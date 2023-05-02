@@ -52,8 +52,6 @@ function HomePage(props: StyledInputs) {
   const [levelOfActive, setLevelOfActive] = React.useState("");
   const [userGoal, setUserGoal] = React.useState("");
 
-  const { user, getAccessTokenSilently } = useAuth0();
-
   const [calorieIntake, setCalorieIntake] = React.useState("");
   const [proteinIntake, setProteinIntake] = React.useState("");
   const [carbsIntake, setCarbsIntake] = React.useState("");
@@ -62,10 +60,12 @@ function HomePage(props: StyledInputs) {
 
   const navigate = useNavigate();
 
-  const handleSub =  async(event) => {
+  const accessToken = localStorage.getItem("token");
+
+  const handleSub = async (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     } else {
       calculateCalories();
@@ -86,30 +86,27 @@ function HomePage(props: StyledInputs) {
         payload: levelOfActive,
       });
 
-      navigate("/allergies");
-      try {
-        const token = await getAccessTokenSilently();
-        console.log("Token:", token);
-        const apiUrl = `https://finalyearprojectapi.onrender.com/api/user/${user?.sub}`;
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const body = {
-          weight: weight,
-          height: height,
-          levelOfActivity: levelOfActive,
-          age: age,
-          fitnessGoal: userGoal,
-        };
-        console.log("Request body:", body);
-        console.log("Request config:", config);
-        const response = await axios.patch(apiUrl, body, config);
-        console.log("Response:", response.data);
-      } catch (error) {
-        console.error(error);
+      const userData = {
+        height,
+        weight,
+        levelOfActive,
+        age,
+        accessToken,
+      };
+
+      if (accessToken !== undefined) {
+        try {
+          const response = await axios.post(
+            "http://localhost:9000/userData",
+            userData
+          );
+          console.log(response.data);
+        } catch (error: any) {
+          console.log(error.response.data);
+        }
       }
+    }
+    navigate("/allergies");
     //registerUser();
     setValidated(true);
   };
