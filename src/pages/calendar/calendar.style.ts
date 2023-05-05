@@ -1,9 +1,22 @@
 import styled from "styled-components";
 
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+
+  overflow: hidden;
+`;
+
+
 export const CalendarTable = styled.table`
   border-collapse: collapse;
   margin: 1rem 0;
-  width: 100%;
+  width: 70%;
+  position: relative;
+  border-radius: 12px;
 
   th,
   td {

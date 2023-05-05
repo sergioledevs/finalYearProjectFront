@@ -8,6 +8,7 @@ function IndivRecipe(props) {
     _id: string;
     recipeName: string;
     ingredients: any;
+    stepsToCook:any;
   }
 
   const { id } = useParams();
@@ -35,6 +36,7 @@ function IndivRecipe(props) {
     <div>
       <h1>{recipe.recipeName}</h1>
       <p>{recipe.ingredients.map((ingredient) => ingredient.name)}</p>
+      <p>{recipe.stepsToCook.map((step)=>step)}</p>
     </div>
   );
 }

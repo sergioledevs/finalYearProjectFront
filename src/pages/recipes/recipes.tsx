@@ -23,31 +23,54 @@ import {
   Text,
   MealInfoText,
   CreateCalendarButton,
-  LinkCalendar
+  LinkCalendar,
 } from "./recipes.style";
 import NavBar from "../../components/navBar/navBar";
 import Calendar from "../calendar/calendar";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
   const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>([]);
   const [isHovering, setIsHovering] = React.useState(false);
   const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userAllergies, setUserAllergies]=React.useState<string[]>([]);
 
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     try {
-      axios.get("https://finalyearprojectapi.onrender.com/getRecipes").then((response) => {
-        //console.log(response.data);
-        setInitialState(response.data);
-      });
+      axios
+        .get("https://finalyearprojectapi.onrender.com/getRecipes")
+        .then((response) => {
+          setInitialState(response.data);
+        });
     } catch (error) {
-      //console.log("");
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   }, []);
+
+  const token= localStorage.getItem("token")
+
+  const fetchCalendarData = async () => {
+    if(token!=null){
+    try {
+      const response = await axios.get(
+        "http://localhost:9000/getAllergies",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUserAllergies(response.data.data.allergicTo);
+    } catch (err: any) {
+      console.log(err.response.data.message);
+    } 
+  }
+  };
 
   let carbsInBreakfast;
   let proteinInBreakfast;
@@ -61,14 +84,23 @@ function Recipes(props) {
   const RecipesBreakfastGrid = initialState
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
-      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
-        ...ingredient.contains,
-        ingredient.name,
-      ]);
-      const contains = props.allergyState.some((allergy) =>
-        allergyIngredients.includes(allergy.toLowerCase())
+      fetchCalendarData()
+      const allergyIngredients = recipe.allergens?.flatMap(
+        (ingredient) => ingredient
       );
-      return !contains;
+      const contains = props.allergyState.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
+
+      const userLoggedContains= userAllergies.some((allergy) =>
+      allergyIngredients?.includes(allergy.toLowerCase())
+    );
+
+      if(token!=null){
+        return !userLoggedContains
+      }else{
+      return !contains
+      }
     })
     .map((recipe: any) => {
       const proteinIngredientAmounts = recipe.ingredients.map(
@@ -127,17 +159,17 @@ function Recipes(props) {
                       )
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
-                  
                 }}
-
-                onClick={()=>{
-                  isSelected ? dispatch({
-                    type: "RECIPES_DELETE",
-                    payload: recipe._id,
-                  }) :dispatch({
-                    type: "SELECTED_RECIPES",
-                    payload: recipe._id,
-                  }) ;
+                onClick={() => {
+                  isSelected
+                    ? dispatch({
+                        type: "RECIPES_DELETE",
+                        payload: recipe._id,
+                      })
+                    : dispatch({
+                        type: "SELECTED_RECIPES",
+                        payload: recipe._id,
+                      });
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
@@ -150,7 +182,9 @@ function Recipes(props) {
                       : [...selectedRecipes, recipe._id];
                     setSelectedRecipes(newSelectedRecipes);
                   }}
-                ></ImageDiv>
+                >
+                  <img src={recipe?.image} alt="image"></img>
+                </ImageDiv>
               </LinkDiv>
             </RecipeCard>
 
@@ -198,14 +232,23 @@ function Recipes(props) {
   const RecipesGridLunch = initialState
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
-      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
-        ...ingredient.contains,
-        ingredient.name,
-      ]);
-      const contains = props.allergyState.some((allergy) =>
-        allergyIngredients.includes(allergy.toLowerCase())
+      fetchCalendarData()
+      const allergyIngredients = recipe.allergens?.flatMap(
+        (ingredient) => ingredient
       );
-      return !contains;
+      const contains = props.allergyState.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
+
+      const userLoggedContains= userAllergies.some((allergy) =>
+      allergyIngredients?.includes(allergy.toLowerCase())
+    );
+
+      if(token!=null){
+        return !userLoggedContains
+      }else{
+      return !contains
+      }
     })
     .map((recipe: any) => {
       const proteinIngredientAmounts = recipe.ingredients.map(
@@ -264,14 +307,16 @@ function Recipes(props) {
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
                 }}
-                onClick={()=>{
-                  isSelected ? dispatch({
-                    type: "RECIPES_DELETE",
-                    payload: recipe._id,
-                  }) :dispatch({
-                    type: "SELECTED_RECIPES",
-                    payload: recipe._id,
-                  }) ;
+                onClick={() => {
+                  isSelected
+                    ? dispatch({
+                        type: "RECIPES_DELETE",
+                        payload: recipe._id,
+                      })
+                    : dispatch({
+                        type: "SELECTED_RECIPES",
+                        payload: recipe._id,
+                      });
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
@@ -284,7 +329,9 @@ function Recipes(props) {
                       : [...selectedRecipes, recipe._id];
                     setSelectedRecipes(newSelectedRecipes);
                   }}
-                ></ImageDiv>
+                >
+                  <img src={recipe?.image} alt="image"></img>
+                </ImageDiv>
               </LinkDiv>
             </RecipeCard>
 
@@ -322,14 +369,23 @@ function Recipes(props) {
   const RecipesGridDinner = initialState
     // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
-      // Check if the recipe contains any ingredients the user is allergic to
-      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
-        ...ingredient.contains,
-        ingredient.name,
-      ]);
-      return !props.allergyState.some((allergy) =>
-        allergyIngredients.includes(allergy.toLowerCase())
+      fetchCalendarData()
+      const allergyIngredients = recipe.allergens?.flatMap(
+        (ingredient) => ingredient
       );
+      const contains = props.allergyState.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
+
+      const userLoggedContains= userAllergies.some((allergy) =>
+      allergyIngredients?.includes(allergy.toLowerCase())
+    );
+
+      if(token!=null){
+        return !userLoggedContains
+      }else{
+      return !contains
+      }
     })
     // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
@@ -396,15 +452,16 @@ function Recipes(props) {
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
                 }}
-
-                onClick={()=>{
-                  isSelected ? dispatch({
-                    type: "RECIPES_DELETE",
-                    payload: recipe._id,
-                  }) :dispatch({
-                    type: "SELECTED_RECIPES",
-                    payload: recipe._id,
-                  }) ;
+                onClick={() => {
+                  isSelected
+                    ? dispatch({
+                        type: "RECIPES_DELETE",
+                        payload: recipe._id,
+                      })
+                    : dispatch({
+                        type: "SELECTED_RECIPES",
+                        payload: recipe._id,
+                      });
                 }}
               />
 
@@ -419,7 +476,9 @@ function Recipes(props) {
                       : [...selectedRecipes, recipe._id];
                     setSelectedRecipes(newSelectedRecipes);
                   }}
-                ></ImageDiv>
+                >
+                  <img src={recipe?.image} alt="image"></img>
+                </ImageDiv>
               </LinkDiv>
             </RecipeCard>
             <Description
@@ -459,13 +518,23 @@ function Recipes(props) {
     // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
-      const allergyIngredients = recipe.ingredients.flatMap((ingredient) => [
-        ...ingredient.contains,
-        ingredient.name,
-      ]);
-      return !props.allergyState.some((allergy) =>
-        allergyIngredients.includes(allergy.toLowerCase())
+      fetchCalendarData()
+      const allergyIngredients = recipe.allergens?.flatMap(
+        (ingredient) => ingredient
       );
+      const contains = props.allergyState.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
+
+      const userLoggedContains= userAllergies.some((allergy) =>
+      allergyIngredients?.includes(allergy.toLowerCase())
+    );
+
+      if(token!=null){
+        return !userLoggedContains
+      }else{
+      return !contains
+      }
     })
     // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
@@ -499,7 +568,7 @@ function Recipes(props) {
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
       //if it is a meal, display the recipe
-      if (recipe.typeOfMeal === "snack") {
+      if (recipe.typeOfMeal === "snacks") {
         // Calculate the recommended amount of protein and carbs to consume
         const proteinIngredientAmount = Math.round(
           (props.proteinIntake * 0.1 * 100) / proteinPerHundredGrams
@@ -537,11 +606,11 @@ function Recipes(props) {
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
                 }}
-
-                
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-                <ImageDiv></ImageDiv>
+                <ImageDiv>
+                  <img src={recipe?.image} alt="image"></img>
+                </ImageDiv>
               </LinkDiv>
             </RecipeCard>
             <Description
@@ -577,6 +646,20 @@ function Recipes(props) {
       }
     });
 
+    const postCalendar = () => {
+        const token = localStorage.getItem('token');
+        if(token!=null){
+        axios.post("http://localhost:9000/saveCalendarData", {
+          selectedRecipes: selectedRecipes,
+          token: token
+        }).then((response) => {
+          console.log("Calendar data saved:", response.data);
+        }).catch((error:any) => {
+          console.log("Error saving calendar data:", error);
+        });
+        }
+    }
+
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
   const toggleDropdown = () => {
@@ -585,66 +668,77 @@ function Recipes(props) {
   return (
     <div>
       <NavBar></NavBar>
-      <BigWrapper>
-        <FloatingText onClick={toggleDropdown}>
-          See your daily requirementes
-        </FloatingText>
-        <DropdownMenu visible={dropdownVisible}>
-          <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
-          <p>Protein: {Math.round(props?.proteinIntake)}g</p>
-          <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
-        </DropdownMenu>
-        <Text onClick={toggleDropdown} visible={dropdownVisible}>
-          <p>Hide requirements</p>
-        </Text>
-        <Header>
-          <p>Breakfast</p>
-          <p>Lunch</p>
-          <p>Dinner</p>
-          <p>Snacks</p>
-        </Header>
-        <MealInfoHeader>
-          <MealInfo>
-            <MealInfoText>
-              {"Protein in breakfast: " + proteinInBreakfast?.toFixed(0) + "g"}
-            </MealInfoText>
-            <MealInfoText>
-              {"Carbs in breakfast: " + carbsInBreakfast?.toFixed(0) + "g"}
-            </MealInfoText>
-          </MealInfo>
-          <MealInfo>
-            <MealInfoText>
-              {"Protein in lunch: " + proteinInLunch?.toFixed(0) + "g"}
-            </MealInfoText>
-            <MealInfoText>
-              {"Carbs in lunch: " + carbsInLunch?.toFixed(0) + "g"}
-            </MealInfoText>
-          </MealInfo>
-          <MealInfo>
-            <MealInfoText>
-              {"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}
-            </MealInfoText>
-            <MealInfoText>
-              {"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}
-            </MealInfoText>
-          </MealInfo>
-        </MealInfoHeader>
-        <Wrapper>
-          <BigDiv>
-            <SmallDiv>{RecipesBreakfastGrid}</SmallDiv>
-          </BigDiv>
-          <BigDiv>
-            <SmallDiv>{RecipesGridLunch}</SmallDiv>
-          </BigDiv>
-          <BigDiv>
-            <SmallDiv>{RecipesGridDinner}</SmallDiv>
-          </BigDiv>
-          <BigDiv>
-            <SmallDiv>{RecipesSnacks}</SmallDiv>
-          </BigDiv>
-        </Wrapper>
-        <LinkCalendar to={`/calendar`}><CreateCalendarButton>Create weekly plan</CreateCalendarButton></LinkCalendar>
-      </BigWrapper>
+      {loading || initialState.length === 0 ? (
+        <BigDiv>
+          <p>Loading...</p>
+        </BigDiv>
+      ) : (
+        <BigWrapper>
+          <FloatingText onClick={toggleDropdown}>
+            See your daily requirementes
+          </FloatingText>
+          <DropdownMenu visible={dropdownVisible}>
+            <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
+            <p>Protein: {Math.round(props?.proteinIntake)}g</p>
+            <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
+          </DropdownMenu>
+          <Text onClick={toggleDropdown} visible={dropdownVisible}>
+            <p>Hide requirements</p>
+          </Text>
+
+          <Header>
+            <p>Breakfast</p>
+            <p>Lunch</p>
+            <p>Dinner</p>
+            <p>Snacks</p>
+          </Header>
+          <MealInfoHeader>
+            <MealInfo>
+              <MealInfoText>
+                {"Protein in breakfast: " +
+                  proteinInBreakfast?.toFixed(0) +
+                  "g"}
+              </MealInfoText>
+              <MealInfoText>
+                {"Carbs in breakfast: " + carbsInBreakfast?.toFixed(0) + "g"}
+              </MealInfoText>
+            </MealInfo>
+            <MealInfo>
+              <MealInfoText>
+                {"Protein in lunch: " + proteinInLunch?.toFixed(0) + "g"}
+              </MealInfoText>
+              <MealInfoText>
+                {"Carbs in lunch: " + carbsInLunch?.toFixed(0) + "g"}
+              </MealInfoText>
+            </MealInfo>
+            <MealInfo>
+              <MealInfoText>
+                {"Protein in dinner: " + proteinInDinner?.toFixed(0) + "g"}
+              </MealInfoText>
+              <MealInfoText>
+                {"Carbs in dinner: " + carbsInDinner?.toFixed(0) + "g"}
+              </MealInfoText>
+            </MealInfo>
+          </MealInfoHeader>
+          <Wrapper>
+            <BigDiv>
+              <SmallDiv>{RecipesBreakfastGrid}</SmallDiv>
+            </BigDiv>
+            <BigDiv>
+              <SmallDiv>{RecipesGridLunch}</SmallDiv>
+            </BigDiv>
+            <BigDiv>
+              <SmallDiv>{RecipesGridDinner}</SmallDiv>
+            </BigDiv>
+            <BigDiv>
+              <SmallDiv>{RecipesSnacks}</SmallDiv>
+            </BigDiv>
+          </Wrapper>
+          <LinkCalendar to={`/calendar`}>
+            <CreateCalendarButton onClick={postCalendar}>Create weekly plan</CreateCalendarButton>
+          </LinkCalendar>
+        </BigWrapper>
+      )}
     </div>
   );
 }

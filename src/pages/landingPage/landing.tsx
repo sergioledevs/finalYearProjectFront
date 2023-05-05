@@ -8,9 +8,16 @@ import {
   Container,
   GradientOverlay,
   Content,
+  Rectangle1,
+  Rectangle2,
+  Rectangle3,
 } from "./landing.style";
 
+import { useRef, useEffect } from "react";
+
 import NavBar from "../../components/navBar/navBar";
+import FeaturePage from "../../components/featuresSection/features";
+import Footer from "../../components/footer/footer";
 
 function Landing() {
   const navigate = useNavigate();
@@ -20,28 +27,26 @@ function Landing() {
 
   return (
     <Container>
-            <NavBar></NavBar>
-      <BigDiv>
+      <NavBar></NavBar>
 
+      <BigDiv>
         <Content>
-          <Slogan>Gains are made in the kitchen</Slogan>
+          <Slogan>
+            Gains are made <br></br>in the kitchen
+          </Slogan>
           <SloganDescription>
-            We personalise your recipes according to your <br></br>
-            fitness goal
+            CUKFIT will adapt food recipes to your <br></br>
+            specific requirements and goals, from gaining weight <br></br> to
+            losing it, as well as staying healthy fitness goal
           </SloganDescription>
           <GradientButton onClick={handleSub}>Start cooking</GradientButton>
         </Content>
-        <GradientOverlay></GradientOverlay>
+        <Rectangle1></Rectangle1>
+        <Rectangle2></Rectangle2>
+        <Rectangle3></Rectangle3>
       </BigDiv>
-      <h1>hello</h1>
-      <h1>hello</h1>
-      <h1>hello</h1>
-
-      <h1>hello</h1>
-      <h1>hello</h1>
-      <h1>hello</h1>
-      <h1>hello</h1>
-      <h1>hello</h1>
+      <FeaturePage></FeaturePage>
+      <Footer></Footer>
     </Container>
   );
 }

@@ -14,6 +14,7 @@ import IndivRecipe from "./pages/indivRecipe/indivRecipe";
 import LoginButton from "./pages/logIn/logIn.tsx";
 import Calendar from "./pages/calendar/calendar";
 import Profile from "./pages/profile/profile";
+import RegistrationForm from "./pages/register/register";
 
 export const Router = () => {
   return (
@@ -25,20 +26,13 @@ export const Router = () => {
           element={<AllergiesPage />}
         />
 
-        <Route key="homepage"
-         path="/home" 
-         element={<HomePage />} />
+        <Route key="homepage" path="/home" element={<HomePage />} />
 
-        <Route key="homepage" 
-        path="/" 
-        element={<Landing />} />
+        <Route key="homepage" path="/" element={<Landing />} />
 
-        <Route path="/indivRecipe/:id" 
-        element={<IndivRecipe />} />
+        <Route path="/indivRecipe/:id" element={<IndivRecipe />} />
 
-        <Route key="logIn" 
-        path="/logIn" 
-        element={<LoginButton />} />
+        <Route key="logIn" path="/logIn" element={<LoginButton />} />
 
         <Route
           key="create new user account"
@@ -46,13 +40,9 @@ export const Router = () => {
           element={<CreateAccount />}
         />
 
-        <Route key="list of recipes" 
-        path="/recipes" 
-        element={<Recipes />} />
+        <Route key="list of recipes" path="/recipes" element={<Recipes />} />
 
-        <Route key="list of recipes" 
-        path="/calendar" 
-        element={<Calendar />} />
+        <Route key="list of recipes" path="/calendar" element={<Calendar />} />
 
         <Route
           key="user profile"
@@ -72,10 +62,16 @@ export const Router = () => {
           element={<Ingredients />}
         />
 
-<Route
+        <Route
           key="what ingredients is the user familiar with"
           path="/profile"
           element={<Profile />}
+        />
+
+        <Route
+          key="register new profile"
+          path="/register"
+          element={<RegistrationForm />}
         />
       </Routes>
     </BrowserRouter>

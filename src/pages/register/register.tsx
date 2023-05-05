@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import { Label, Form, Input, Button, Wrapper } from "./register.styled";
 
 
 import axios from "axios";
+import NavBar from "../../components/navBar/navBar";
 
 function RegistrationForm() {
   const [email, setEmail] = useState("");
@@ -23,36 +25,37 @@ function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <Wrapper>
+      <NavBar></NavBar>
+    <Form onSubmit={handleSubmit}>
+      <Label>
         Email:
-        <input
+        <Input
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
-      </label>
-      <br />
-      <label>
+      </Label>
+      <Label>
         Password:
-        <input
+        <Input
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-      </label>
-      <br />
-      <label>
+      </Label>
+      <Label>
         Confirm Password:
-        <input
+        <Input
           type="password"
           value={confirmPassword}
+          placeholder="hello"
           onChange={(event) => setConfirmPassword(event.target.value)}
         />
-      </label>
-      <br />
-      <button type="submit">Register</button>
-    </form>
+      </Label>
+      <Button type="submit">Register</Button>
+    </Form>
+    </Wrapper>
   );
 }
   export default RegistrationForm

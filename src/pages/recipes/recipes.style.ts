@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
+margin-bottom: 100px;
 
   overflow: hidden;
 `;
@@ -23,6 +24,7 @@ export const BigWrapper = styled.div`
   height: 100%;
   background-color: #fffff5;
 
+  
   overflow: hidden;
 `;
 
@@ -63,6 +65,7 @@ export const Div2 = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 
   overflow-y: scroll;
 
@@ -72,6 +75,7 @@ export const Div2 = styled.div`
 `;
 
 export const SmallDiv = styled.div`
+margin-bottom: 200px;
   .selected {
     display: flex;
     justify-content: center;
@@ -116,6 +120,7 @@ export const SmallDiv = styled.div`
 `;
 
 export const RecipeCard = styled.div`
+position: relative;
   .notVisible {
     opacity: 1; /* Initially hide the description */
   }
@@ -187,6 +192,13 @@ export const MealInfoText = styled.p`
 export const ImageDiv = styled.div`
   height: 100%;
   width: 100%;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+  }
 `;
 
 export const RecipeTitle = styled.h2`
@@ -217,6 +229,10 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   background-color: var(--form-background);
   /* Not removed via appearance */
   margin: 0;
+
+  position: absolute;
+  z-index: 1;
+  top: 0;
 
   font: inherit;
   color: currentColor;
