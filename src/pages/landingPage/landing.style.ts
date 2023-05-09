@@ -1,4 +1,7 @@
 import styled, { keyframes } from "styled-components";
+import girlExercising from "../../media/girl_exercising.jpeg"
+import nutritionist from "../../media/nutritionist.jpeg"
+import cooking from "../../media/cooking.jpeg"
 
 
 export const Container = styled.div`
@@ -6,8 +9,6 @@ scroll-behavior: smooth;
 `;
 
 export const Section = styled.section`
-
-  
 
 `;
 
@@ -24,11 +25,13 @@ export const BigDiv = styled.div`
   align-items: start;
   justify-content: center;
   height: 100vh;
- 
-  @media (max-width: 768px) {
-    align-items: center;
-    margin: 0 auto;
-    width: 80%;
+
+  @media screen and (max-width: 768px) {
+    /* styles for tablet screens */
+  }
+
+  @media screen and (max-width: 480px) {
+    /* styles for mobile screens */
   }
 `;
 
@@ -39,7 +42,10 @@ export const Rectangle1 = styled.div`
   left: 970px;
   top: 355px;
 
-  background: url(image.png);
+  background-image: url(${girlExercising});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 `;
@@ -51,7 +57,10 @@ export const Rectangle2 = styled.div`
   left: 1239px;
   top: 270px;
 
-  background: url(image.png);
+  background-image: url(${nutritionist});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 `;
@@ -63,7 +72,10 @@ export const Rectangle3 = styled.div`
   left: 1508px;
   top: 355px;
 
-  background: url(image.png);
+  background-image: url(${cooking});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 `;

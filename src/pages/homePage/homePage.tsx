@@ -4,17 +4,20 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import {
   BigDiv,
   FormDiv,
-  FormField,
-  FormGroup2,
   StyledForm,
   StyledInput,
   WeightInputGroupTextLeft,
   InputFormControl,
   WeightInputGroupTextRight,
   InputGroupCustom,
+  InputFormSelect,
+  AgeFormControl,
+  ChefIcon,
+  RunnerIcon,
 } from "./home.style";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
+import Form2 from "../whatMeal/typeOfMeal"
 import Button from "react-bootstrap/Button";
 import { FormGroup } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -24,6 +27,10 @@ import { useEffect } from "react";
 import { userWeight } from "./home.actions";
 
 import NavBar from "../../components/navBar/navBar";
+import { GradientButton } from "../landingPage/landing.style";
+import chef from "../../media/icons/Chef_Flatline.png"
+import runner from "../../media/icons/Fitness_Flatline.png"
+import { FeatureTitle } from "../../components/featuresSection/features.styles";
 
 type StyledInputs = {
   height: Number;
@@ -52,9 +59,9 @@ function HomePage(props: StyledInputs) {
   const [levelOfActive, setLevelOfActive] = React.useState("");
   const [userGoal, setUserGoal] = React.useState("");
 
-  const [calorieIntake, setCalorieIntake] = React.useState("");
-  const [proteinIntake, setProteinIntake] = React.useState("");
-  const [carbsIntake, setCarbsIntake] = React.useState("");
+  var [calorieIntake, setCalorieIntake] = React.useState("");
+  var [proteinIntake, setProteinIntake] = React.useState("0");
+  var [carbsIntake, setCarbsIntake] = React.useState("0");
 
   const [initialState, setInitialState] = React.useState([]);
 
@@ -67,6 +74,8 @@ function HomePage(props: StyledInputs) {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
+
+      console.log("check validity false");
     } else {
       calculateCalories();
       dispatch({
@@ -86,12 +95,17 @@ function HomePage(props: StyledInputs) {
         payload: levelOfActive,
       });
 
+      console.log("check validity true");
+
       const userData = {
         height,
         weight,
         levelOfActive,
         age,
         accessToken,
+        calorieIntake,
+        proteinIntake,
+        carbsIntake,
       };
 
       if (accessToken !== undefined) {
@@ -105,8 +119,9 @@ function HomePage(props: StyledInputs) {
           console.log(error.response.data);
         }
       }
+      navigate("/allergies");
     }
-    navigate("/allergies");
+
     //registerUser();
     setValidated(true);
   };
@@ -123,19 +138,6 @@ function HomePage(props: StyledInputs) {
       console.log("");
     }
   }, []);
-
-  async function registerUser() {
-    try {
-      await axios.post("http://localhost:9000/getDatabase", {
-        height,
-        weight,
-        levelOfActive,
-        age,
-      });
-    } catch (error: any) {
-      console.log(error.response.data);
-    }
-  }
 
   const calculateCalories = () => {
     //https://www.omnicalculator.com/health/bmr-harris-benedict-equation#:~:text=It%20needs%20your%20age%2C%20weight,%2D%20(6.75%20%C3%97%20age)%20.
@@ -156,7 +158,7 @@ function HomePage(props: StyledInputs) {
       5.003 * parseInt(height) -
       6.75 * parseInt(age);
 
-    var totalCalorieIntake = equation * levelOfActivityMultiplier; //multiply user info by their level of activity
+    calorieIntake = String(equation * levelOfActivityMultiplier); //multiply user info by their level of activity
 
     var proteinMultiplier; //calculate protein
     if (userGoal == "Bulk") {
@@ -167,20 +169,19 @@ function HomePage(props: StyledInputs) {
       proteinMultiplier = 1.4;
     }
 
-    var proteinIntake = parseInt(weight) * proteinMultiplier;
+    proteinIntake = String(parseInt(weight) * proteinMultiplier);
 
-    var carbsIntake; //calculate carbs
     if (userGoal == "Bulk") {
-      carbsIntake = totalCalorieIntake * 0.6 * 0.13; //if bulking, 60% of calories are carbs, which then convert to grams
+      carbsIntake = String(parseInt(calorieIntake) * 0.6 * 0.13); //if bulking, 60% of calories are carbs, which then convert to grams
     } else if (userGoal == "Lose weight") {
-      carbsIntake = totalCalorieIntake * 0.4 * 0.13; //if losing weight, 40% of calories are carbs
+      carbsIntake = String(parseInt(calorieIntake) * 0.4 * 0.13); //if losing weight, 40% of calories are carbs
     } else if (userGoal == "Mantain weight") {
-      carbsIntake = totalCalorieIntake * 0.55 * 0.13; //if mantaining weight, 55% of calories are carbs
+      carbsIntake = String(parseInt(calorieIntake) * 0.55 * 0.13); //if mantaining weight, 55% of calories are carbs
     }
 
     dispatch({
       type: "CALORIES_INTAKE",
-      payload: totalCalorieIntake,
+      payload: calorieIntake,
     });
 
     dispatch({
@@ -193,21 +194,23 @@ function HomePage(props: StyledInputs) {
       payload: carbsIntake,
     });
 
-    return totalCalorieIntake;
+    return calorieIntake;
   };
 
   return (
     <div>
       <NavBar></NavBar>
+      
       <BigDiv>
+      <FeatureTitle>Step 1 of 2</FeatureTitle>
         <FormDiv>
           <StyledForm noValidate validated={validated} onSubmit={handleSub}>
             <FormGroup>
-              <InputGroup className="mb-3">
-                <InputGroup.Text id="inputGroup-sizing-default">
+              <InputGroupCustom className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
                   Gender
-                </InputGroup.Text>
-                <Form.Select
+                </WeightInputGroupTextRight>
+                <InputFormSelect
                   size="sm"
                   value={gender}
                   isInvalid={
@@ -219,33 +222,11 @@ function HomePage(props: StyledInputs) {
                   <option>Select option</option>
                   <option>Male</option>
                   <option>Female</option>
-                </Form.Select>
+                </InputFormSelect>
                 <Form.Control.Feedback type="invalid">
                   Select your gender
                 </Form.Control.Feedback>
-              </InputGroup>
-
-              {/*<InputGroup>
-                <FormGroup2>
-                  <span>Height</span>
-                  <InputFormControl
-                    value={height}
-                    required
-                    onChange={(e) => setHeight(e.target.value)}
-                    type="text"
-                    isInvalid={
-                      parseInt(height) < 100 ||
-                      (parseInt(height) < 100 && validated)
-                    }
-                    placeholder="domain.tld"
-                  ></InputFormControl>
-                  <span>Cm</span>
-                  
-                </FormGroup2>
-                <Form.Control.Feedback type="invalid">
-                    Please introduce your height.
-                  </Form.Control.Feedback>
-                  </InputGroup>*/}
+              </InputGroupCustom>
 
               <InputGroupCustom className="mb-3">
                 <WeightInputGroupTextRight id="inputGroup-sizing-default">
@@ -261,8 +242,10 @@ function HomePage(props: StyledInputs) {
                   value={height}
                   isInvalid={
                     parseInt(height) < 100 ||
+                    parseInt(height) > 230 ||
                     (height == "" && validated) ||
-                    (parseInt(height) < 100 && validated)
+                    (parseInt(height) < 100 && validated) ||
+                    (parseInt(height) > 230 && validated)
                   }
                   onChange={(e) => setHeight(e.target.value)}
                 />
@@ -271,15 +254,15 @@ function HomePage(props: StyledInputs) {
                 </WeightInputGroupTextLeft>
 
                 <Form.Control.Feedback type="invalid">
-                  Height has to be bigger than 100cm
+                  Height has to be bigger than 100cm and smaller than 230cm
                 </Form.Control.Feedback>
               </InputGroupCustom>
 
-              <InputGroup hasValidation className="mb-3">
-                <InputGroup.Text id="inputGroup-sizing-default">
+              <InputGroupCustom hasValidation className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
                   Weight
-                </InputGroup.Text>
-                <Form.Control
+                </WeightInputGroupTextRight>
+                <InputFormControl
                   type="number"
                   aria-label="Height"
                   aria-describedby="inputGroup-sizing-default"
@@ -293,39 +276,41 @@ function HomePage(props: StyledInputs) {
                   }
                   onChange={(e) => setWeight(e.target.value)}
                 />
-                <InputGroup.Text id="inputGroup-sizing-default">
+                <WeightInputGroupTextLeft id="inputGroup-sizing-default">
                   Kg
-                </InputGroup.Text>
+                </WeightInputGroupTextLeft>
                 <Form.Control.Feedback type="invalid">
                   Weight has to be bigger than 40kg
                 </Form.Control.Feedback>
-              </InputGroup>
+              </InputGroupCustom>
 
-              <InputGroup hasValidation className="mb-3">
-                <InputGroup.Text id="inputGroup-sizing-default">
+              <InputGroupCustom hasValidation className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
                   Age
-                </InputGroup.Text>
-                <Form.Control
+                </WeightInputGroupTextRight>
+                <AgeFormControl
                   type="number"
                   aria-label="Height"
                   aria-describedby="inputGroup-sizing-default"
                   required
                   value={age}
                   isInvalid={
-                    parseInt(age) < 12 || (parseInt(age) < 12 && validated)
+                    parseInt(age) < 12 ||
+                    (parseInt(age) < 12 && validated) ||
+                    (age == "" && validated)
                   }
                   onChange={(e) => setAge(e.target.value)}
                 />
                 <Form.Control.Feedback type="invalid">
                   Have to be older than 12
                 </Form.Control.Feedback>
-              </InputGroup>
+              </InputGroupCustom>
 
-              <InputGroup className="mb-3">
-                <InputGroup.Text id="inputGroup-sizing-default">
+              <InputGroupCustom className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
                   Level of Activity
-                </InputGroup.Text>
-                <Form.Select
+                </WeightInputGroupTextRight>
+                <InputFormSelect
                   size="sm"
                   value={levelOfActive}
                   isInvalid={
@@ -334,23 +319,24 @@ function HomePage(props: StyledInputs) {
                     (levelOfActive == "Select option" && validated)
                   }
                   onChange={(e) => setLevelOfActive(e.target.value)}
+                  required
                 >
                   <option>Select option</option>
                   <option>No exercise</option>
                   <option>Exercise 1-2 times a week</option>
                   <option>Exercise 3-4 times a week</option>
                   <option>Exercise 5-7 times a week</option>
-                </Form.Select>
+                </InputFormSelect>
                 <Form.Control.Feedback type="invalid">
                   Select a level of activity
                 </Form.Control.Feedback>
-              </InputGroup>
+              </InputGroupCustom>
 
-              <InputGroup className="mb-3">
-                <InputGroup.Text id="inputGroup-sizing-default">
+              <InputGroupCustom className="mb-3">
+                <WeightInputGroupTextRight id="inputGroup-sizing-default">
                   Fitness goal
-                </InputGroup.Text>
-                <Form.Select
+                </WeightInputGroupTextRight>
+                <InputFormSelect
                   size="sm"
                   value={userGoal}
                   isInvalid={
@@ -359,21 +345,28 @@ function HomePage(props: StyledInputs) {
                     (userGoal == "Select option" && validated)
                   }
                   onChange={(e) => setUserGoal(e.target.value)}
+                  required
                 >
                   <option>Select option</option>
                   <option>Mantain weight</option>
                   <option>Bulk</option>
                   <option>Lose weight</option>
-                </Form.Select>
+                </InputFormSelect>
                 <Form.Control.Feedback type="invalid">
                   Select your goal
                 </Form.Control.Feedback>
-              </InputGroup>
+              </InputGroupCustom>
             </FormGroup>
-            <Button type="submit">Submit form</Button>
+            <GradientButton type="submit" style={{ marginTop: "40px" }}>
+              Continue
+            </GradientButton>
           </StyledForm>
         </FormDiv>
+        <Form2></Form2>
       </BigDiv>
+      <ChefIcon src={chef}></ChefIcon>
+      <RunnerIcon src={runner}></RunnerIcon>
+      
     </div>
   );
 }

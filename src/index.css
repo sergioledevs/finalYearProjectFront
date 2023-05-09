@@ -36,3 +36,8 @@ code {
   font-family: "InterSemi";
   src: url("../src/media/fonts/Inter-SemiBold.ttf") format("truetype");
 }
+
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

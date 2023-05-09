@@ -28,11 +28,10 @@ function Landing() {
   return (
     <Container>
       <NavBar></NavBar>
-
       <BigDiv>
         <Content>
           <Slogan>
-            Gains are made <br></br>in the kitchen
+            Your free online<br></br> nutritionist
           </Slogan>
           <SloganDescription>
             CUKFIT will adapt food recipes to your <br></br>

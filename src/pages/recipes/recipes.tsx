@@ -29,6 +29,7 @@ import NavBar from "../../components/navBar/navBar";
 import Calendar from "../calendar/calendar";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Footer from "../../components/footer/footer";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
@@ -36,9 +37,44 @@ function Recipes(props) {
   const [isHovering, setIsHovering] = React.useState(false);
   const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
   const [loading, setLoading] = useState(true);
-  const [userAllergies, setUserAllergies]=React.useState<string[]>([]);
+  const [userAllergies, setUserAllergies] = React.useState<string[]>([]);
 
   const dispatch = useDispatch();
+
+  const fetchAllergies = async () => {
+    if (token != null) {
+      try {
+        const response = await axios.get("http://localhost:9000/getAllergies", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserAllergies(response.data.data.allergicTo);
+      } catch (err: any) {
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
+  const [calorieIntake, setCalorieIntake] = useState("");
+  const [carbsIntake, setCarbsIntake] = useState("");
+  const [proteinIntake, setProteinIntake] = useState("");
+
+  useEffect(() => {
+    async function fetchData() {
+      if (token != null) {
+        try {
+          const response = await axios.get("http://localhost:9000/userData", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setCalorieIntake(response.data.data.calorieIntake);
+          setCarbsIntake(response.data.data.carbsIntake);
+          setProteinIntake(response.data.data.proteinIntake);
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        }
+      }
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     try {
@@ -54,23 +90,11 @@ function Recipes(props) {
     }
   }, []);
 
-  const token= localStorage.getItem("token")
+  useEffect(() => {
+    fetchAllergies();
+  }, []);
 
-  const fetchCalendarData = async () => {
-    if(token!=null){
-    try {
-      const response = await axios.get(
-        "http://localhost:9000/getAllergies",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUserAllergies(response.data.data.allergicTo);
-    } catch (err: any) {
-      console.log(err.response.data.message);
-    } 
-  }
-  };
+  const token = localStorage.getItem("token");
 
   let carbsInBreakfast;
   let proteinInBreakfast;
@@ -84,7 +108,6 @@ function Recipes(props) {
   const RecipesBreakfastGrid = initialState
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
-      fetchCalendarData()
       const allergyIngredients = recipe.allergens?.flatMap(
         (ingredient) => ingredient
       );
@@ -92,14 +115,14 @@ function Recipes(props) {
         allergyIngredients?.includes(allergy.toLowerCase())
       );
 
-      const userLoggedContains= userAllergies.some((allergy) =>
-      allergyIngredients?.includes(allergy.toLowerCase())
-    );
+      const userLoggedContains = userAllergies.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
 
-      if(token!=null){
-        return !userLoggedContains
-      }else{
-      return !contains
+      if (token != null) {
+        return !userLoggedContains;
+      } else {
+        return !contains;
       }
     })
     .map((recipe: any) => {
@@ -126,12 +149,27 @@ function Recipes(props) {
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
       if (recipe.typeOfMeal === "breakfast") {
-        const proteinIngredientAmount = Math.round(
-          (props.proteinIntake * 0.15 * 100) / proteinPerHundredGrams
-        );
-        const carbIngredientAmount = Math.round(
-          (props.carbsIntake * 0.15 * 100) / carbsPerHundredGrams
-        );
+        var proteinIngredientAmount = 0;
+        var carbIngredientAmount = 0;
+
+        //use requierements if user is logged in
+        if (token != null) {
+          proteinIngredientAmount = Math.round(
+            (parseInt(proteinIntake) * 0.15 * 100) / proteinPerHundredGrams
+          );
+          carbIngredientAmount = Math.round(
+            (parseInt(carbsIntake) * 0.15 * 100) / carbsPerHundredGrams
+          );
+        } else {
+          proteinIngredientAmount = Math.round(
+            (props.proteinIntake * 0.15 * 100) / proteinPerHundredGrams
+          );
+          carbIngredientAmount = Math.round(
+            (props.carbsIntake * 0.15 * 100) / carbsPerHundredGrams
+          );
+        }
+
+        Math.round((props.carbsIntake * 0.15 * 100) / carbsPerHundredGrams);
 
         proteinInBreakfast =
           (proteinIngredientAmount / 100) * proteinPerHundredGrams;
@@ -232,7 +270,6 @@ function Recipes(props) {
   const RecipesGridLunch = initialState
     .filter((recipe: any) => {
       // Check if the recipe contains any ingredients the user is allergic to
-      fetchCalendarData()
       const allergyIngredients = recipe.allergens?.flatMap(
         (ingredient) => ingredient
       );
@@ -240,14 +277,14 @@ function Recipes(props) {
         allergyIngredients?.includes(allergy.toLowerCase())
       );
 
-      const userLoggedContains= userAllergies.some((allergy) =>
-      allergyIngredients?.includes(allergy.toLowerCase())
-    );
+      const userLoggedContains = userAllergies.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
 
-      if(token!=null){
-        return !userLoggedContains
-      }else{
-      return !contains
+      if (token != null) {
+        return !userLoggedContains;
+      } else {
+        return !contains;
       }
     })
     .map((recipe: any) => {
@@ -273,12 +310,25 @@ function Recipes(props) {
       );
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
-      const proteinIngredientAmount = Math.round(
-        (props.proteinIntake * 0.5 * 100) / proteinPerHundredGrams
-      );
-      const carbIngredientAmount = Math.round(
-        (props.carbsIntake * 0.5 * 100) / carbsPerHundredGrams
-      );
+      var proteinIngredientAmount = 0;
+      var carbIngredientAmount = 0;
+
+      //use requierements if user is logged in
+      if (token != null) {
+        proteinIngredientAmount = Math.round(
+          (parseInt(proteinIntake) * 0.5 * 100) / proteinPerHundredGrams
+        );
+        carbIngredientAmount = Math.round(
+          (parseInt(carbsIntake) * 0.5 * 100) / carbsPerHundredGrams
+        );
+      } else {
+        proteinIngredientAmount = Math.round(
+          (props.proteinIntake * 0.5 * 100) / proteinPerHundredGrams
+        );
+        carbIngredientAmount = Math.round(
+          (props.carbsIntake * 0.5 * 100) / carbsPerHundredGrams
+        );
+      }
 
       proteinInLunch = (proteinIngredientAmount / 100) * proteinPerHundredGrams;
       carbsInLunch = (carbIngredientAmount / 100) * carbsPerHundredGrams;
@@ -369,7 +419,6 @@ function Recipes(props) {
   const RecipesGridDinner = initialState
     // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
-      fetchCalendarData()
       const allergyIngredients = recipe.allergens?.flatMap(
         (ingredient) => ingredient
       );
@@ -377,14 +426,14 @@ function Recipes(props) {
         allergyIngredients?.includes(allergy.toLowerCase())
       );
 
-      const userLoggedContains= userAllergies.some((allergy) =>
-      allergyIngredients?.includes(allergy.toLowerCase())
-    );
+      const userLoggedContains = userAllergies.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
 
-      if(token!=null){
-        return !userLoggedContains
-      }else{
-      return !contains
+      if (token != null) {
+        return !userLoggedContains;
+      } else {
+        return !contains;
       }
     })
     // Map each recipe to a RecipeCard component to display
@@ -415,12 +464,25 @@ function Recipes(props) {
       const carbIngredientName = carbIngredient ? carbIngredient.name : "";
 
       // Calculate the recommended amount of protein and carbs to consume
-      const proteinIngredientAmount = Math.round(
-        (props.proteinIntake * 0.35 * 100) / proteinPerHundredGrams
-      );
-      const carbIngredientAmount = Math.round(
-        (props.carbsIntake * 0.35 * 100) / carbsPerHundredGrams
-      );
+      var proteinIngredientAmount = 0;
+      var carbIngredientAmount = 0;
+
+      //use requierements if user is logged in
+      if (token != null) {
+        proteinIngredientAmount = Math.round(
+          (parseInt(proteinIntake) * 0.35 * 100) / proteinPerHundredGrams
+        );
+        carbIngredientAmount = Math.round(
+          (parseInt(carbsIntake) * 0.35 * 100) / carbsPerHundredGrams
+        );
+      } else {
+        proteinIngredientAmount = Math.round(
+          (props.proteinIntake * 0.35 * 100) / proteinPerHundredGrams
+        );
+        carbIngredientAmount = Math.round(
+          (props.carbsIntake * 0.35 * 100) / carbsPerHundredGrams
+        );
+      }
 
       proteinInDinner =
         (proteinIngredientAmount / 100) * proteinPerHundredGrams;
@@ -515,152 +577,142 @@ function Recipes(props) {
     });
 
   const RecipesSnacks = initialState
-    // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
-      // Check if the recipe contains any ingredients the user is allergic to
-      fetchCalendarData()
       const allergyIngredients = recipe.allergens?.flatMap(
         (ingredient) => ingredient
       );
       const contains = props.allergyState.some((allergy) =>
         allergyIngredients?.includes(allergy.toLowerCase())
       );
-
-      const userLoggedContains= userAllergies.some((allergy) =>
-      allergyIngredients?.includes(allergy.toLowerCase())
-    );
-
-      if(token!=null){
-        return !userLoggedContains
-      }else{
-      return !contains
-      }
+      const userLoggedContains = userAllergies.some((allergy) =>
+        allergyIngredients?.includes(allergy.toLowerCase())
+      );
+      return (
+        (token != null ? !userLoggedContains : !contains) &&
+        recipe.typeOfMeal === "snacks"
+      );
     })
-    // Map each recipe to a RecipeCard component to display
     .map((recipe: any) => {
-      // Get the maximum protein and carb amounts of the recipe
-      const proteinIngredientAmounts = recipe.ingredients
-        .map((ingredient) => parseFloat(ingredient.protein))
-        .filter((value) => !isNaN(value));
-      const proteinPerHundredGrams = proteinIngredientAmounts.length
-        ? Math.max(...proteinIngredientAmounts)
-        : 0;
-
-      const carbIngredientAmounts = recipe.ingredients
-        .map((ingredient) => parseFloat(ingredient.carbs))
-        .filter((value) => !isNaN(value));
-      const carbsPerHundredGrams = carbIngredientAmounts.length
-        ? Math.max(...carbIngredientAmounts)
-        : 0;
-
-      // Get the ingredient with the highest protein amount
-      const proteinIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
+      const { ingredients } = recipe;
+      const proteinIngredient = ingredients.reduce(
+        (prev, current) =>
+          parseFloat(prev.protein) > parseFloat(current.protein)
+            ? prev
+            : current,
+        {}
       );
-      const proteinIngredientName = proteinIngredient
-        ? proteinIngredient.name
-        : "";
-
-      // Get the ingredient with the highest carb amount
-      const carbIngredient = recipe.ingredients.find(
-        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
+      const proteinPerHundredGrams = parseFloat(proteinIngredient.protein) || 0;
+      const carbIngredient = ingredients.reduce(
+        (prev, current) =>
+          parseFloat(prev.carbs) > parseFloat(current.carbs) ? prev : current,
+        {}
       );
-      const carbIngredientName = carbIngredient ? carbIngredient.name : "";
+      const carbsPerHundredGrams = parseFloat(carbIngredient.carbs) || 0;
 
-      //if it is a meal, display the recipe
-      if (recipe.typeOfMeal === "snacks") {
-        // Calculate the recommended amount of protein and carbs to consume
-        const proteinIngredientAmount = Math.round(
+      var proteinIngredientAmount = 0;
+      var carbIngredientAmount = 0;
+
+      //use requierements if user is logged in
+      if (token != null) {
+        proteinIngredientAmount = Math.round(
+          (parseInt(proteinIntake) * 0.1 * 100) / proteinPerHundredGrams
+        );
+        carbIngredientAmount = Math.round(
+          (parseInt(carbsIntake) * 0.1 * 100) / carbsPerHundredGrams
+        );
+      } else {
+        proteinIngredientAmount = Math.round(
           (props.proteinIntake * 0.1 * 100) / proteinPerHundredGrams
         );
-        const carbIngredientAmount = Math.round(
+        carbIngredientAmount = Math.round(
           (props.carbsIntake * 0.1 * 100) / carbsPerHundredGrams
         );
-
-        const proteinInRecipe =
-          (proteinIngredientAmount / 100) * proteinPerHundredGrams;
-        const carbsInRecipe =
-          (carbIngredientAmount / 100) * carbsPerHundredGrams;
-
-        const isSelected = selectedRecipes.includes(recipe._id);
-
-        // Calculate total number of calories in protein and carbs
-        const proteinIngredientCalories =
-          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
-        const carbIngredientCalories =
-          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
-        const totalCalories =
-          proteinIngredientCalories + carbIngredientCalories;
-
-        return (
-          <Div2>
-            <RecipeCard className={isSelected ? "selected" : "notSelected"}>
-              <Checkbox
-                checked={isSelected}
-                onChange={() => {
-                  // Update selected recipes
-                  const newSelectedRecipes = isSelected
-                    ? selectedRecipes.filter(
-                        (recipeId) => recipeId !== recipe._id
-                      )
-                    : [...selectedRecipes, recipe._id];
-                  setSelectedRecipes(newSelectedRecipes);
-                }}
-              />
-              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-                <ImageDiv>
-                  <img src={recipe?.image} alt="image"></img>
-                </ImageDiv>
-              </LinkDiv>
-            </RecipeCard>
-            <Description
-              key={recipe.id}
-              onMouseEnter={() => handleMouseEnter(recipe)}
-              onMouseLeave={() => handleMouseLeave()}
-              className={isHovering ? "visible" : "notVisible"}
-            >
-              <RecipeTitle>{recipe.recipeName}</RecipeTitle>
-              <>
-                {/* Display the ingredient with the highest protein amount */}
-                {proteinIngredientName && (
-                  <Ingredient>
-                    {proteinIngredientName +
-                      " " +
-                      proteinIngredientAmount +
-                      "g"}
-                  </Ingredient>
-                )}
-                {carbIngredientName && (
-                  <Ingredient>
-                    {carbIngredientName + " " + carbIngredientAmount + "g"}
-                  </Ingredient>
-                )}
-              </>
-              {/* Display total number of calories in protein and carbs */}
-              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
-                0
-              )}`}</Ingredient>
-            </Description>
-          </Div2>
-        );
       }
+
+      const isSelected = selectedRecipes.includes(recipe._id);
+
+      const proteinIngredientCalories =
+        proteinIngredient.calories * (proteinIngredientAmount / 100) || 0;
+      const carbIngredientCalories =
+        carbIngredient.calories * (carbIngredientAmount / 100) || 0;
+      const totalCalories = proteinIngredientCalories + carbIngredientCalories;
+
+      return (
+        <Div2 key={recipe._id}>
+          <RecipeCard className={isSelected ? "selected" : "notSelected"}>
+            <Checkbox
+              checked={isSelected}
+              onChange={() => {
+                const newSelectedRecipes = isSelected
+                  ? selectedRecipes.filter(
+                      (recipeId) => recipeId !== recipe._id
+                    )
+                  : [...selectedRecipes, recipe._id];
+                setSelectedRecipes(newSelectedRecipes);
+              }}
+            />
+            <LinkDiv to={`/indivRecipe/${recipe._id}`}>
+              <ImageDiv>
+                <img src={recipe?.image} alt="image"></img>
+              </ImageDiv>
+            </LinkDiv>
+          </RecipeCard>
+          <Description
+            onMouseEnter={() => handleMouseEnter(recipe)}
+            onMouseLeave={() => handleMouseLeave()}
+          >
+            <RecipeTitle>{recipe.recipeName}</RecipeTitle>
+            {proteinIngredient.name && (
+              <Ingredient>
+                {proteinIngredient.name + " " + proteinIngredientAmount + "g"}
+              </Ingredient>
+            )}
+            {carbIngredient.name && (
+              <Ingredient>
+                {carbIngredient.name + " " + carbIngredientAmount + "g"}
+              </Ingredient>
+            )}
+            <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+              0
+            )}`}</Ingredient>
+          </Description>
+        </Div2>
+      );
     });
 
-    const postCalendar = () => {
-        const token = localStorage.getItem('token');
-        if(token!=null){
-        axios.post("http://localhost:9000/saveCalendarData", {
+  const postCalendar = () => {
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      axios
+        .post("http://localhost:9000/saveCalendarData", {
           selectedRecipes: selectedRecipes,
-          token: token
-        }).then((response) => {
+          token: token,
+        })
+        .then((response) => {
           console.log("Calendar data saved:", response.data);
-        }).catch((error:any) => {
+        })
+        .catch((error: any) => {
           console.log("Error saving calendar data:", error);
         });
-        }
     }
+  };
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
+
+  var caloriesIntakeDropdown;
+  var carbsIntakeDropdown;
+  var proteinIntakeDropdown;
+
+  //use requierements if user is logged in
+  if (token != null) {
+    caloriesIntakeDropdown = Math.round(parseInt(calorieIntake));
+    carbsIntakeDropdown = Math.round(parseInt(carbsIntake));
+    proteinIntakeDropdown = Math.round(parseInt(proteinIntake));
+  } else {
+    caloriesIntakeDropdown = Math.round(props?.caloriesIntake);
+    carbsIntakeDropdown = Math.round(props?.carbsIntake);
+    proteinIntakeDropdown = Math.round(props?.proteinIntake);
+  }
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -675,12 +727,12 @@ function Recipes(props) {
       ) : (
         <BigWrapper>
           <FloatingText onClick={toggleDropdown}>
-            See your daily requirementes
+            See your daily requirements
           </FloatingText>
           <DropdownMenu visible={dropdownVisible}>
-            <p>Calories: {Math.round(props?.caloriesIntake)}kcal</p>
-            <p>Protein: {Math.round(props?.proteinIntake)}g</p>
-            <p>Carbs: {Math.round(props?.carbsIntake)}g</p>
+            <p>Calories: {caloriesIntakeDropdown}kcal</p>
+            <p>Protein: {proteinIntakeDropdown}g</p>
+            <p>Carbs: {carbsIntakeDropdown}g</p>
           </DropdownMenu>
           <Text onClick={toggleDropdown} visible={dropdownVisible}>
             <p>Hide requirements</p>
@@ -735,10 +787,13 @@ function Recipes(props) {
             </BigDiv>
           </Wrapper>
           <LinkCalendar to={`/calendar`}>
-            <CreateCalendarButton onClick={postCalendar}>Create weekly plan</CreateCalendarButton>
+            <CreateCalendarButton onClick={postCalendar}>
+              Create weekly plan
+            </CreateCalendarButton>
           </LinkCalendar>
         </BigWrapper>
       )}
+      <Footer></Footer>
     </div>
   );
 }

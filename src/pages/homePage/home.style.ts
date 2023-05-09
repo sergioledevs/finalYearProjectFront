@@ -2,6 +2,7 @@ import styled from "styled-components";
 import InputGroup from "react-bootstrap/InputGroup";
 import background from "../../media/figma_test.png";
 
+
 import { Form } from "react-bootstrap";
 
 export const BigDiv = styled.div`
@@ -10,13 +11,27 @@ export const BigDiv = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url(${background});
-  background-size: 100% 100%;
 
   @media screen and (max-width: 768px) {
     height: auto;
     min-height: 100vh;
   }
+`;
+
+export const ChefIcon = styled.img`
+position: fixed;
+width: 500px;
+height: 500px;
+left: 1389px;
+top:540px;
+`;
+
+export const RunnerIcon = styled.img`
+position: fixed;
+width: 500px;
+height: 500px;
+left: 48px;
+top:544px;
 `;
 
 export const FormDiv = styled.div`
@@ -50,15 +65,6 @@ export const StyledInput = styled.input`
   }
 `;
 
-export const InputGroupCustom = styled(InputGroup)`
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0px 0px 3px gray;
-  &:focus {
-    outline: none;
-    border: black;
-  }
-`;
 
 export const WeightInputGroupTextLeft = styled(InputGroup.Text)`
   border-left: none;
@@ -70,15 +76,32 @@ export const WeightInputGroupTextLeft = styled(InputGroup.Text)`
 export const WeightInputGroupTextRight = styled(InputGroup.Text)`
   border-right: none;
   background-color: transparent;
-  &:focus {
-    outline: none;
-    border-color: #275efe;
+`;
+
+export const InputGroupCustom = styled(InputGroup)`
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 0px 3px gray;
+  opacity: 0.75;
+  border-color: black;
+
+
+  &:focus-within {
+  box-shadow: none;
+  opacity:1;
+  transition: box-shadow 0.3s ease-in-out;
+  + ${WeightInputGroupTextRight} {
+    border-color: black;
+    transition: border-color 0.3s ease-in-out;
+  }
   }
 `;
 
+
 export const InputFormControl = styled(Form.Control)`
   display: block;
-  width: 100%;
+  width: 287px;
+  height: 54px;
   padding: 8px 16px;
   line-height: 25px;
   border-left: none;
@@ -87,114 +110,118 @@ export const InputFormControl = styled(Form.Control)`
   font-weight: 500;
   font-family: inherit;
   background-color: transparent;
-  border-radius: 20px;
-  -webkit-appearance: none;
+  border-radius: 8px;
+
   color: #99a3ba;
-  transition: border 0.3s ease;
+  transition: border 0.3s ease-in-out;
+
+  text-align: right;
 
   &::placeholder {
-    color: #cbd1dc;
+    border-color: green;
     border-left: none;
-    border-right: none;
   }
 
   &:focus-within {
-    outline: none;
-    border-left: none;
-    border-right: none;
-    box-shadow: none;
-    border:black;
+  box-shadow: none;
+  border-color: black;
 
-    & ~ ${WeightInputGroupTextRight} {
-      transition: background-color 0.3s ease-in-out;
-      background-color: #5cb85c;
-    }
-
-    & ~ ${WeightInputGroupTextLeft} {
-      transition: background-color 0.3s ease;
-      background-color: green;
-    }
- 
+   
+  + ${WeightInputGroupTextRight} {
+    border-left-color: black;
+    transition: border-color 0.3s ease-in-out;
   }
+   + ${WeightInputGroupTextLeft} {
+    transition: border-color 0.3s ease-in-out;
+    border-color: black;
+  }
+}
 `;
 
-export const FormField = styled(Form.Control)`
+export const AgeFormControl = styled(Form.Control)`
   display: block;
-  width: 100%;
+  width: 287px;
+  height: 54px;
   padding: 8px 16px;
   line-height: 25px;
+  border-left: none;
   font-size: 14px;
   font-weight: 500;
   font-family: inherit;
-  border-radius: 6px;
-  -webkit-appearance: none;
+  background-color: transparent;
+  border-radius: 8px;
+
   color: #99a3ba;
-  border: 1px solid #cdd9ed;
-  background: #fff;
-  transition: border 0.3s ease;
+  transition: border 0.3s ease-in-out;
+
+  text-align: right;
 
   &::placeholder {
-    color: #cbd1dc;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #275efe;
-  }
-`;
-
-export const FormGroup2 = styled.div`
-  position: relative;
-  display: flex;
-  width: 100%;
-
-  & > span,
-  ${FormField} {
-    white-space: nowrap;
-    display: block;
-
-    &:not(:first-child):not(:last-child) {
-      border-radius: 0;
-    }
-
-    &:first-child {
-      border-radius: 6px 0 0 6px;
-    }
-
-    &:last-child {
-      border-radius: 0 6px 6px 0;
-    }
-
-    &:not(:first-child) {
-      margin-left: -1px;
-    }
-  }
-
-  ${FormField} {
-    position: relative;
-    z-index: 1;
-    flex: 1 1 auto;
-    width: 1%;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  & > span {
-    text-align: center;
-    padding: 8px 12px;
-    font-size: 14px;
-    line-height: 25px;
-    color: #99a3ba;
-    background: #fff;
-    border: 1px solid #cdd9ed;
-    transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+    border-color: green;
+    border-left: none;
   }
 
   &:focus-within {
-    & > span {
-      color: #fff;
-      background: #678efe;
-      border-color: #275efe;
-    }
+  box-shadow: none;
+  border-color: black;
+
+   + ${WeightInputGroupTextRight} {
+    border-color: black;
+    transition: border-color 0.3s ease-in-out;
   }
+
+   + ${WeightInputGroupTextLeft} {
+    transition: border-color 0.3s ease-in-out;
+    border-color: black;
+  }
+}
 `;
+
+
+export const InputFormSelect = styled(Form.Select)`
+  display: block;
+  width: 287px;
+  height: 54px;
+  padding: 8px 16px;
+  line-height: 25px;
+  border-left: none;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 8px;
+  -webkit-appearance: none;
+  color: #99a3ba;
+  transition: border 0.3s ease;
+
+
+  border-radius: 8px;
+  border-top-right-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+
+  &::placeholder {
+    border-color: green;
+    border-left: none;
+  }
+
+  &:focus-within {
+  box-shadow: none;
+  border-color: black;
+
+  & + ${WeightInputGroupTextRight},
+  & ~ ${WeightInputGroupTextRight} {
+    border-left-color: black;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  & + ${WeightInputGroupTextLeft},
+  & ~ ${WeightInputGroupTextLeft} {
+    transition: border-color 0.3s ease-in-out;
+    border-color: black;
+  }
+}
+`;
+
+
+
+

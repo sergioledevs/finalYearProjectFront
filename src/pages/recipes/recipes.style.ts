@@ -10,7 +10,6 @@ export const Wrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-margin-bottom: 100px;
 
   overflow: hidden;
 `;
@@ -22,9 +21,6 @@ export const BigWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: #fffff5;
-
-  
   overflow: hidden;
 `;
 
@@ -44,7 +40,7 @@ export const Header = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   text-align: center;
-  margin-top: 75px;
+  margin-top: 145px;
   font-family: "InterExtraBold", sans-serif;
   font-size: 22px;
 `;
@@ -66,7 +62,6 @@ export const Div2 = styled.div`
   align-items: center;
   justify-content: center;
   
-
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
@@ -89,6 +84,8 @@ margin-bottom: 200px;
     margin-top: 50px;
     transition: box-shadow 0.2s;
     background-color: grey;
+
+    opacity: .65;
 
     &:hover {
       cursor: pointer;
@@ -162,9 +159,23 @@ export const CreateCalendarButton = styled.button`
   
   bottom: 120px;
   z-index: 2;
-  width: 130px;
+  width: 160px;
   height: 50px;
   margin: 0;
+
+  background: linear-gradient(191.9deg, #ffffff -136.1%, #fffffe 176.52%);
+  border: 0.5px solid #4cef13;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 49px;
+  color: #4fd60f;
+  cursor: pointer;
+  font-family: "InterBold", sans-serif;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  }
 `;
 
 export const Description = styled.div`
@@ -236,8 +247,8 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
 
   font: inherit;
   color: currentColor;
-  width: 2em;
-  height: 2em;
+  width: 2.2em;
+  height: 2.2em;
   border: 0.05em solid currentColor;
   transform: translateY(-0.075em);
   background-color: white;
@@ -248,10 +259,14 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   display: grid;
   place-content: center;
 
+  &:hover{
+    cursor: pointer;
+  }
+
   &::before {
     content: "";
-    width: 1em;
-    height: 1em;
+    width: 1.2em;
+    height: 1.2em;
     clip-path: polygon(28% 38%, 41% 53%, 75% 24%, 86% 38%, 40% 78%, 15% 50%);
     transform: scale(0);
     transition: 120ms transform ease-in-out;
@@ -278,10 +293,28 @@ const floatAnimation = keyframes`
 `;
 
 export const FloatingText = styled.p`
-  animation: ${floatAnimation} 2s ease-in-out infinite;
-  z-index: 3;
-  margin-top: 50px;
-  cursor: pointer;
+  position: fixed;
+  top: ${(props) => (props.visible ? "-100%" : "0")};
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 30px;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  transition: all 0.3s ease;
+  z-index: 7;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding-left: 45px;
+  opacity: .7;
+  box-shadow: 0px 0px 8px gray;
+
+  &:hover{
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity .2s ease;
+  }
 `;
 
 export const DropdownMenu = styled.div`
@@ -291,8 +324,10 @@ export const DropdownMenu = styled.div`
   transform: translateX(-50%);
   width: 300px;
   height: 150px;
-  background-color: gray;
-  transition: all 0.5s ease;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  transition: all 0.3s ease;
   z-index: 998;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -303,7 +338,7 @@ export const Text = styled.div`
   top: ${(props) => (props.visible ? "160px" : "-30%")};
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   z-index: 998;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

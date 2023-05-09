@@ -1,11 +1,21 @@
 import React from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Wrapper, Grid, WrapperBack } from "./allergies.style";
+import {
+  Wrapper,
+  Grid,
+  WrapperBack,
+  GoBackButton,
+  SearchBar,
+  AllergiesTitle,
+  EatingIcon,
+} from "./allergies.style";
 import { useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
 import { useState } from "react";
+import { GradientButton } from "../landingPage/landing.style";
+import  eatingMan  from "../../media/lunchMan.png"
 
 function AllergiesPage(props) {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -32,25 +42,26 @@ function AllergiesPage(props) {
   const navigate = useNavigate();
 
   const postAllergies = () => {
-    const token = localStorage.getItem('token');
-    if(token!=null){
-    axios.post("http://localhost:9000/saveAllergies", {
-      arrayAllergies: props.allergyState,
-      token: token
-    }).then((response) => {
-      console.log("Calendar data saved:", response.data);
-    }).catch((error:any) => {
-      console.log("Error saving calendar data:", error);
-    });
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      axios
+        .post("http://localhost:9000/saveAllergies", {
+          arrayAllergies: props.allergyState,
+          token: token,
+        })
+        .then((response) => {
+          console.log("Calendar data saved:", response.data);
+        })
+        .catch((error: any) => {
+          console.log("Error saving calendar data:", error);
+        });
     }
-}
+  };
 
   const handleSub = () => {
     navigate("/recipes");
-    postAllergies()
+    postAllergies();
   };
-
-  
 
   const AllergensGrid = initialState
     .filter((allergen: string) => {
@@ -94,18 +105,19 @@ function AllergiesPage(props) {
       <NavBar></NavBar>
       <WrapperBack>
         <Wrapper>
-          <h2>Do you have any allergies or dislike any ingredient?</h2>
-          <input
+          <AllergiesTitle>Do you have any allergies?</AllergiesTitle>
+          <SearchBar
             type="text"
             placeholder="Search..."
             onChange={(event) => {
               setSearchTerm(event.target.value);
             }}
-          ></input>
+          ></SearchBar>
           <Grid>{AllergensGrid}</Grid>
-          
-          <button onClick={handleSub}>Continue</button>
-          <button onClick={()=>navigate("/home")}>Go back</button>
+
+          <GradientButton onClick={handleSub}>Finish</GradientButton>
+          <GoBackButton onClick={() => navigate("/home")}>Go back</GoBackButton>
+          <EatingIcon src={eatingMan}></EatingIcon>
         </Wrapper>
       </WrapperBack>
     </div>
