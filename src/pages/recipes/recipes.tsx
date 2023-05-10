@@ -30,6 +30,7 @@ import Calendar from "../calendar/calendar";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Footer from "../../components/footer/footer";
+import Loader from "../../components/loader/loader";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
@@ -721,9 +722,9 @@ function Recipes(props) {
     <div>
       <NavBar></NavBar>
       {loading || initialState.length === 0 ? (
-        <BigDiv>
-          <p>Loading...</p>
-        </BigDiv>
+        
+          <Loader/>
+    
       ) : (
         <BigWrapper>
           <FloatingText onClick={toggleDropdown}>

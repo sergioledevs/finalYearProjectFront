@@ -101,6 +101,7 @@ function HomePage(props: StyledInputs) {
         height,
         weight,
         levelOfActive,
+        userGoal,
         age,
         accessToken,
         calorieIntake,

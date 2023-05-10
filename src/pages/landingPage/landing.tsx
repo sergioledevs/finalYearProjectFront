@@ -21,8 +21,13 @@ import Footer from "../../components/footer/footer";
 
 function Landing() {
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   const handleSub = () => {
-    navigate("/home");
+    if (token !== null) {
+      navigate("/recipes");
+    } else {
+      navigate("/home");
+    }
   };
 
   return (

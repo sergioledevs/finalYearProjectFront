@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { CalendarTable, Wrapper } from "./calendar.style";
 import NavBar from "../../components/navBar/navBar";
+import Loader from "../../components/loader/loader";
 
 function Calendar(props) {
   const daysOfWeek = [
@@ -128,7 +129,7 @@ function Calendar(props) {
   };
   console.log(planStored);
   if (!isReady) {
-    return <div>Loading...</div>;
+    return <Loader></Loader>;
   } else {
     return (
       <Wrapper>

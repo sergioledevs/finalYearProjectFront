@@ -1,16 +1,13 @@
 import styled, { keyframes } from "styled-components";
-import girlExercising from "../../media/girl_exercising.jpeg"
-import nutritionist from "../../media/nutritionist.jpeg"
-import cooking from "../../media/cooking.jpeg"
-
+import girlExercising from "../../media/girl_exercising.jpeg";
+import nutritionist from "../../media/nutritionist.jpeg";
+import cooking from "../../media/cooking.jpeg";
 
 export const Container = styled.div`
-scroll-behavior: smooth;
+  scroll-behavior: smooth;
 `;
 
-export const Section = styled.section`
-
-`;
+export const Section = styled.section``;
 
 export const Slogan = styled.h1`
   color: black;
@@ -48,6 +45,26 @@ export const Rectangle1 = styled.div`
   background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
+
+  @media (max-width: 1024px) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 330px;
+    top: 280px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+    top: 200px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+    top: 120px;
+  }
 `;
 
 export const Rectangle2 = styled.div`

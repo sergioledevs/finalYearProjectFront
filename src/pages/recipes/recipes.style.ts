@@ -300,7 +300,7 @@ export const FloatingText = styled.p`
   width: 300px;
   height: 30px;
   background-color: white;
-  border: 1px solid black;
+
   border-top: none;
   transition: all 0.3s ease;
   z-index: 7;
@@ -324,13 +324,18 @@ export const DropdownMenu = styled.div`
   transform: translateX(-50%);
   width: 300px;
   height: 150px;
+  box-shadow: 0px 0px 8px gray;
   background-color: white;
-  border: 1px solid black;
   border-top: none;
   transition: all 0.3s ease;
   z-index: 998;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  padding-left: 15px;
+  padding-top: 15px;
 `;
 
 export const Text = styled.div`

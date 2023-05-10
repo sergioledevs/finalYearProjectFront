@@ -10,7 +10,14 @@ import {
   Text,
   RightDiv,
   RecipeTitle,
+  DropdownText,
+  Arrow,
+  RecipeImage,
+  Dropdown,
 } from "../indivRecipe/indivRecipe.style";
+import arrow from "../../media/downArrow.png";
+import Footer from "../../components/footer/footer";
+import Loader from "../../components/loader/loader";
 
 function IndivRecipe(props) {
   interface Recipe {
@@ -25,8 +32,10 @@ function IndivRecipe(props) {
 
   const [initialState, setInitialState] = React.useState<Recipe[]>([]);
   const [dropdownStepsVisible, setDropdownStepsVisible] = React.useState(true);
-  const [dropdownIngredientsVisible, setDropdownIngredientsVisible] =React.useState(true);
-  const [dropdownValuesVisible, setDropdownValuesVisible] =React.useState(true);
+  const [dropdownIngredientsVisible, setDropdownIngredientsVisible] =
+    React.useState(true);
+  const [dropdownValuesVisible, setDropdownValuesVisible] =
+    React.useState(true);
 
   useEffect(() => {
     try {
@@ -44,7 +53,7 @@ function IndivRecipe(props) {
   const recipe = initialState.find((recipe) => recipe._id === id);
 
   if (!recipe) {
-    return <div>Recipe not found.</div>;
+    return <Loader/>
   }
 
   const toggleDropdownSteps = () => {
@@ -68,47 +77,73 @@ function IndivRecipe(props) {
   }
 
   function getStepsParagraphs(recipe) {
-    return recipe.stepsToCook.map((ingredient) => {
-      return <Text visible={dropdownStepsVisible}>{ingredient}</Text>;
+    return recipe.stepsToCook.map((step, index) => {
+      return (
+        <Text key={index} visible={dropdownStepsVisible}>
+          {index + 1}. {step}
+        </Text>
+      );
     });
   }
 
   function getValuesParagraphs(recipe) {
-    return recipe.stepsToCook.map((ingredient) => {
-      return <Text visible={dropdownValuesVisible}>{ingredient}</Text>;
+    return recipe.stepsToCook.map((values) => {
+      return <Text visible={dropdownValuesVisible}>{values}</Text>;
     });
   }
 
   const ingredientParagraphs = recipe ? getIngredientParagraphs(recipe) : null;
   const stepsParagraphs = recipe ? getStepsParagraphs(recipe) : null;
   const valuesParagraphs = recipe ? getValuesParagraphs(recipe) : null;
-  
+
   console.log(ingredientParagraphs);
 
   return (
-    <BigDiv>
-      <NavBar></NavBar>
+    <div>
+      <BigDiv>
+        <NavBar></NavBar>
 
-      <img src={recipe.image} alt={recipe.recipeName + " image"}></img>
-      <RightDiv>
-        <RecipeTitle>{recipe.recipeName}</RecipeTitle>
+        <RecipeImage
+          src={recipe.image}
+          alt={recipe.recipeName + " image"}
+        ></RecipeImage>
+        <RightDiv>
+          <RecipeTitle>{recipe.recipeName}</RecipeTitle>
 
-        <Text onClick={toggleDropdownSteps}>Steps to cook</Text>
-        <DropdownMenu visible={dropdownStepsVisible}>
-          {stepsParagraphs}
-        </DropdownMenu>
+          <Dropdown visible={dropdownStepsVisible}>
+            <DropdownText onClick={toggleDropdownSteps}>
+              Steps to cooks
+              <Arrow src={arrow}></Arrow>
+            </DropdownText>
+          </Dropdown>
 
-        <Text onClick={toggleDropdownIngredients}>Ingredients</Text>
-        <DropdownMenu visible={dropdownIngredientsVisible}>
-          {ingredientParagraphs}
-        </DropdownMenu>
+          <DropdownMenu visible={dropdownStepsVisible}>
+            {stepsParagraphs}
+          </DropdownMenu>
 
-        <Text onClick={toggleDropdownValues}>Ingredients</Text>
-        <DropdownMenu visible={dropdownValuesVisible}>
-          {valuesParagraphs}
-        </DropdownMenu>
-      </RightDiv>
-    </BigDiv>
+          <Dropdown visible={dropdownIngredientsVisible}>
+            <DropdownText onClick={toggleDropdownIngredients}>
+              Ingredients
+              <Arrow src={arrow}></Arrow>
+            </DropdownText>
+            <DropdownMenu visible={dropdownIngredientsVisible}>
+              {ingredientParagraphs}
+            </DropdownMenu>
+          </Dropdown>
+
+          <Dropdown visible={dropdownValuesVisible}>
+            <DropdownText onClick={toggleDropdownValues}>
+              Nutritional values
+              <Arrow src={arrow}></Arrow>
+            </DropdownText>
+            <DropdownMenu visible={dropdownValuesVisible}>
+              {valuesParagraphs}
+            </DropdownMenu>
+          </Dropdown>
+        </RightDiv>
+      </BigDiv>
+      <Footer></Footer>
+    </div>
   );
 }
 
