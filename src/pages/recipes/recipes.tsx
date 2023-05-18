@@ -27,14 +27,16 @@ import {
 } from "./recipes.style";
 import NavBar from "../../components/navBar/navBar";
 import Calendar from "../calendar/calendar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Footer from "../../components/footer/footer";
 import Loader from "../../components/loader/loader";
 
 function Recipes(props) {
   const [initialState, setInitialState] = React.useState([]);
-  const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>([]);
+  const [selectedRecipes, setSelectedRecipes] = React.useState<string[]>(
+    props.recipesSelected
+  );
   const [isHovering, setIsHovering] = React.useState(false);
   const [hoveredRecipe, setHoveredRecipe] = React.useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,6 +56,8 @@ function Recipes(props) {
       }
     }
   };
+
+  console.log(selectedRecipes)
 
   const [calorieIntake, setCalorieIntake] = useState("");
   const [carbsIntake, setCarbsIntake] = useState("");
@@ -78,17 +82,37 @@ function Recipes(props) {
   }, []);
 
   useEffect(() => {
-    try {
-      axios
-        .get("https://finalyearprojectapi.onrender.com/getRecipes")
-        .then((response) => {
-          setInitialState(response.data);
-        });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    async function fetchData() {
+      if (token != null) {
+        try {
+          const response = await axios.get("http://localhost:9000/getCalendarData", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setSelectedRecipes(response.data.data.weeklyPlan)
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        }
+      }
     }
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    async function fetchData() {
+        try {
+          const response = await axios.get("http://localhost:9000/getRecipes", {
+            headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': 'http://localhost:3000' },
+          });
+          setInitialState(response.data);
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        } finally {
+          setLoading(false);
+        }
+     
+    }
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -187,20 +211,23 @@ function Recipes(props) {
 
         return (
           <Div2>
-            <RecipeCard className={isSelected ? "selected" : "notSelected"}>
+            <RecipeCard
+              className={
+                selectedRecipes.includes(recipe._id)
+                  ? "selected"
+                  : "notSelected"
+              }
+            >
               <Checkbox
                 checked={isSelected}
-                onChange={() => {
-                  // Update selected recipes
+                onClick={() => {
                   const newSelectedRecipes = isSelected
                     ? selectedRecipes.filter(
                         (recipeId) => recipeId !== recipe._id
                       )
                     : [...selectedRecipes, recipe._id];
                   setSelectedRecipes(newSelectedRecipes);
-                }}
-                onClick={() => {
-                  isSelected
+                  isSelected || props.recipesSelected.includes(recipe._id)
                     ? dispatch({
                         type: "RECIPES_DELETE",
                         payload: recipe._id,
@@ -212,16 +239,7 @@ function Recipes(props) {
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-                <ImageDiv
-                  onClick={() => {
-                    const newSelectedRecipes = isSelected
-                      ? selectedRecipes.filter(
-                          (recipeId) => recipeId !== recipe._id
-                        )
-                      : [...selectedRecipes, recipe._id];
-                    setSelectedRecipes(newSelectedRecipes);
-                  }}
-                >
+                <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
               </LinkDiv>
@@ -371,16 +389,7 @@ function Recipes(props) {
                 }}
               />
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-                <ImageDiv
-                  onClick={() => {
-                    const newSelectedRecipes = isSelected
-                      ? selectedRecipes.filter(
-                          (recipeId) => recipeId !== recipe._id
-                        )
-                      : [...selectedRecipes, recipe._id];
-                    setSelectedRecipes(newSelectedRecipes);
-                  }}
-                >
+                <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
               </LinkDiv>
@@ -529,17 +538,7 @@ function Recipes(props) {
               />
 
               <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-                <ImageDiv
-                  onClick={() => {
-                    // Update selected recipes
-                    const newSelectedRecipes = isSelected
-                      ? selectedRecipes.filter(
-                          (recipeId) => recipeId !== recipe._id
-                        )
-                      : [...selectedRecipes, recipe._id];
-                    setSelectedRecipes(newSelectedRecipes);
-                  }}
-                >
+                <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
               </LinkDiv>
@@ -641,17 +640,29 @@ function Recipes(props) {
       return (
         <Div2 key={recipe._id}>
           <RecipeCard className={isSelected ? "selected" : "notSelected"}>
-            <Checkbox
-              checked={isSelected}
-              onChange={() => {
-                const newSelectedRecipes = isSelected
-                  ? selectedRecipes.filter(
-                      (recipeId) => recipeId !== recipe._id
-                    )
-                  : [...selectedRecipes, recipe._id];
-                setSelectedRecipes(newSelectedRecipes);
-              }}
-            />
+          <Checkbox
+                checked={isSelected}
+                onChange={() => {
+                  // Update selected recipes
+                  const newSelectedRecipes = isSelected
+                    ? selectedRecipes.filter(
+                        (recipeId) => recipeId !== recipe._id
+                      )
+                    : [...selectedRecipes, recipe._id];
+                  setSelectedRecipes(newSelectedRecipes);
+                }}
+                onClick={() => {
+                  isSelected
+                    ? dispatch({
+                        type: "RECIPES_DELETE",
+                        payload: recipe._id,
+                      })
+                    : dispatch({
+                        type: "SELECTED_RECIPES",
+                        payload: recipe._id,
+                      });
+                }}
+              />
             <LinkDiv to={`/indivRecipe/${recipe._id}`}>
               <ImageDiv>
                 <img src={recipe?.image} alt="image"></img>
@@ -681,6 +692,8 @@ function Recipes(props) {
       );
     });
 
+const navigate= useNavigate()
+
   const postCalendar = () => {
     const token = localStorage.getItem("token");
     if (token != null) {
@@ -691,10 +704,14 @@ function Recipes(props) {
         })
         .then((response) => {
           console.log("Calendar data saved:", response.data);
+          navigate("/calendar")
         })
         .catch((error: any) => {
           console.log("Error saving calendar data:", error);
         });
+        
+    } else{
+     alert("You need to log in to create a weekly meal plan");
     }
   };
 
@@ -722,9 +739,7 @@ function Recipes(props) {
     <div>
       <NavBar></NavBar>
       {loading || initialState.length === 0 ? (
-        
-          <Loader/>
-    
+        <Loader />
       ) : (
         <BigWrapper>
           <FloatingText onClick={toggleDropdown}>
@@ -787,11 +802,10 @@ function Recipes(props) {
               <SmallDiv>{RecipesSnacks}</SmallDiv>
             </BigDiv>
           </Wrapper>
-          <LinkCalendar to={`/calendar`}>
+ 
             <CreateCalendarButton onClick={postCalendar}>
               Create weekly plan
             </CreateCalendarButton>
-          </LinkCalendar>
         </BigWrapper>
       )}
       <Footer></Footer>
@@ -802,6 +816,7 @@ function Recipes(props) {
 interface RootState {
   UserInfo: any;
   allergyReducer: any;
+  selectedRecipesReducer: any;
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -810,6 +825,7 @@ const mapStateToProps = (state: RootState) => {
     carbsIntake: state.UserInfo.carbsIntake,
     caloriesIntake: state.UserInfo.caloriesIntake,
     allergyState: state.allergyReducer.allergyArray,
+    recipesSelected: state.selectedRecipesReducer.selectedRecipes,
   };
 };
 

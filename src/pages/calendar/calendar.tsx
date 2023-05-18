@@ -1,10 +1,11 @@
 import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CalendarTable, Wrapper } from "./calendar.style";
 import NavBar from "../../components/navBar/navBar";
 import Loader from "../../components/loader/loader";
+import { BackButton } from "../profile/profile.styles";
 
 function Calendar(props) {
   const daysOfWeek = [
@@ -40,16 +41,20 @@ function Calendar(props) {
 
   //get all the recipes
   useEffect(() => {
-    try {
-      axios
-        .get("https://finalyearprojectapi.onrender.com/getRecipes")
-        .then((response) => {
+    async function fetchData() {
+        try {
+          const response = await axios.get("http://localhost:9000/getRecipes", {
+            headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': 'http://localhost:3000' },
+          });
           setInitialState(response.data);
-        });
-    } catch (error) {
-      console.log("");
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        } 
+     
     }
+    fetchData();
   }, []);
+
 
   const token = localStorage.getItem("token");
 
@@ -122,6 +127,8 @@ function Calendar(props) {
     }
   }, [props.selected, initialState]);
 
+  const navigate= useNavigate()
+
   const getSelectedRecipe = (mealType, dayIndex) => {
     const selectedRecipesForMeal = selectedRecipes[mealType];
     const recipeIndex = dayIndex % selectedRecipesForMeal.length;
@@ -166,6 +173,7 @@ function Calendar(props) {
           ))}
         </tbody>
       </CalendarTable>
+      <BackButton style={{marginTop:"20px"}} onClick={()=>navigate("/recipes")}>Back to recipes</BackButton>
       </Wrapper>
     );
   }

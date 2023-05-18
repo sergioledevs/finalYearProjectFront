@@ -5,11 +5,14 @@ import { Label, Form, Input, Button, Wrapper } from "./register.styled";
 
 import axios from "axios";
 import NavBar from "../../components/navBar/navBar";
+import { StyledButton } from "../profile/profile.styles";
+import { useNavigate } from "react-router-dom";
 
 function RegistrationForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate= useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,6 +21,7 @@ function RegistrationForm() {
       const response = await axios.post("http://localhost:9000/register", { email, password, confirmPassword });
       // Store the token in localStorage
       localStorage.setItem("token", response.data.token);
+      navigate("/")
     } catch (error:any) {
       console.log(error.response.data)
       alert("An error occurred");
@@ -49,11 +53,10 @@ function RegistrationForm() {
         <Input
           type="password"
           value={confirmPassword}
-          placeholder="hello"
           onChange={(event) => setConfirmPassword(event.target.value)}
         />
       </Label>
-      <Button type="submit">Register</Button>
+      <StyledButton type="submit">Register</StyledButton>
     </Form>
     </Wrapper>
   );

@@ -59,9 +59,17 @@ export const Logo = styled.h2`
 `;
 
 export const AboutUs = styled.p`
+  width: 135px;
+  cursor: pointer;
+  margin: 0;
+  font-family: "InterRegular", sans-serif;
+`;
+
+export const WeeklyPlan = styled.p`
   size: 50px;
   cursor: pointer;
   margin: 0;
+
   font-family: "InterRegular", sans-serif;
 `;
 
@@ -72,7 +80,6 @@ export const Features = styled.p`
   margin-right: 73px;
   font-family: "InterRegular", sans-serif;
 `;
-
 
 export const LogIn = styled.p`
   size: 80px;

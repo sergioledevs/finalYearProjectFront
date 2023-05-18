@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AllergiesPage from "./pages/allergies/allergiesPage";
-import Ingredients from "./pages/familiarIngredients/ingredients";
 import HomePage from "./pages/homePage/homePage";
 import Landing from "./pages/landingPage/landing";
 import LogIn from "./pages/logIn/logIn.tsx";
@@ -42,11 +41,6 @@ export const Router = () => {
           element={<TypeOfMeal />}
         />
 
-        <Route
-          key="what ingredients is the user familiar with"
-          path="/familiarIngredients"
-          element={<Ingredients />}
-        />
 
         <Route
           key="what ingredients is the user familiar with"

@@ -153,11 +153,19 @@ function HomePage(props: StyledInputs) {
       levelOfActivityMultiplier = 1.725;
     }
 
-    var equation =
-      66.5 +
+    var equation
+
+    if(gender=="Male"){
+      equation= 66.5 +
       13.75 * parseInt(weight) +
       5.003 * parseInt(height) -
       6.75 * parseInt(age);
+    } else{
+      equation= 655.1 +
+      9.563 * parseInt(weight) +
+      1.85 * parseInt(height) -
+      4.675 * parseInt(age);
+    }
 
     calorieIntake = String(equation * levelOfActivityMultiplier); //multiply user info by their level of activity
 
@@ -363,11 +371,10 @@ function HomePage(props: StyledInputs) {
             </GradientButton>
           </StyledForm>
         </FormDiv>
-        <Form2></Form2>
+        {/*<Form2></Form2>*/}
       </BigDiv>
       <ChefIcon src={chef}></ChefIcon>
       <RunnerIcon src={runner}></RunnerIcon>
-      
     </div>
   );
 }

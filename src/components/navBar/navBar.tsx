@@ -9,6 +9,7 @@ import {
   RightWrapper,
   LogOut,
   Features,
+  WeeklyPlan,
 } from "./navBar.style";
 import {useEffect} from "react"
 import axios from "axios";
@@ -18,9 +19,28 @@ import { useNavigate } from "react-router-dom";
 
 function NavBar(props) {
   const [isLogged, setIsLogged] = useState(false);
+  const [height, setHeight] = useState("");
 
   const token = localStorage.getItem("token");
   const navigate= useNavigate()
+
+  useEffect(() => {
+    async function fetchData() {
+      if (token != null) {
+        try {
+          const response = await axios.get("http://localhost:9000/userData", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setHeight(response.data.data.height);
+        } catch (err: any) {
+          console.log(err.response.data.message);
+        }
+      }
+    }
+    console.log(height)
+    console.log(token)
+    fetchData();
+  }, []);
   
   useEffect(() => {
     if (token !== null) {
@@ -62,10 +82,21 @@ function NavBar(props) {
         <LinkDiv>
           <Features>Features</Features>
         </LinkDiv>
-        <LinkDiv>
-          <AboutUs>About us</AboutUs>
+        
+        {height==="" || token===null || height===undefined ? (
+        <div></div>
+      ) : (
+        <LeftWrapper>
+        <LinkDiv to={`/recipes`}>
+          <AboutUs>Recipes</AboutUs>
         </LinkDiv>
+        <LinkDiv to={`/calendar`}>
+          <WeeklyPlan>My weekly plan</WeeklyPlan>
+        </LinkDiv>
+        </LeftWrapper>
+      )}
       </LeftWrapper>
+      
       {isLogged === false ? (
         <LinkDiv to={`/logIn`}>
           <LogIn>LOG IN</LogIn>

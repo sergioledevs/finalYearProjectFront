@@ -37,18 +37,22 @@ function IndivRecipe(props) {
   const [dropdownValuesVisible, setDropdownValuesVisible] =
     React.useState(true);
 
-  useEffect(() => {
-    try {
-      axios
-        .get("https://finalyearprojectapi.onrender.com/getRecipes")
-        .then((response) => {
-          console.log(response.data);
-          setInitialState(response.data);
-        });
-    } catch (error) {
-      console.log("");
-    }
-  }, []);
+    const token= localStorage.getItem('token')
+
+    useEffect(() => {
+      async function fetchData() {
+          try {
+            const response = await axios.get("http://localhost:9000/getRecipes", {
+              headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': 'http://localhost:3000' },
+            });
+            setInitialState(response.data);
+          } catch (err: any) {
+            console.log(err.response.data.message);
+          } 
+       
+      }
+      fetchData();
+    }, []);
 
   const recipe = initialState.find((recipe) => recipe._id === id);
 
@@ -112,7 +116,7 @@ function IndivRecipe(props) {
 
           <Dropdown visible={dropdownStepsVisible}>
             <DropdownText onClick={toggleDropdownSteps}>
-              Steps to cooks
+              Steps to cook
               <Arrow src={arrow}></Arrow>
             </DropdownText>
           </Dropdown>

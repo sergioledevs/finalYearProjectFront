@@ -4,7 +4,7 @@ function Footer(props) {
    
     return (
       <Wrapper>
-        <p>CUFKIT 2023</p>
+        <p>CUFKIT® 2023</p>
       </Wrapper>
     );
   }

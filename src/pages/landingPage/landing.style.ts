@@ -11,7 +11,7 @@ export const Section = styled.section``;
 
 export const Slogan = styled.h1`
   color: black;
-  font-size: 65px;
+  font-size: 4.063em;
   font-family: "InterBold", sans-serif;
   margin-top: 30px;
 `;
@@ -24,7 +24,8 @@ export const BigDiv = styled.div`
   height: 100vh;
 
   @media screen and (max-width: 768px) {
-    /* styles for tablet screens */
+    align-items: start;
+    text-align: center;/* styles for tablet screens */
   }
 
   @media screen and (max-width: 480px) {
@@ -33,11 +34,10 @@ export const BigDiv = styled.div`
 `;
 
 export const Rectangle1 = styled.div`
-  position: absolute;
+
   width: 226px;
   height: 371px;
-  left: 970px;
-  top: 355px;
+  
 
   background-image: url(${girlExercising});
   background-position: center; /* Center the image */
@@ -46,33 +46,29 @@ export const Rectangle1 = styled.div`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
 
+  margin-top: 30px;
+  margin-right: 2.5%;
+
   @media (max-width: 1024px) {
-    left: 50%;
-    transform: translateX(-50%);
     width: 200px;
     height: 330px;
-    top: 280px;
   }
 
   @media (max-width: 768px) {
     width: 150px;
     height: 250px;
-    top: 200px;
+ 
   }
 
   @media (max-width: 480px) {
     width: 100px;
     height: 170px;
-    top: 120px;
   }
 `;
 
 export const Rectangle2 = styled.div`
-  position: absolute;
   width: 222px;
   height: 371px;
-  left: 1239px;
-  top: 270px;
 
   background-image: url(${nutritionist});
   background-position: center; /* Center the image */
@@ -80,14 +76,31 @@ export const Rectangle2 = styled.div`
   background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
+
+  margin-bottom: 30px;
+  margin-right: 2.5%;
+
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 330px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+ 
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+  }
 `;
 
 export const Rectangle3 = styled.div`
-  position: absolute;
-  width: 222px;
+width: 222px;
   height: 371px;
-  left: 1508px;
-  top: 355px;
+ 
 
   background-image: url(${cooking});
   background-position: center; /* Center the image */
@@ -95,17 +108,26 @@ export const Rectangle3 = styled.div`
   background-size: cover;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   border-radius: 12px;
+
+  margin-top: 30px;
+
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 330px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+ 
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+  }
 `;
 
-export const GradientOverlay = styled.div`
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-`;
 
 export const SloganDescription = styled.h3`
   color: rgba(0, 0, 0, 0.55);
@@ -121,13 +143,36 @@ export const SloganDescription = styled.h3`
 `;
 
 export const Content = styled.div`
-  position: relative;
   z-index: 2;
   display: flex;
   align-items: start;
   justify-content: center;
   flex-direction: column;
-  margin-left: 192px;
+  width: 40%;
+  padding-left: -20%;
+
+  /* Add your content styles here */
+
+  @media (max-width: 768px) {
+    padding-left: 48px;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    padding-left: 24px;
+  }
+`;
+
+export const ContentWrapper = styled.div`
+
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row !important;
+  width: 100%;
+
   /* Add your content styles here */
 
   @media (max-width: 768px) {

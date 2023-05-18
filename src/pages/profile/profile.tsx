@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import { ProfileContainer, Text, Title } from "./profile.styles";
+import { Form, ProfileContainer, Text, Title, Input, Label, StyledButton, Select, BackButton } from "./profile.styles";
 
 import { Navigate, useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
@@ -137,31 +137,34 @@ function Profile() {
         {!isEditing ? (
           <div>
             <Title>Your profile</Title>
-            <Text>Email: {email}</Text>
-            <Text>Height: {height} cm</Text>
-            <Text>Weight: {weight} kg</Text>
-            <Text>Age: {age}</Text>
-            <Text>Level of Activity: {levelOfActive}</Text>
-            <Text>Fitness goal: {userGoal} </Text>
-            <button
+            <Label>Email:</Label>
+            <Text>{email}</Text>
+            <Label>Height: </Label>
+            <Text>{height} cm</Text>
+            <Label>Weight:</Label>
+            <Text> {weight} kg</Text>
+            <Label>Age:</Label>
+            <Text> {age}</Text>
+            <Label>Level of Activity:</Label>
+            <Text> {levelOfActive}</Text>
+            <Label>Fitness goal: </Label>
+            <Text>{userGoal} </Text>
+            <StyledButton
               onClick={() => {
                 setValidated(false);
                 setIsEditing(true);
               }}
             >
-              Edit
-            </button>
-            <button onClick={() => navigate("/calendar")}>
-              My weekly plan
-            </button>
+              Edit personal info
+            </StyledButton>
           </div>
         ) : (
           !validated && (
-            <form onSubmit={handleSub}>
+            <Form onSubmit={handleSub}>
               <h2>Edit profile</h2>
               <div>
-                <label htmlFor="email">Email:</label>
-                <input
+                <Label htmlFor="email">Email:</Label>
+                <Input
                   type="email"
                   id="email"
                   value={email}
@@ -169,8 +172,8 @@ function Profile() {
                 />
               </div>
               <div>
-                <label htmlFor="height">Height:</label>
-                <input
+                <Label htmlFor="height">Height:</Label>
+                <Input
                   type="number"
                   id="height"
                   value={height}
@@ -178,8 +181,8 @@ function Profile() {
                 />
               </div>
               <div>
-                <label htmlFor="weight">Weight:</label>
-                <input
+                <Label htmlFor="weight">Weight:</Label>
+                <Input
                   type="number"
                   id="weight"
                   value={weight}
@@ -187,8 +190,8 @@ function Profile() {
                 />
               </div>
               <div>
-                <label htmlFor="age">Age:</label>
-                <input
+                <Label htmlFor="age">Age:</Label>
+                <Input
                   type="number"
                   id="age"
                   value={age}
@@ -196,8 +199,8 @@ function Profile() {
                 />
               </div>
               <div>
-                <label htmlFor="levelOfActive">Level of Activity:</label>
-                <select
+                <Label htmlFor="levelOfActive">Level of Activity:</Label>
+                <Select
                   id="levelOfActive"
                   value={levelOfActive}
                   onChange={(e) => setLevelOfActive(e.target.value)}
@@ -207,11 +210,11 @@ function Profile() {
                   <option>Exercise 1-2 times a week</option>
                   <option>Exercise 3-4 times a week</option>
                   <option>Exercise 5-7 times a week</option>
-                </select>
+                </Select>
               </div>
               <div>
-                <label htmlFor="userGoal">Fitness goal:</label>
-                <select
+                <Label htmlFor="userGoal">Fitness goal:</Label>
+                <Select
                   id="userGoal"
                   value={userGoal}
                   onChange={(e) => setUserGoal(e.target.value)}
@@ -220,13 +223,14 @@ function Profile() {
                   <option>Mantain weight</option>
                   <option>Bulk</option>
                   <option>Lose weight</option>
-                </select>
+                </Select>
               </div>
-              <button type="submit">Submit</button>
-              <button onClick={() => setIsEditing(false)}>Go Back</button>
-            </form>
+              <StyledButton type="submit">Submit</StyledButton>
+              <BackButton onClick={() => setIsEditing(false)}>Go Back</BackButton>
+            </Form>
           )
         )}
+        
       </ProfileContainer>
     </div>
   );

@@ -4,6 +4,8 @@ import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Form, Label, Input, Button, RegisterButton, BigDiv } from "./logIn.style";
 import NavBar from "../../components/navBar/navBar";
+import { BackButton, StyledButton } from "../profile/profile.styles";
+import { GradientButton } from "../landingPage/landing.style";
 
 function LoginButton() {
   const [email, setEmail] = useState("");
@@ -72,9 +74,9 @@ function LoginButton() {
             onChange={(event) => setPassword(event.target.value)}
           />
         </Label>
-        <Button type="submit">Login</Button>
-        <p>Not have an account yet?</p>
-        <RegisterButton onClick={() => navigate("/register")}> Register</RegisterButton>
+        <StyledButton type="submit">Login</StyledButton>
+        <p style={{marginTop:"30px"}}>Not have an account yet?</p>
+        <BackButton style={{marginTop:"0px"}} onClick={() => navigate("/register")}> Register</BackButton>
       </Form>
     </BigDiv>
   );

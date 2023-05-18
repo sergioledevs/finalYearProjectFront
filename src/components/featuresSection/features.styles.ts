@@ -5,6 +5,8 @@ export const FeatureWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+
+  width:100%;
 `;
 
 export const FeatureImage = styled.img`
@@ -30,7 +32,7 @@ export const Feature = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 320px;
+  width: 25%;
   margin-right: 200px;
   text-align: center;
   opacity: 0;
