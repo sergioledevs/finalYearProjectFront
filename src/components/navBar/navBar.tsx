@@ -16,6 +16,9 @@ import axios from "axios";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FeaturePage from "../featuresSection/features";
+import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
+import Landing from "../../pages/landingPage/landing";
 
 function NavBar(props) {
   const [isLogged, setIsLogged] = useState(false);
@@ -24,11 +27,12 @@ function NavBar(props) {
   const token = localStorage.getItem("token");
   const navigate= useNavigate()
 
+
   useEffect(() => {
     async function fetchData() {
       if (token != null) {
         try {
-          const response = await axios.get("http://localhost:9000/userData", {
+          const response = await axios.get("https://finalyearprojectapi.onrender.com/userData", {
             headers: { Authorization: `Bearer ${token}` },
           });
           setHeight(response.data.data.height);
@@ -37,8 +41,6 @@ function NavBar(props) {
         }
       }
     }
-    console.log(height)
-    console.log(token)
     fetchData();
   }, []);
   
@@ -54,7 +56,7 @@ function NavBar(props) {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "http://localhost:9000/logout",
+        "https://finalyearprojectapi.onrender.com/logout",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -79,8 +81,8 @@ function NavBar(props) {
         <LinkDiv to={`/`}>
           <Logo>CUKFIT</Logo>
         </LinkDiv>
-        <LinkDiv>
-          <Features>Features</Features>
+        <LinkDiv to={`/privacyPolicy`}>
+          <Features>Privacy policy</Features>
         </LinkDiv>
         
         {height==="" || token===null || height===undefined ? (

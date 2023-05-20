@@ -10,6 +10,17 @@ height: 100vh;
 width:100%;
 `
 
+export const LogInDiv= styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 30%;
+width:15%;
+border-radius: 12px;
+box-shadow: 0px 4px 22px gray;
+`
+
 export const StyledForm= styled.form`
 display: flex;
 flex-direction: column;
@@ -38,38 +49,42 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #0077ff;
-  color: white;
+  margin-top: 20px;
+  padding: 5px 10px;
+  width: 50%;
+  height: 40px;
   border: none;
   border-radius: 5px;
-  font-size: 18px;
+  background-color: #87F484;
+  color: white;
+  font-size: 1rem;
+  font-family: "InterSemi", sans-serif;
   cursor: pointer;
-
   &:hover {
-    background-color: #0066cc;
+    background-color: #2e8b57;
   }
-
   
 `;
 
 export const RegisterButton = styled.button`
-  padding: 10px;
-  background-color: #0077ff;
-  color: white;
+ margin-top: 50px;
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
-  font-size: 18px;
+  border: 1px solid #87F484;
+  background-color:white ;
+  color: #4fd60f;
+  font-size: 1rem;
+  font-family: "InterRegular", sans-serif;
+  opacity: .7;
   cursor: pointer;
-
   &:hover {
-    background-color: #0066cc;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
+    background-color: #2e8b57;
+    color:white;
+    opacity: 1;
   }
 `;
+
+
 
 export{}

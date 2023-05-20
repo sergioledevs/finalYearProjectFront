@@ -31,7 +31,7 @@ function Landing() {
     async function fetchData() {
       if (token != null) {
         try {
-          const response = await axios.get("http://localhost:9000/userData", {
+          const response = await axios.get("https://finalyearprojectapi.onrender.com/userData", {
             headers: { Authorization: `Bearer ${token}` },
           });
           setHeight(response.data.data.height);

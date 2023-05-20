@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
 import { useState } from "react";
 import { GradientButton } from "../landingPage/landing.style";
-import  eatingMan  from "../../media/lunchMan.png"
+import eatingMan from "../../media/lunchMan.png";
 
 function AllergiesPage(props) {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -45,7 +45,7 @@ function AllergiesPage(props) {
     const token = localStorage.getItem("token");
     if (token != null) {
       axios
-        .post("http://localhost:9000/saveAllergies", {
+        .post("https://finalyearprojectapi.onrender.com/saveAllergies", {
           arrayAllergies: props.allergyState,
           token: token,
         })
@@ -63,42 +63,50 @@ function AllergiesPage(props) {
     postAllergies();
   };
 
-  const AllergensGrid = initialState
+  const filteredAllergens = initialState
     .filter((allergen: string) => {
       return allergen.toLowerCase().startsWith(searchTerm.toLowerCase());
     })
-    .slice(0, 8)
-    .map((allergen: string) => {
-      const isSelected = arrayAllergies.includes(allergen);
-      return (
-        <div>
-          <p
-            onClick={() => {
-              const newAllergies = isSelected
-                ? arrayAllergies.filter((allergy) => allergy !== allergen)
-                : [...arrayAllergies, allergen];
-              setArrayAlergies(newAllergies);
-              if (isSelected || props.allergyState.includes(allergen)) {
-                dispatch({
-                  type: "ALLERGY_DELETE",
-                  payload: allergen,
-                });
-              } else {
-                dispatch({
-                  type: "ALLERGY_ADD",
-                  payload: allergen,
-                });
+    .slice(0, 8);
+
+  const AllergensGrid =
+    filteredAllergens.length === 0 ? (
+      <h3>Allergy doesn't exist</h3>
+    ) : (
+      filteredAllergens.map((allergen: string) => {
+        const isSelected = arrayAllergies.includes(allergen);
+        return (
+          <div key={allergen}>
+            <p
+              onClick={() => {
+                const newAllergies = isSelected
+                  ? arrayAllergies.filter((allergy) => allergy !== allergen)
+                  : [...arrayAllergies, allergen];
+                setArrayAlergies(newAllergies);
+                if (isSelected || props.allergyState.includes(allergen)) {
+                  dispatch({
+                    type: "ALLERGY_DELETE",
+                    payload: allergen,
+                  });
+                } else {
+                  dispatch({
+                    type: "ALLERGY_ADD",
+                    payload: allergen,
+                  });
+                }
+              }}
+              className={
+                props.allergyState.includes(allergen)
+                  ? "selected"
+                  : "notSelected"
               }
-            }}
-            className={
-              props.allergyState.includes(allergen) ? "selected" : "notSelected"
-            }
-          >
-            {allergen}
-          </p>
-        </div>
-      );
-    });
+            >
+              {allergen}
+            </p>
+          </div>
+        );
+      })
+    );
 
   return (
     <div>
@@ -114,7 +122,6 @@ function AllergiesPage(props) {
             }}
           ></SearchBar>
           <Grid>{AllergensGrid}</Grid>
-
           <GradientButton onClick={handleSub}>Finish</GradientButton>
           <GoBackButton onClick={() => navigate("/home")}>Go back</GoBackButton>
           <EatingIcon src={eatingMan}></EatingIcon>

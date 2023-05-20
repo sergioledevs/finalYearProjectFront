@@ -18,6 +18,7 @@ import {
 import arrow from "../../media/downArrow.png";
 import Footer from "../../components/footer/footer";
 import Loader from "../../components/loader/loader";
+import { useLocation } from "react-router-dom";
 
 function IndivRecipe(props) {
   interface Recipe {
@@ -30,6 +31,16 @@ function IndivRecipe(props) {
 
   const { id } = useParams();
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const proteinAmount = searchParams.get("proteinAmount");
+  const protIng = searchParams.get("protIng");
+  const carbAmount = searchParams.get("carbAmount");
+  const carbIng = searchParams.get("carbIng");
+  const protein = searchParams.get("protein");
+  const carbs = searchParams.get("carbs");
+  const calories = searchParams.get("calories");
+
   const [initialState, setInitialState] = React.useState<Recipe[]>([]);
   const [dropdownStepsVisible, setDropdownStepsVisible] = React.useState(true);
   const [dropdownIngredientsVisible, setDropdownIngredientsVisible] =
@@ -37,27 +48,32 @@ function IndivRecipe(props) {
   const [dropdownValuesVisible, setDropdownValuesVisible] =
     React.useState(true);
 
-    const token= localStorage.getItem('token')
+  const token = localStorage.getItem("token");
 
-    useEffect(() => {
-      async function fetchData() {
-          try {
-            const response = await axios.get("http://localhost:9000/getRecipes", {
-              headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': 'http://localhost:3000' },
-            });
-            setInitialState(response.data);
-          } catch (err: any) {
-            console.log(err.response.data.message);
-          } 
-       
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          "https://finalyearprojectapi.onrender.com/getRecipes",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Access-Control-Allow-Origin": "https://cukfit.netlify.app",
+            },
+          }
+        );
+        setInitialState(response.data);
+      } catch (err: any) {
+        console.log(err.response.data.message);
       }
-      fetchData();
-    }, []);
+    }
+    fetchData();
+  }, []);
 
   const recipe = initialState.find((recipe) => recipe._id === id);
 
   if (!recipe) {
-    return <Loader/>
+    return <Loader />;
   }
 
   const toggleDropdownSteps = () => {
@@ -74,9 +90,30 @@ function IndivRecipe(props) {
 
   function getIngredientParagraphs(recipe) {
     return recipe.ingredients.map((ingredient) => {
-      return (
-        <Text visible={dropdownIngredientsVisible}>{ingredient.name}</Text>
-      );
+      // Check if the ingredient name matches a specific condition
+      console.log(protIng);
+      if (ingredient.name === protIng) {
+        // Append the proteinAmount next to the ingredient name
+        return (
+          <Text visible={dropdownIngredientsVisible}>
+            {ingredient.name} {proteinAmount}
+            {"g"}
+          </Text>
+        );
+      } else if (ingredient.name === carbIng) {
+        // Append the proteinAmount next to the ingredient name
+        return (
+          <Text visible={dropdownIngredientsVisible}>
+            {ingredient.name} {carbAmount}
+            {"g"}
+          </Text>
+        );
+      } else {
+        console.log("gfalse"); // Render the ingredient name without the proteinAmount
+        return (
+          <Text visible={dropdownIngredientsVisible}>{ingredient.name}</Text>
+        );
+      }
     });
   }
 
@@ -91,16 +128,28 @@ function IndivRecipe(props) {
   }
 
   function getValuesParagraphs(recipe) {
-    return recipe.stepsToCook.map((values) => {
-      return <Text visible={dropdownValuesVisible}>{values}</Text>;
-    });
+    console.log(protein);
+    return (
+      <div>
+        <Text visible={dropdownValuesVisible}>
+          {"Protein"} {protein ? parseFloat(protein).toFixed(2) : "N/A"}
+          {"g"}
+        </Text>
+        <Text visible={dropdownValuesVisible}>
+          {"Carbohydrates"} {carbs ? parseFloat(carbs).toFixed(2) : "N/A"}
+          {"g"}
+        </Text>
+        <Text visible={dropdownValuesVisible}>
+          {"Calories"} {calories ? parseFloat(calories).toFixed(2) : "N/A"}
+          {"Kcal"}
+        </Text>
+      </div>
+    );
   }
 
   const ingredientParagraphs = recipe ? getIngredientParagraphs(recipe) : null;
   const stepsParagraphs = recipe ? getStepsParagraphs(recipe) : null;
   const valuesParagraphs = recipe ? getValuesParagraphs(recipe) : null;
-
-  console.log(ingredientParagraphs);
 
   return (
     <div>

@@ -3,6 +3,7 @@ import wave from "../../media/wave.svg";
 import background from "../../media/figma_test.png";
 
 export const Wrapper = styled.div`
+
   .selected {
     display: flex;
     justify-content: center;
@@ -57,6 +58,7 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
 
   overflow: hidden;
 `;

@@ -22,7 +22,6 @@ const FeaturePage = () => {
         <FeaturePageTitle>Features</FeaturePageTitle>
         <FeatureWrapper>
           <Feature>
-
             <ImageDiv>
             <FeatureImage src={checklist}></FeatureImage>
             </ImageDiv>

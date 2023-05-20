@@ -74,10 +74,10 @@ export const WeeklyPlan = styled.p`
 `;
 
 export const Features = styled.p`
-  size: 50px;
+  size: 70px;
   cursor: pointer;
   margin: 0;
-  margin-right: 73px;
+  width:190px;
   font-family: "InterRegular", sans-serif;
 `;
 

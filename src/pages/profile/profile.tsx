@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import { Form, ProfileContainer, Text, Title, Input, Label, StyledButton, Select, BackButton } from "./profile.styles";
+import {
+  Form,
+  ProfileContainer,
+  Text,
+  Title,
+  Input,
+  Label,
+  StyledButton,
+  Select,
+  BackButton,
+} from "./profile.styles";
 
 import { Navigate, useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
@@ -29,9 +39,12 @@ function Profile() {
     async function fetchData() {
       if (token != null) {
         try {
-          const response = await axios.get("http://localhost:9000/userData", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await axios.get(
+            "https://finalyearprojectapi.onrender.com/userData",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           setEmail(response.data.data.email);
           setHeight(response.data.data.height);
           setWeight(response.data.data.weight);
@@ -73,7 +86,7 @@ function Profile() {
       if (token !== undefined) {
         try {
           const response = await axios.post(
-            "http://localhost:9000/userData",
+            "https://finalyearprojectapi.onrender.com/userData",
             userData
           );
           console.log(response.data);
@@ -140,15 +153,35 @@ function Profile() {
             <Label>Email:</Label>
             <Text>{email}</Text>
             <Label>Height: </Label>
-            <Text>{height} cm</Text>
+            {height ? (
+              <Text>{height} cm</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
             <Label>Weight:</Label>
-            <Text> {weight} kg</Text>
+            {weight ? (
+              <Text>{weight} kg</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
             <Label>Age:</Label>
-            <Text> {age}</Text>
+            {age ? (
+              <Text>{age}</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
             <Label>Level of Activity:</Label>
-            <Text> {levelOfActive}</Text>
+            {levelOfActive ? (
+              <Text>{levelOfActive}</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
             <Label>Fitness goal: </Label>
-            <Text>{userGoal} </Text>
+            {userGoal ? (
+              <Text>{userGoal}</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
             <StyledButton
               onClick={() => {
                 setValidated(false);
@@ -226,11 +259,12 @@ function Profile() {
                 </Select>
               </div>
               <StyledButton type="submit">Submit</StyledButton>
-              <BackButton onClick={() => setIsEditing(false)}>Go Back</BackButton>
+              <BackButton onClick={() => setIsEditing(false)}>
+                Go Back
+              </BackButton>
             </Form>
           )
         )}
-        
       </ProfileContainer>
     </div>
   );

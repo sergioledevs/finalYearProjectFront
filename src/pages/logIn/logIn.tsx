@@ -2,7 +2,7 @@ import { useState } from "react";
 import RegistrationForm from "../register/register";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Form, Label, Input, Button, RegisterButton, BigDiv } from "./logIn.style";
+import { Form, Label, Input, Button, RegisterButton, BigDiv, LogInDiv } from "./logIn.style";
 import NavBar from "../../components/navBar/navBar";
 import { BackButton, StyledButton } from "../profile/profile.styles";
 import { GradientButton } from "../landingPage/landing.style";
@@ -17,7 +17,7 @@ function LoginButton() {
     event.preventDefault();
     try {
       // Send a POST request to the /login endpoint
-      const response = await axios.post("http://localhost:9000/login", {
+      const response = await axios.post("https://finalyearprojectapi.onrender.com/login", {
         email,
         password,
       });
@@ -27,7 +27,7 @@ function LoginButton() {
       navigate("/");
     } catch (error: any) {
       console.log(error.response.data);
-      alert("An error occurred");
+      alert("Incorrect email or password");
     }
   };
 
@@ -35,7 +35,7 @@ function LoginButton() {
     const token = localStorage.getItem("token");
     axios
       .post(
-        "http://localhost:9000/logout",
+        "https://finalyearprojectapi.onrender.com/logout",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -57,6 +57,7 @@ function LoginButton() {
   return (
     <BigDiv>
       <NavBar></NavBar>
+      <LogInDiv>
       <Form onSubmit={handleSubmit}>
         <Label>
           Email:
@@ -69,15 +70,18 @@ function LoginButton() {
         <Label>
           Password:
           <Input
+          name="hello"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </Label>
-        <StyledButton type="submit">Login</StyledButton>
-        <p style={{marginTop:"30px"}}>Not have an account yet?</p>
-        <BackButton style={{marginTop:"0px"}} onClick={() => navigate("/register")}> Register</BackButton>
+        <Button type="submit">Log in</Button>
+        
       </Form>
+      </LogInDiv>
+      <p style={{marginTop:"30px"}}>Not have an account yet?</p>
+        <RegisterButton style={{marginTop:"0px"}} onClick={() => navigate("/register")}> Register</RegisterButton>
     </BigDiv>
   );
 }

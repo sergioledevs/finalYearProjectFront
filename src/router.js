@@ -12,6 +12,7 @@ import LoginButton from "./pages/logIn/logIn.tsx";
 import Calendar from "./pages/calendar/calendar";
 import Profile from "./pages/profile/profile";
 import RegistrationForm from "./pages/register/register";
+import PrivacyPolicy from "./pages/privacyPolicy/privacyPolicy";
 
 export const Router = () => {
   return (
@@ -43,9 +44,15 @@ export const Router = () => {
 
 
         <Route
-          key="what ingredients is the user familiar with"
+          key="profile page"
           path="/profile"
           element={<Profile />}
+        />
+
+        <Route
+          key="privacy policy"
+          path="/privacyPolicy"
+          element={<PrivacyPolicy />}
         />
 
         <Route

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Label, Form, Input, Button, Wrapper } from "./register.styled";
+import { Label, Form, Input, Wrapper,Button } from "./register.styled";
 
 
 import axios from "axios";
@@ -18,7 +18,7 @@ function RegistrationForm() {
     event.preventDefault();
     try {
       // Send a POST request to the /register endpoint
-      const response = await axios.post("http://localhost:9000/register", { email, password, confirmPassword });
+      const response = await axios.post("https://finalyearprojectapi.onrender.com/register", { email, password, confirmPassword });
       // Store the token in localStorage
       localStorage.setItem("token", response.data.token);
       navigate("/")
@@ -56,7 +56,7 @@ function RegistrationForm() {
           onChange={(event) => setConfirmPassword(event.target.value)}
         />
       </Label>
-      <StyledButton type="submit">Register</StyledButton>
+      <Button type="submit">Register</Button>
     </Form>
     </Wrapper>
   );

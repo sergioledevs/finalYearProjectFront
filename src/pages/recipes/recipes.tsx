@@ -47,17 +47,18 @@ function Recipes(props) {
   const fetchAllergies = async () => {
     if (token != null) {
       try {
-        const response = await axios.get("http://localhost:9000/getAllergies", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://finalyearprojectapi.onrender.com/getAllergies",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUserAllergies(response.data.data.allergicTo);
       } catch (err: any) {
         console.log(err.response.data.message);
       }
     }
   };
-
-  console.log(selectedRecipes)
 
   const [calorieIntake, setCalorieIntake] = useState("");
   const [carbsIntake, setCarbsIntake] = useState("");
@@ -67,9 +68,12 @@ function Recipes(props) {
     async function fetchData() {
       if (token != null) {
         try {
-          const response = await axios.get("http://localhost:9000/userData", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await axios.get(
+            "https://finalyearprojectapi.onrender.com/userData",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           setCalorieIntake(response.data.data.calorieIntake);
           setCarbsIntake(response.data.data.carbsIntake);
           setProteinIntake(response.data.data.proteinIntake);
@@ -85,10 +89,13 @@ function Recipes(props) {
     async function fetchData() {
       if (token != null) {
         try {
-          const response = await axios.get("http://localhost:9000/getCalendarData", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setSelectedRecipes(response.data.data.weeklyPlan)
+          const response = await axios.get(
+            "https://finalyearprojectapi.onrender.com/getCalendarData",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          setSelectedRecipes(response.data.data.weeklyPlan);
         } catch (err: any) {
           console.log(err.response.data.message);
         }
@@ -97,20 +104,24 @@ function Recipes(props) {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     async function fetchData() {
-        try {
-          const response = await axios.get("http://localhost:9000/getRecipes", {
-            headers: { Authorization: `Bearer ${token}`, 'Access-Control-Allow-Origin': 'http://localhost:3000' },
-          });
-          setInitialState(response.data);
-        } catch (err: any) {
-          console.log(err.response.data.message);
-        } finally {
-          setLoading(false);
-        }
-     
+      try {
+        const response = await axios.get(
+          "https://finalyearprojectapi.onrender.com/getRecipes",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Access-Control-Allow-Origin": "https://cukfit.netlify.app",
+            },
+          }
+        );
+        setInitialState(response.data);
+      } catch (err: any) {
+        console.log(err.response);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -118,6 +129,28 @@ function Recipes(props) {
   useEffect(() => {
     fetchAllergies();
   }, []);
+
+  const navigate = useNavigate();
+
+  const postCalendar = () => {
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      axios
+        .post("https://finalyearprojectapi.onrender.com/saveCalendarData", {
+          selectedRecipes: selectedRecipes,
+          token: token,
+        })
+        .then((response) => {
+          console.log("Calendar data saved:", response.data);
+          navigate("/calendar");
+        })
+        .catch((error: any) => {
+          console.log("Error saving calendar data:", error);
+        });
+    } else {
+      alert("You need to log in to create a weekly meal plan");
+    }
+  };
 
   const token = localStorage.getItem("token");
 
@@ -238,9 +271,11 @@ function Recipes(props) {
                       });
                 }}
               />
-              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
+              <LinkDiv
+                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+              >
                 <ImageDiv>
-                  <img src={recipe?.image} alt="image"></img>
+                  <img src={recipe?.image} alt="image" />
                 </ImageDiv>
               </LinkDiv>
             </RecipeCard>
@@ -388,7 +423,9 @@ function Recipes(props) {
                       });
                 }}
               />
-              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
+              <LinkDiv
+                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+              >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
@@ -537,7 +574,9 @@ function Recipes(props) {
                 }}
               />
 
-              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
+              <LinkDiv
+                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+              >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
@@ -576,7 +615,8 @@ function Recipes(props) {
       }
     });
 
-  const RecipesSnacks = initialState
+    const RecipesSnacks = initialState
+    // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
       const allergyIngredients = recipe.allergens?.flatMap(
         (ingredient) => ingredient
@@ -584,31 +624,45 @@ function Recipes(props) {
       const contains = props.allergyState.some((allergy) =>
         allergyIngredients?.includes(allergy.toLowerCase())
       );
+
       const userLoggedContains = userAllergies.some((allergy) =>
         allergyIngredients?.includes(allergy.toLowerCase())
       );
-      return (
-        (token != null ? !userLoggedContains : !contains) &&
-        recipe.typeOfMeal === "snacks"
-      );
-    })
-    .map((recipe: any) => {
-      const { ingredients } = recipe;
-      const proteinIngredient = ingredients.reduce(
-        (prev, current) =>
-          parseFloat(prev.protein) > parseFloat(current.protein)
-            ? prev
-            : current,
-        {}
-      );
-      const proteinPerHundredGrams = parseFloat(proteinIngredient.protein) || 0;
-      const carbIngredient = ingredients.reduce(
-        (prev, current) =>
-          parseFloat(prev.carbs) > parseFloat(current.carbs) ? prev : current,
-        {}
-      );
-      const carbsPerHundredGrams = parseFloat(carbIngredient.carbs) || 0;
 
+      if (token != null) {
+        return !userLoggedContains;
+      } else {
+        return !contains;
+      }
+    })
+    // Map each recipe to a RecipeCard component to display
+    .map((recipe: any) => {
+      // Get the maximum protein and carb amounts of the recipe
+      const proteinIngredientAmounts = recipe.ingredients.map(
+        (ingredient) => ingredient.protein
+      );
+      const proteinPerHundredGrams = Math.max(...proteinIngredientAmounts);
+
+      const carbIngredientAmounts = recipe.ingredients.map(
+        (ingredient) => ingredient.carbs
+      );
+      const carbsPerHundredGrams = Math.max(...carbIngredientAmounts);
+
+      // Get the ingredient with the highest protein amount
+      const proteinIngredient = recipe.ingredients.find(
+        (ingredient) => ingredient.protein === proteinPerHundredGrams.toString()
+      );
+      const proteinIngredientName = proteinIngredient
+        ? proteinIngredient.name
+        : "";
+
+      // Get the ingredient with the highest carb amount
+      const carbIngredient = recipe.ingredients.find(
+        (ingredient) => ingredient.carbs === carbsPerHundredGrams.toString()
+      );
+      const carbIngredientName = carbIngredient ? carbIngredient.name : "";
+
+      // Calculate the recommended amount of protein and carbs to consume
       var proteinIngredientAmount = 0;
       var carbIngredientAmount = 0;
 
@@ -629,18 +683,26 @@ function Recipes(props) {
         );
       }
 
-      const isSelected = selectedRecipes.includes(recipe._id);
+      proteinInDinner =
+        (proteinIngredientAmount / 100) * proteinPerHundredGrams;
+      carbsInDinner = (carbIngredientAmount / 100) * carbsPerHundredGrams;
 
-      const proteinIngredientCalories =
-        proteinIngredient.calories * (proteinIngredientAmount / 100) || 0;
-      const carbIngredientCalories =
-        carbIngredient.calories * (carbIngredientAmount / 100) || 0;
-      const totalCalories = proteinIngredientCalories + carbIngredientCalories;
+      //if it is a meal, display the recipe
+      if (recipe.typeOfMeal === "snacks") {
+        const isSelected = selectedRecipes.includes(recipe._id);
 
-      return (
-        <Div2 key={recipe._id}>
-          <RecipeCard className={isSelected ? "selected" : "notSelected"}>
-          <Checkbox
+        // Calculate total number of calories in protein and carbs
+        const proteinIngredientCalories =
+          proteinIngredient?.calories * (proteinIngredientAmount / 100) || 0;
+        const carbIngredientCalories =
+          carbIngredient?.calories * (carbIngredientAmount / 100) || 0;
+        const totalCalories =
+          proteinIngredientCalories + carbIngredientCalories;
+
+        return (
+          <Div2>
+            <RecipeCard className={isSelected ? "selected" : "notSelected"}>
+              <Checkbox
                 checked={isSelected}
                 onChange={() => {
                   // Update selected recipes
@@ -663,57 +725,47 @@ function Recipes(props) {
                       });
                 }}
               />
-            <LinkDiv to={`/indivRecipe/${recipe._id}`}>
-              <ImageDiv>
-                <img src={recipe?.image} alt="image"></img>
-              </ImageDiv>
-            </LinkDiv>
-          </RecipeCard>
-          <Description
-            onMouseEnter={() => handleMouseEnter(recipe)}
-            onMouseLeave={() => handleMouseLeave()}
-          >
-            <RecipeTitle>{recipe.recipeName}</RecipeTitle>
-            {proteinIngredient.name && (
-              <Ingredient>
-                {proteinIngredient.name + " " + proteinIngredientAmount + "g"}
-              </Ingredient>
-            )}
-            {carbIngredient.name && (
-              <Ingredient>
-                {carbIngredient.name + " " + carbIngredientAmount + "g"}
-              </Ingredient>
-            )}
-            <Ingredient>{`Total Calories: ${totalCalories.toFixed(
-              0
-            )}`}</Ingredient>
-          </Description>
-        </Div2>
-      );
+
+              <LinkDiv
+                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+              >
+                <ImageDiv>
+                  <img src={recipe?.image} alt="image"></img>
+                </ImageDiv>
+              </LinkDiv>
+            </RecipeCard>
+            <Description
+              key={recipe.id}
+              onMouseEnter={() => handleMouseEnter(recipe)}
+              onMouseLeave={() => handleMouseLeave()}
+              className={isHovering ? "visible" : "notVisible"}
+            >
+              <RecipeTitle>{recipe.recipeName}</RecipeTitle>
+              <>
+                {/* Display the ingredient with the highest protein amount */}
+                {proteinIngredientName && (
+                  <Ingredient>
+                    {proteinIngredientName +
+                      " " +
+                      proteinIngredientAmount +
+                      "g"}
+                  </Ingredient>
+                )}
+                {carbIngredientName && (
+                  <Ingredient>
+                    {carbIngredientName + " " + carbIngredientAmount + "g"}
+                  </Ingredient>
+                )}
+              </>
+              {/* Display total number of calories in protein and carbs */}
+              <Ingredient>{`Total Calories: ${totalCalories.toFixed(
+                0
+              )}`}</Ingredient>
+            </Description>
+          </Div2>
+        );
+      }
     });
-
-const navigate= useNavigate()
-
-  const postCalendar = () => {
-    const token = localStorage.getItem("token");
-    if (token != null) {
-      axios
-        .post("http://localhost:9000/saveCalendarData", {
-          selectedRecipes: selectedRecipes,
-          token: token,
-        })
-        .then((response) => {
-          console.log("Calendar data saved:", response.data);
-          navigate("/calendar")
-        })
-        .catch((error: any) => {
-          console.log("Error saving calendar data:", error);
-        });
-        
-    } else{
-     alert("You need to log in to create a weekly meal plan");
-    }
-  };
 
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
@@ -802,10 +854,10 @@ const navigate= useNavigate()
               <SmallDiv>{RecipesSnacks}</SmallDiv>
             </BigDiv>
           </Wrapper>
- 
-            <CreateCalendarButton onClick={postCalendar}>
-              Create weekly plan
-            </CreateCalendarButton>
+
+          <CreateCalendarButton onClick={postCalendar}>
+            Create weekly plan
+          </CreateCalendarButton>
         </BigWrapper>
       )}
       <Footer></Footer>

@@ -17,21 +17,22 @@ export const BigDiv = styled.div`
     min-height: 100vh;
   }
 `;
-
 export const ChefIcon = styled.img`
-position: fixed;
-width: 500px;
-height: 500px;
-left: 1389px;
-top:540px;
+  position: fixed;
+  width: 30%;
+  max-width: 500px;
+  height: auto;
+  left: 70%;
+  top: 62%;
 `;
 
 export const RunnerIcon = styled.img`
-position: fixed;
-width: 500px;
-height: 500px;
-left: 48px;
-top:544px;
+  position: fixed;
+  width: 30%;
+  max-width: 500px;
+  height: auto;
+  left: 4%;
+  top: 62%;
 `;
 
 export const FormDiv = styled.div`

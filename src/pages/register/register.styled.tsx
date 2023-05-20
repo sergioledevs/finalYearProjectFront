@@ -32,16 +32,19 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #0077ff;
-  color: white;
+    margin-top: 20px;
+  padding: 5px 10px;
+  width: 100%;
+  height: 40px;
   border: none;
   border-radius: 5px;
-  font-size: 18px;
+  background-color: #87F484;
+  color: white;
+  font-size: 1rem;
+  font-family: "InterSemi", sans-serif;
   cursor: pointer;
-
   &:hover {
-    background-color: #0066cc;
+    background-color: #2e8b57;
   }
+  
 `;

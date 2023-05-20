@@ -6,6 +6,7 @@ export const BigDiv = styled.div`
   justify-content: center;
   height: 100vh;
 
+
   @media screen and (max-width: 768px) {
     /* styles for tablet screens */
   }
