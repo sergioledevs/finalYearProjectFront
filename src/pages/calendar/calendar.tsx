@@ -138,7 +138,13 @@ function Calendar(props) {
   };
   console.log(planStored);
   if (initialState.length === 0) {
-    return <Loader></Loader>;
+
+
+    return (
+    <div>
+    <NavBar></NavBar>
+    <Loader></Loader>
+    </div>)
   } else {
 
     return (

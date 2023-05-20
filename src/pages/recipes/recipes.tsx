@@ -272,7 +272,7 @@ function Recipes(props) {
                 }}
               />
               <LinkDiv
-                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+                to={`/indivRecipe/${recipe._id}`}
               >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image" />
@@ -424,7 +424,7 @@ function Recipes(props) {
                 }}
               />
               <LinkDiv
-                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+                to={`/indivRecipe/${recipe._id}`}
               >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
@@ -575,7 +575,7 @@ function Recipes(props) {
               />
 
               <LinkDiv
-                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+                to={`/indivRecipe/${recipe._id}`}
               >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
@@ -683,10 +683,6 @@ function Recipes(props) {
         );
       }
 
-      proteinInDinner =
-        (proteinIngredientAmount / 100) * proteinPerHundredGrams;
-      carbsInDinner = (carbIngredientAmount / 100) * carbsPerHundredGrams;
-
       //if it is a meal, display the recipe
       if (recipe.typeOfMeal === "snacks") {
         const isSelected = selectedRecipes.includes(recipe._id);
@@ -727,7 +723,7 @@ function Recipes(props) {
               />
 
               <LinkDiv
-                to={`/indivRecipe/${recipe._id}?proteinAmount=${proteinIngredientAmount}&carbAmount=${carbIngredientAmount}&protIng=${proteinIngredientName}&carbIng=${carbIngredientName}&protein=${proteinInBreakfast}&carbs=${carbsInBreakfast}&calories=${totalCalories}`}
+                to={`/indivRecipe/${recipe._id}`}
               >
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
