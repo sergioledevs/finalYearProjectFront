@@ -14,12 +14,19 @@ import {
   Arrow,
   RecipeImage,
   Dropdown,
+  StyledDiv,
+  StyledAccordion,
+  StyledTypography
 } from "../indivRecipe/indivRecipe.style";
 import arrow from "../../media/downArrow.png";
 import Footer from "../../components/footer/footer";
 import Loader from "../../components/loader/loader";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
 
 function IndivRecipe(props) {
   interface Recipe {
@@ -249,8 +256,6 @@ function IndivRecipe(props) {
     }
   }
 
-  
-
   if (!recipe) {
     return <Loader />;
   }
@@ -273,7 +278,7 @@ function IndivRecipe(props) {
       if (ingredient.name === proteinIngredientName) {
         // Append the proteinAmount next to the ingredient name
         return (
-          <Text visible={dropdownIngredientsVisible}>
+          <Text>
             {ingredient.name} {proteinIngredientAmount}
             {"g"}
           </Text>
@@ -281,16 +286,14 @@ function IndivRecipe(props) {
       } else if (ingredient.name === carbIngredientName) {
         // Append the proteinAmount next to the ingredient name
         return (
-          <Text visible={dropdownIngredientsVisible}>
+          <Text>
             {ingredient.name} {carbIngredientAmount}
             {"g"}
           </Text>
         );
       } else {
         // Render the ingredient name without the proteinAmount
-        return (
-          <Text visible={dropdownIngredientsVisible}>{ingredient.name}</Text>
-        );
+        return <Text>{ingredient.name}</Text>;
       }
     });
   }
@@ -298,7 +301,7 @@ function IndivRecipe(props) {
   function getStepsParagraphs(recipe) {
     return recipe.stepsToCook.map((step, index) => {
       return (
-        <Text key={index} visible={dropdownStepsVisible}>
+        <Text key={index}>
           {index + 1}. {step}
         </Text>
       );
@@ -308,19 +311,19 @@ function IndivRecipe(props) {
   function getValuesParagraphs(recipe) {
     return (
       <div>
-        <Text visible={dropdownValuesVisible}>
+        <Text>
           {"Protein"}{" "}
           {proteinInBreakfast
             ? parseFloat(proteinInBreakfast).toFixed(2)
             : "N/A"}
           {"g"}
         </Text>
-        <Text visible={dropdownValuesVisible}>
+        <Text>
           {"Carbohydrates"}{" "}
           {carbsInBreakfast ? parseFloat(carbsInBreakfast).toFixed(2) : "N/A"}
           {"g"}
         </Text>
-        <Text visible={dropdownValuesVisible}>
+        <Text>
           {"Calories"} {calories ? parseFloat(calories).toFixed(2) : "N/A"}
           {"Kcal"}
         </Text>
@@ -334,9 +337,9 @@ function IndivRecipe(props) {
 
   return (
     <div>
-      <BigDiv>
-        <NavBar></NavBar>
+      <NavBar></NavBar>
 
+      <StyledDiv>
         <RecipeImage
           src={recipe.image}
           alt={recipe.recipeName + " image"}
@@ -344,39 +347,46 @@ function IndivRecipe(props) {
         <RightDiv>
           <RecipeTitle>{recipe.recipeName}</RecipeTitle>
 
-          <Dropdown visible={dropdownStepsVisible}>
-            <DropdownText onClick={toggleDropdownSteps}>
-              Steps to cook
-              <Arrow src={arrow}></Arrow>
-            </DropdownText>
-          </Dropdown>
+          <StyledAccordion>
+            <AccordionSummary
+              expandIcon={<Arrow src={arrow} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <StyledTypography>Ingredients</StyledTypography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{ingredientParagraphs}</Typography>
+            </AccordionDetails>
+          </StyledAccordion>
 
-          <DropdownMenu visible={dropdownStepsVisible}>
-            {stepsParagraphs}
-          </DropdownMenu>
+          <StyledAccordion>
+            <AccordionSummary
+              expandIcon={<Arrow src={arrow} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <StyledTypography>Steps to cook</StyledTypography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{stepsParagraphs}</Typography>
+            </AccordionDetails>
+          </StyledAccordion>
 
-          <Dropdown visible={dropdownIngredientsVisible}>
-            <DropdownText onClick={toggleDropdownIngredients}>
-              Ingredients
-              <Arrow src={arrow}></Arrow>
-            </DropdownText>
-            <DropdownMenu visible={dropdownIngredientsVisible}>
-              {ingredientParagraphs}
-            </DropdownMenu>
-          </Dropdown>
-
-          <Dropdown visible={dropdownValuesVisible}>
-            <DropdownText onClick={toggleDropdownValues}>
-              Nutritional values
-              <Arrow src={arrow}></Arrow>
-            </DropdownText>
-            <DropdownMenu visible={dropdownValuesVisible}>
-              {valuesParagraphs}
-            </DropdownMenu>
-          </Dropdown>
+          <StyledAccordion>
+            <AccordionSummary
+              expandIcon={<Arrow src={arrow} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <StyledTypography>Nutritional values</StyledTypography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{valuesParagraphs}</Typography>
+            </AccordionDetails>
+          </StyledAccordion>
         </RightDiv>
-      </BigDiv>
-      <Footer></Footer>
+      </StyledDiv>
     </div>
   );
 }

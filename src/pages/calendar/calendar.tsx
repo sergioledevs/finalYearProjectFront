@@ -132,21 +132,27 @@ function Calendar(props) {
   const navigate = useNavigate();
 
   const getSelectedRecipe = (mealType, dayIndex) => {
+    // Get the array of selected recipes for the specified meal type
     const selectedRecipesForMeal = selectedRecipes[mealType];
+  
+    // Calculate the index of the recipe based on the day index
     const recipeIndex = dayIndex % selectedRecipesForMeal.length;
+  
+    // Return the selected recipe for the specified meal and day
     return selectedRecipesForMeal[recipeIndex];
   };
-  console.log(planStored);
+  
+  // Check if the initialState array is empty
   if (initialState.length === 0) {
-
-
+    // Render a loading state if the initialState is empty
     return (
-    <div>
-    <NavBar></NavBar>
-    <Loader></Loader>
-    </div>)
+      <div>
+        <NavBar></NavBar>
+        <Loader></Loader>
+      </div>
+    );
   } else {
-
+    // Render the calendar table and recipes
     return (
       <Wrapper>
         <NavBar></NavBar>
@@ -154,28 +160,35 @@ function Calendar(props) {
           <thead>
             <tr>
               <th></th>
+              {/* Render table header for each meal */}
               {meals.map((meal) => (
                 <th key={meal}>{meal}</th>
               ))}
             </tr>
           </thead>
           <tbody>
+            {/* Render rows for each day of the week */}
             {daysOfWeek.map((day, dayIndex) => (
               <tr key={day}>
                 <td>{day}</td>
+                {/* Render cells for each meal of the day */}
                 {meals?.map((meal) => (
                   <td key={meal}>
+                    {/* Check if a recipe is selected for the meal */}
                     {selectedRecipes[meal]?.length ? (
+                      // Render a link to the individual recipe page
                       <Link
                         to={`/indivRecipe/${
                           getSelectedRecipe(meal, dayIndex)?._id
                         }`}
                       >
                         <div>
+                          {/* Display the name of the selected recipe */}
                           {getSelectedRecipe(meal, dayIndex)?.recipeName}
                         </div>
                       </Link>
                     ) : (
+                      // If no recipe is selected, display a message
                       <div>No recipe selected</div>
                     )}
                   </td>

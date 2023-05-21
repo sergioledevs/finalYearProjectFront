@@ -17,7 +17,7 @@ import {
 } from "./home.style";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
-import Form2 from "../whatMeal/typeOfMeal"
+import Form2 from "../whatMeal/typeOfMeal";
 import Button from "react-bootstrap/Button";
 import { FormGroup } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -28,8 +28,8 @@ import { userWeight } from "./home.actions";
 
 import NavBar from "../../components/navBar/navBar";
 import { GradientButton } from "../landingPage/landing.style";
-import chef from "../../media/icons/Chef_Flatline.png"
-import runner from "../../media/icons/Fitness_Flatline.png"
+import chef from "../../media/icons/Chef_Flatline.png";
+import runner from "../../media/icons/Fitness_Flatline.png";
 import { FeatureTitle } from "../../components/featuresSection/features.styles";
 
 type StyledInputs = {
@@ -98,6 +98,7 @@ function HomePage(props: StyledInputs) {
       console.log("check validity true");
 
       const userData = {
+        gender,
         height,
         weight,
         levelOfActive,
@@ -153,30 +154,38 @@ function HomePage(props: StyledInputs) {
       levelOfActivityMultiplier = 1.725;
     }
 
-    var equation
+    var equation;
 
-    if(gender=="Male"){
-      equation= 66.5 +
-      13.75 * parseInt(weight) +
-      5.003 * parseInt(height) -
-      6.75 * parseInt(age);
-    } else{
-      equation= 655.1 +
-      9.563 * parseInt(weight) +
-      1.85 * parseInt(height) -
-      4.675 * parseInt(age);
+    if (gender == "Male") {
+      equation =
+        66.5 +
+        13.75 * parseInt(weight) +
+        5.003 * parseInt(height) -
+        6.75 * parseInt(age);
+    } else {
+      equation =
+        655.1 +
+        9.563 * parseInt(weight) +
+        1.85 * parseInt(height) -
+        4.675 * parseInt(age);
     }
-
-    calorieIntake = String(equation * levelOfActivityMultiplier); //multiply user info by their level of activity
 
     var proteinMultiplier; //calculate protein
+    var caloryAdjustment;
     if (userGoal == "Bulk") {
       proteinMultiplier = 1.8;
+      caloryAdjustment=200;
     } else if (userGoal == "Lose weight") {
       proteinMultiplier = 1.2;
-    } else if (userGoal === "Mantain weight") {
+      caloryAdjustment=-200;
+    } else if (userGoal === "Just want to eat healthy") {
       proteinMultiplier = 1.4;
+      caloryAdjustment=0;
     }
+
+    calorieIntake = String(equation * levelOfActivityMultiplier+caloryAdjustment); //multiply user info by their level of activity
+
+   
 
     proteinIntake = String(parseInt(weight) * proteinMultiplier);
 
@@ -184,7 +193,7 @@ function HomePage(props: StyledInputs) {
       carbsIntake = String(parseInt(calorieIntake) * 0.6 * 0.13); //if bulking, 60% of calories are carbs, which then convert to grams
     } else if (userGoal == "Lose weight") {
       carbsIntake = String(parseInt(calorieIntake) * 0.4 * 0.13); //if losing weight, 40% of calories are carbs
-    } else if (userGoal == "Mantain weight") {
+    } else if (userGoal == "Just want to eat healthy") {
       carbsIntake = String(parseInt(calorieIntake) * 0.55 * 0.13); //if mantaining weight, 55% of calories are carbs
     }
 
@@ -209,9 +218,9 @@ function HomePage(props: StyledInputs) {
   return (
     <div>
       <NavBar></NavBar>
-      
+
       <BigDiv>
-      <FeatureTitle>Step 1 of 2</FeatureTitle>
+        <FeatureTitle>Step 1 of 2</FeatureTitle>
         <FormDiv>
           <StyledForm noValidate validated={validated} onSubmit={handleSub}>
             <FormGroup>
@@ -357,7 +366,7 @@ function HomePage(props: StyledInputs) {
                   required
                 >
                   <option>Select option</option>
-                  <option>Mantain weight</option>
+                  <option>Just want to eat healthy</option>
                   <option>Bulk</option>
                   <option>Lose weight</option>
                 </InputFormSelect>

@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import girlExercising from "../../media/girl_exercising.jpeg";
 import nutritionist from "../../media/nutritionist.jpeg";
 import cooking from "../../media/cooking.jpeg";
@@ -25,7 +25,7 @@ export const BigDiv = styled.div`
 
   @media screen and (max-width: 768px) {
     align-items: start;
-    text-align: center;/* styles for tablet screens */
+    text-align: center; /* styles for tablet screens */
   }
 
   @media screen and (max-width: 480px) {
@@ -34,10 +34,8 @@ export const BigDiv = styled.div`
 `;
 
 export const Rectangle1 = styled.div`
-
   width: 226px;
   height: 371px;
-  
 
   background-image: url(${girlExercising});
   background-position: center; /* Center the image */
@@ -57,7 +55,6 @@ export const Rectangle1 = styled.div`
   @media (max-width: 768px) {
     width: 150px;
     height: 250px;
- 
   }
 
   @media (max-width: 480px) {
@@ -88,7 +85,6 @@ export const Rectangle2 = styled.div`
   @media (max-width: 768px) {
     width: 150px;
     height: 250px;
- 
   }
 
   @media (max-width: 480px) {
@@ -98,9 +94,8 @@ export const Rectangle2 = styled.div`
 `;
 
 export const Rectangle3 = styled.div`
-width: 222px;
+  width: 222px;
   height: 371px;
- 
 
   background-image: url(${cooking});
   background-position: center; /* Center the image */
@@ -119,7 +114,6 @@ width: 222px;
   @media (max-width: 768px) {
     width: 150px;
     height: 250px;
- 
   }
 
   @media (max-width: 480px) {
@@ -127,7 +121,6 @@ width: 222px;
     height: 170px;
   }
 `;
-
 
 export const SloganDescription = styled.h3`
   color: rgba(0, 0, 0, 0.55);
@@ -165,7 +158,6 @@ export const Content = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-
   z-index: 2;
   display: flex;
   align-items: center;
@@ -199,3 +191,46 @@ export const GradientButton = styled.button`
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   }
 `;
+
+const scrollDownAnimation = keyframes`
+  0% {
+    bottom: 20px;
+    right: 20px;
+    transform: translate(0, 0);
+  }
+  100% {
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);
+  }
+`;
+
+export const Button = styled.button<{ scrollDirection: 'down' | 'up' }>`
+position: fixed;
+bottom: 80px;
+right: 930px;
+z-index: 9999;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background-color: white;
+color: #fff;
+font-size: 16px;
+display: flex;
+justify-content: center;
+align-items: center;
+transition: all 0.3s ease-in-out;
+box-shadow: 0px 4px 4px gray;
+border: 1px solid darkblue; /* Added border color dark blue */
+
+${(props) =>
+  props.scrollDirection === 'up' &&
+  css`
+    bottom: 80px;
+    right: 40px;
+  `}
+
+
+`;
+
+

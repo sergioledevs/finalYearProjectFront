@@ -9,21 +9,27 @@ import {
   Input,
   Label,
   StyledButton,
-  Select,
   BackButton,
+  SelectStyle,
 } from "./profile.styles";
 
 import { Navigate, useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Loader from "../../components/loader/loader";
 
 function Profile() {
   const [email, setEmail] = useState("");
   const [height, setHeight] = useState("");
+  const [gender, setGender] = useState("");
   const [weight, setWeight] = useState("");
   const [age, setAge] = useState("");
   const [levelOfActive, setLevelOfActive] = useState("");
   const [userGoal, setUserGoal] = useState("");
   const token = localStorage.getItem("token");
+  const [allergicTo, setAllergicTo] = useState<string[]>([]);
 
   var [calorieIntake, setCalorieIntake] = React.useState("");
   var [proteinIntake, setProteinIntake] = React.useState("0");
@@ -31,9 +37,39 @@ function Profile() {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [validated, setValidated] = React.useState(false);
 
+  const allergens = [
+    "Celery",
+    "Gluten",
+    "Crustaceans",
+    "Eggs",
+    "Fish",
+    "Lupin",
+    "Milk",
+    "Molluscs",
+    "Mustard",
+    "Tree Nuts",
+    "Peanuts",
+    "Sesame Seeds",
+    "Soybeans",
+    "Sulphites",
+  ];
+
   const navigate = useNavigate();
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -51,11 +87,17 @@ function Profile() {
           setLevelOfActive(response.data.data.levelOfActive);
           setAge(response.data.data.age);
           setUserGoal(response.data.data.userGoal);
+          setAllergicTo(response.data.data.allergicTo);
+          setGender(response.data.data.gender)
+          setIsLoading(false)
+          console.log(response.data.data);
         } catch (err: any) {
           console.log(err.response.data.message);
         }
       }
     }
+    console.log(allergicTo);
+
     fetchData();
   }, []);
 
@@ -81,6 +123,7 @@ function Profile() {
         calorieIntake,
         proteinIntake,
         carbsIntake,
+        allergicTo,
       };
 
       if (token !== undefined) {
@@ -100,6 +143,16 @@ function Profile() {
     setValidated(true);
   };
 
+  const handleChange = (event: SelectChangeEvent<typeof allergicTo>) => {
+    const {
+      target: { value },
+    } = event;
+    setAllergicTo(
+      typeof value === "string" ? value.split(",") : value
+      // On autofill we get a stringified value.
+    );
+  };
+
   const calculateCalories = () => {
     //https://www.omnicalculator.com/health/bmr-harris-benedict-equation#:~:text=It%20needs%20your%20age%2C%20weight,%2D%20(6.75%20%C3%97%20age)%20.
     var levelOfActivityMultiplier = 0;
@@ -113,22 +166,35 @@ function Profile() {
       levelOfActivityMultiplier = 1.725;
     }
 
-    var equation =
-      66.5 +
-      13.75 * parseInt(weight) +
-      5.003 * parseInt(height) -
-      6.75 * parseInt(age);
-
-    calorieIntake = String(equation * levelOfActivityMultiplier); //multiply user info by their level of activity
-
-    var proteinMultiplier; //calculate protein
-    if (userGoal == "Bulk") {
-      proteinMultiplier = 1.8;
-    } else if (userGoal == "Lose weight") {
-      proteinMultiplier = 1.2;
-    } else if (userGoal === "Mantain weight") {
-      proteinMultiplier = 1.4;
+    var equation;
+    if (gender == "Male") {
+      equation =
+        66.5 +
+        13.75 * parseInt(weight) +
+        5.003 * parseInt(height) -
+        6.75 * parseInt(age);
+    } else {
+      equation =
+        655.1 +
+        9.563 * parseInt(weight) +
+        1.85 * parseInt(height) -
+        4.675 * parseInt(age);
     }
+
+    var proteinMultiplier; //calculate protein t
+    var caloryAdjustment; //add more calories if bulking to go over BMR, and less if losing weight to go under BMR
+    if (userGoal === "Bulk") {
+      proteinMultiplier = 1.8;
+      caloryAdjustment = 200;
+    } else if (userGoal === "Lose weight") {
+      proteinMultiplier = 1.2;
+      caloryAdjustment = -200;
+    } else if (userGoal === "Just want to eat healthy") {
+      proteinMultiplier = 1.4;
+      caloryAdjustment = 0;
+    }
+
+    calorieIntake = String(equation * levelOfActivityMultiplier + caloryAdjustment);
 
     proteinIntake = String(parseInt(weight) * proteinMultiplier);
 
@@ -136,13 +202,17 @@ function Profile() {
       carbsIntake = String(parseInt(calorieIntake) * 0.6 * 0.13); //if bulking, 60% of calories are carbs, which then convert to grams
     } else if (userGoal == "Lose weight") {
       carbsIntake = String(parseInt(calorieIntake) * 0.4 * 0.13); //if losing weight, 40% of calories are carbs
-    } else if (userGoal == "Mantain weight") {
+    } else if (userGoal == "Just want to eat healthy") {
       carbsIntake = String(parseInt(calorieIntake) * 0.55 * 0.13); //if mantaining weight, 55% of calories are carbs
     }
 
     return calorieIntake;
   };
 
+  if(isLoading){
+    return <Loader></Loader>
+  }
+else{
   return (
     <div>
       <NavBar></NavBar>
@@ -179,6 +249,12 @@ function Profile() {
             <Label>Fitness goal: </Label>
             {userGoal ? (
               <Text>{userGoal}</Text>
+            ) : (
+              <Text>You haven't introduced this value</Text>
+            )}
+            <Label>Allergic to: </Label>
+            {allergicTo ? (
+              <Text>{allergicTo.join(", ")}</Text>
             ) : (
               <Text>You haven't introduced this value</Text>
             )}
@@ -233,7 +309,7 @@ function Profile() {
               </div>
               <div>
                 <Label htmlFor="levelOfActive">Level of Activity:</Label>
-                <Select
+                <SelectStyle
                   id="levelOfActive"
                   value={levelOfActive}
                   onChange={(e) => setLevelOfActive(e.target.value)}
@@ -243,19 +319,38 @@ function Profile() {
                   <option>Exercise 1-2 times a week</option>
                   <option>Exercise 3-4 times a week</option>
                   <option>Exercise 5-7 times a week</option>
-                </Select>
+                </SelectStyle>
               </div>
               <div>
                 <Label htmlFor="userGoal">Fitness goal:</Label>
-                <Select
+                <SelectStyle
                   id="userGoal"
                   value={userGoal}
                   onChange={(e) => setUserGoal(e.target.value)}
                 >
                   <option>Select option</option>
-                  <option>Mantain weight</option>
+                  <option>Just want to eat healthy</option>
                   <option>Bulk</option>
                   <option>Lose weight</option>
+                </SelectStyle>
+              </div>
+              <div>
+                <Label htmlFor="userGoal">Allergic to:</Label>
+                <Select
+                  labelId="demo-multiple-name-label"
+                  id="demo-multiple-name"
+                  multiple
+                  value={allergicTo}
+                  onChange={handleChange}
+                  input={<OutlinedInput label="Name" />}
+                  MenuProps={MenuProps}
+                  color="success"
+                >
+                  {allergens.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </div>
               <StyledButton type="submit">Submit</StyledButton>
@@ -268,6 +363,7 @@ function Profile() {
       </ProfileContainer>
     </div>
   );
+}
 }
 
 export default Profile;

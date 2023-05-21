@@ -113,7 +113,7 @@ function AllergiesPage(props) {
       <NavBar></NavBar>
       <WrapperBack>
         <Wrapper>
-          <AllergiesTitle>Do you have any allergies?</AllergiesTitle>
+          <AllergiesTitle>Do you have any allergies? If not, continue</AllergiesTitle>
           <SearchBar
             type="text"
             placeholder="Search..."

@@ -1,5 +1,10 @@
 import styled from 'styled-components';
+import { TextField } from '@mui/material';
 
+
+export const CssTextField = styled(TextField)`
+ margin-top: 30px !important;
+`;
 
 export const BigDiv= styled.div`
 display: flex;
@@ -15,10 +20,10 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-height: 30%;
+height: 20%;
 width:15%;
 border-radius: 12px;
-box-shadow: 0px 4px 22px gray;
+
 `
 
 export const StyledForm= styled.form`

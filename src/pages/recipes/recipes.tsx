@@ -133,24 +133,32 @@ function Recipes(props) {
   const navigate = useNavigate();
 
   const postCalendar = () => {
+    // Retrieve the token from the localStorage
     const token = localStorage.getItem("token");
+  
+    // Check if a token is available
     if (token != null) {
+      // Send a POST request to the server endpoint
       axios
         .post("https://finalyearprojectapi.onrender.com/saveCalendarData", {
           selectedRecipes: selectedRecipes,
           token: token,
         })
         .then((response) => {
+          // Log a success message and navigate to the calendar page
           console.log("Calendar data saved:", response.data);
           navigate("/calendar");
         })
         .catch((error: any) => {
+          // Log an error message if there is an error saving the data
           console.log("Error saving calendar data:", error);
         });
     } else {
+      // Show an alert message if the token is not available
       alert("You need to log in to create a weekly meal plan");
     }
   };
+  
 
   const token = localStorage.getItem("token");
 
