@@ -2,59 +2,74 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import AllergiesPage from "./pages/allergies/allergiesPage";
-import CreateAccount from "./pages/createAccount/createAccount";
-import Ingredients from "./pages/familiarIngredients/ingredients";
-import HomePage from "./pages/homePage/homePage";
+import HomePage from "./pages/userForm/userForm";
 import Landing from "./pages/landingPage/landing";
-import LogIn from "./pages/logIn/logIn.tsx";
 import Recipes from "./pages/recipes/recipes";
-import UserProfile from "./pages/userProfile/userProfile";
-import TypeOfMeal from "./pages/whatMeal/typeOfMeal";
 import IndivRecipe from "./pages/indivRecipe/indivRecipe";
-import LoginButton from "./pages/logIn/logIn.tsx";
+import LogIn from "./pages/logIn/logIn.tsx";
+import Calendar from "./pages/calendar/calendar";
+import Profile from "./pages/profile/profile";
+import RegistrationForm from "./pages/register/register";
+import PrivacyPolicy from "./pages/privacyPolicy/privacyPolicy";
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route
-          key="Ask for allergies or preferences"
+          key="Ask for allergies"
           path="/allergies"
           element={<AllergiesPage />}
         />
 
-        <Route key="homepage" path="/home" element={<HomePage />} />
-
-        <Route key="homepage" path="/" element={<Landing />} />
-
-        <Route path="/indivRecipe/:id" element={<IndivRecipe />} />
-
-        <Route key="logIn" path="/logIn" element={<LoginButton />} />
-
         <Route
-          key="create new user account"
-          path="/createAccount"
-          element={<CreateAccount />}
+          key="user information form"
+          path="/home"
+          element={<HomePage />}
         />
 
-        <Route key="list of recipes" path="/recipes" element={<Recipes />} />
-
-        <Route
-          key="user profile"
-          path="/userProfile"
-          element={<UserProfile />}
+        <Route key="homepage" 
+        path="/" 
+        element={<Landing />} 
         />
 
         <Route
-          key="what type of meal does the user want to cook"
-          path="/whatMeal"
-          element={<TypeOfMeal />}
+          key="individual page"
+          path="/indivRecipe/:id"
+          element={<IndivRecipe />}
+        />
+
+        <Route key="log in page" 
+        path="/logIn" 
+        element={<LogIn />} 
+        />
+
+        <Route key="list of recipes" 
+        path="/recipes" 
+        element={<Recipes />} 
         />
 
         <Route
-          key="what ingredients is the user familiar with"
-          path="/familiarIngredients"
-          element={<Ingredients />}
+          key="weekly plan calendar"
+          path="/calendar"
+          element={<Calendar />}
+        />
+
+        <Route key="profile page" 
+        path="/profile" 
+        element={<Profile />} 
+        />
+
+        <Route
+          key="privacy policy"
+          path="/privacyPolicy"
+          element={<PrivacyPolicy />}
+        />
+
+        <Route
+          key="register new profile"
+          path="/register"
+          element={<RegistrationForm />}
         />
       </Routes>
     </BrowserRouter>

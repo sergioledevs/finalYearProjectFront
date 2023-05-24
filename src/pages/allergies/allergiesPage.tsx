@@ -1,113 +1,138 @@
 import React from "react";
 import axios from "axios";
-import { useEffect } from "react";
-import { Wrapper, Grid, WrapperBack } from "./allergies.style";
+import {
+  Wrapper,
+  Grid,
+  WrapperBack,
+  GoBackButton,
+  SearchBar,
+  AllergiesTitle,
+  EatingIcon,
+} from "./allergies.style";
 import { useDispatch, connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
+import { useState } from "react";
+import { GradientButton } from "../landingPage/landing.style";
+import eatingMan from "../../media/lunchMan.png";
 
 function AllergiesPage(props) {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [initialState, setInitialState] = React.useState([]);
-  const [arrayAllergies, setArrayAlergies] = React.useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [arrayAllergies, setArrayAlergies] = useState<string[]>([]);
+  const initialState = [
+    "Celery",
+    "Gluten",
+    "Crustaceans",
+    "Eggs",
+    "Fish",
+    "Lupin",
+    "Milk",
+    "Molluscs",
+    "Mustard",
+    "Tree Nuts",
+    "Peanuts",
+    "Sesame Seeds",
+    "Soybeans",
+    "Sulphites",
+  ]; //14 allergens list
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    try {
-      axios.get("http://localhost:9000/getIngredients").then((response) => {
-        console.log(response.data);
-        setInitialState(response.data);
-      });
-    } catch (error) {
-      console.log("");
+  const postAllergies = () => {
+    const token = localStorage.getItem("token");
+    if (token != null) {
+      axios
+        .post("https://finalyearprojectapi.onrender.com/saveAllergies", {
+          arrayAllergies: props.allergyState,
+          token: token,
+        })
+        .then((response) => {
+          console.log("Calendar data saved:", response.data);
+        })
+        .catch((error: any) => {
+          console.log("Error saving calendar data:", error);
+        });
     }
-  }, []);
+  };
 
   const handleSub = () => {
     navigate("/recipes");
+    postAllergies();
   };
 
-  const IngredientsGrid = initialState
-  
-  .filter((ingredient: any) => {
-    if (searchTerm === "") {
-      return true;
-    } else {
-      return ingredient.contains.some((containedIngredient: string) =>
-        containedIngredient.toLowerCase().startsWith(searchTerm.toLowerCase())
-      );
-    }
-  })
-  .slice(0,7)
-  .map((ingredient: any) => {
-    const filteredContains = ingredient.contains.filter((containedIngredient: string) =>
-      containedIngredient.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+ // Filter the initial array of allergens based on the search term
+const filteredAllergens = initialState
+.filter((allergen: string) => {
+  return allergen.toLowerCase().startsWith(searchTerm.toLowerCase());
+})
+.slice(0, 8); // Take the first 8 filtered allergens
 
+const AllergensGrid =
+filteredAllergens.length === 0 ? ( // If there are no filtered allergens
+  <h3>Allergy doesn't exist</h3> // Display a message indicating that the allergy doesn't exist
+) : (
+  filteredAllergens.map((allergen: string) => { // Map over the filtered allergens array
+    const isSelected = arrayAllergies.includes(allergen); // Check if the allergen is selected (included in arrayAllergies)
     return (
-      <>
-        {filteredContains.map((containedIngredient: string) => {
-          const isSelected = arrayAllergies.includes(containedIngredient);
-          return (
-            <div>
-              <p
-                onClick={() => {
-                  const newAllergies = isSelected
-                    ? arrayAllergies.filter(
-                        (allergy) => allergy !== containedIngredient
-                      )
-                    : [...arrayAllergies, containedIngredient];
-                  setArrayAlergies(newAllergies);
-                  if (isSelected || props.allergyState.includes(containedIngredient)) {
-                    dispatch({
-                      type: "ALLERGY_DELETE",
-                      payload: containedIngredient,
-                    });
-                  } else {
-                    dispatch({
-                      type: "ALLERGY_ADD",
-                      payload: containedIngredient,
-                    });
-                  }
-                }}
-                className={
-                  props.allergyState.includes(containedIngredient)
-                    ? "selected"
-                    : "notSelected"
-                }
-              >
-                {containedIngredient}
-              </p>
-            </div>
-          );
-        })}
-      </>
+      <div key={allergen}>
+        <p
+          onClick={() => {
+            // Handle click event for selecting/deselecting allergens
+            const newAllergies = isSelected
+              ? arrayAllergies.filter((allergy) => allergy !== allergen) // If already selected, remove allergen from arrayAllergies
+              : [...arrayAllergies, allergen]; // If not selected, add allergen to arrayAllergies
+            setArrayAlergies(newAllergies); // Update the state with the new array of selected allergens
+
+            if (isSelected || props.allergyState.includes(allergen)) {
+              // If the allergen is already selected or included in the allergyState prop
+              dispatch({
+                type: "ALLERGY_DELETE", // Dispatch an action to delete the allergen from the state
+                payload: allergen,
+              });
+            } else {
+              // If the allergen is not selected or included in the allergyState prop
+              dispatch({
+                type: "ALLERGY_ADD", // Dispatch an action to add the allergen to the state
+                payload: allergen,
+              });
+            }
+          }}
+          className={
+            props.allergyState.includes(allergen)
+              ? "selected" // Apply "selected" class if the allergen is included in the allergyState prop
+              : "notSelected" // Apply "notSelected" class if the allergen is not included in the allergyState prop
+          }
+        >
+          
+          {allergen} {/*display the allergen name */}
+        </p> 
+      </div>
     );
-  });
+  })
+);
+
 
   return (
     <div>
       <NavBar></NavBar>
-    <WrapperBack>
-      
-    <Wrapper>
-      <h2>Do you have any allergies or dislike any ingredient?</h2>
-      <input
-        type="text"
-        placeholder="Search..."
-        onChange={(event) => {
-          setSearchTerm(event.target.value);
-        }}
-      ></input>
-      <Grid>{IngredientsGrid}</Grid>
-      <button>Go back</button>
-      <button onClick={handleSub}>Continue</button>
-    </Wrapper>
-    </WrapperBack>
+      <WrapperBack>
+        <Wrapper>
+          <AllergiesTitle>Do you have any allergies? If not, continue</AllergiesTitle>
+          <SearchBar
+            type="text"
+            placeholder="Search..."
+            onChange={(event) => {
+              setSearchTerm(event.target.value);
+            }}
+          ></SearchBar>
+          <Grid>{AllergensGrid}</Grid>
+          <GradientButton onClick={handleSub}>Finish</GradientButton>
+          <GoBackButton onClick={() => navigate("/home")}>Go back</GoBackButton>
+          <EatingIcon src={eatingMan}></EatingIcon>
+        </Wrapper>
+      </WrapperBack>
     </div>
-     
   );
 }
 

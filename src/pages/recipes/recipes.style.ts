@@ -21,8 +21,6 @@ export const BigWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: #fffff5;
-
   overflow: hidden;
 `;
 
@@ -42,7 +40,7 @@ export const Header = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   text-align: center;
-  margin-top: 75px;
+  margin-top: 145px;
   font-family: "InterExtraBold", sans-serif;
   font-size: 22px;
 `;
@@ -58,12 +56,12 @@ export const MealInfoHeader = styled.div`
   margin: 0;
 `;
 
-export const Div2 = styled.div`
+export const RecipeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
+  
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
@@ -72,6 +70,7 @@ export const Div2 = styled.div`
 `;
 
 export const SmallDiv = styled.div`
+margin-bottom: 200px;
   .selected {
     display: flex;
     justify-content: center;
@@ -85,6 +84,8 @@ export const SmallDiv = styled.div`
     margin-top: 50px;
     transition: box-shadow 0.2s;
     background-color: grey;
+
+    opacity: .65;
 
     &:hover {
       cursor: pointer;
@@ -116,12 +117,13 @@ export const SmallDiv = styled.div`
 `;
 
 export const RecipeCard = styled.div`
+position: relative;
   .notVisible {
-    opacity: 1; /* Initially hide the description */
+    opacity: 1; 
   }
 
   .visible {
-    /* Add a transition effect */
+    
   }
 `;
 
@@ -136,6 +138,43 @@ export const LinkDiv = styled(Link)`
   color: black;
   &:hover {
     color: black;
+  }
+`;
+
+export const LinkCalendar = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-decoration: none;
+  color: black;
+  &:hover {
+    color: black;
+  }
+`;
+
+export const CreateCalendarButton = styled.button`
+  position: fixed;
+  
+  bottom: 120px;
+  z-index: 2;
+  width: 160px;
+  height: 50px;
+  margin: 0;
+
+  background: linear-gradient(191.9deg, #ffffff -136.1%, #fffffe 176.52%);
+  border: 0.5px solid #4cef13;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 49px;
+  color: #4fd60f;
+  cursor: pointer;
+  font-family: "InterBold", sans-serif;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   }
 `;
 
@@ -164,6 +203,13 @@ export const MealInfoText = styled.p`
 export const ImageDiv = styled.div`
   height: 100%;
   width: 100%;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+  }
 `;
 
 export const RecipeTitle = styled.h2`
@@ -186,19 +232,20 @@ export const Ingredient = styled.p`
 
 export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
-  /* Add if not using autoprefixer */
+  
   -webkit-appearance: none;
-  /* Remove most all native input styles */
   appearance: none;
-  /* For iOS < 15 */
   background-color: var(--form-background);
-  /* Not removed via appearance */
   margin: 0;
+
+  position: absolute;
+  z-index: 1;
+  top: 0;
 
   font: inherit;
   color: currentColor;
-  width: 2em;
-  height: 2em;
+  width: 2.2em;
+  height: 2.2em;
   border: 0.05em solid currentColor;
   transform: translateY(-0.075em);
   background-color: white;
@@ -209,21 +256,23 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   display: grid;
   place-content: center;
 
+  &:hover{
+    cursor: pointer;
+  }
+
   &::before {
     content: "";
-    width: 1em;
-    height: 1em;
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    width: 1.2em;
+    height: 1.2em;
+    clip-path: polygon(28% 38%, 41% 53%, 75% 24%, 86% 38%, 40% 78%, 15% 50%);
     transform: scale(0);
-    transform-origin: bottom left;
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em var(--form-control-color);
-    /* Windows High Contrast Mode */
     background-color: green;
   }
 
   &:checked::before {
-    transform: scale(1);
+    transform: scale(1.5);
   }
 `;
 
@@ -240,10 +289,28 @@ const floatAnimation = keyframes`
 `;
 
 export const FloatingText = styled.p`
-  animation: ${floatAnimation} 2s ease-in-out infinite;
-  z-index: 3;
-  margin-top: 50px;
-  cursor: pointer;
+  position: fixed;
+  top: ${(props) => (props.visible ? "-100%" : "0")};
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 30px;
+  background-color: white;
+
+  border-top: none;
+  transition: all 0.3s ease;
+  z-index: 7;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding-left: 45px;
+  opacity: .7;
+  box-shadow: 0px 0px 8px gray;
+
+  &:hover{
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity .2s ease;
+  }
 `;
 
 export const DropdownMenu = styled.div`
@@ -253,11 +320,18 @@ export const DropdownMenu = styled.div`
   transform: translateX(-50%);
   width: 300px;
   height: 150px;
-  background-color: gray;
-  transition: all 0.5s ease;
+  box-shadow: 0px 0px 8px gray;
+  background-color: white;
+  border-top: none;
+  transition: all 0.3s ease;
   z-index: 998;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  padding-left: 15px;
+  padding-top: 15px;
 `;
 
 export const Text = styled.div`
@@ -265,7 +339,7 @@ export const Text = styled.div`
   top: ${(props) => (props.visible ? "160px" : "-30%")};
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
   z-index: 998;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

@@ -1,77 +1,236 @@
-import styled from 'styled-components';
-import food_background from '../../media/food_background.jpg'
+import styled, { keyframes, css } from "styled-components";
+import girlExercising from "../../media/girl_exercising.jpeg";
+import nutritionist from "../../media/nutritionist.jpeg";
+import cooking from "../../media/cooking.jpeg";
 
-
-export const Container= styled.div`
-background-color: rgba(219, 234, 239, 1);
-`
-
-export const Slogan= styled.h1`
-color: black;
-font-size: 4.5em;
-font-family: "InterBold", sans-serif;
-margin-bottom: 30px;
-`
-
-export const BigDiv= styled.div`
-display: flex;
-flex-direction: column;
-background-image:url(${food_background});
-background-size: 150% auto;
-background-position: right 70% top 69%;
-background-repeat: no-repeat;
-align-items: center;
-justify-content: center;
-height: 100vh;
-`
-
-
-export const GradientOverlay = styled.div`
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(rgba(255, 255, 255, 0) 65%, rgba(219, 234, 239, 1) 100%);
-  z-index: 1;
+export const Container = styled.div`
+  scroll-behavior: smooth;
 `;
 
-export const SloganDescription= styled.h3`
-color: black;
-font-size: 1.5em;
-font-family: "InterMedium", sans-serif;
-text-align: center;
-margin-bottom: 40px;
-`
+export const Section = styled.section``;
+
+export const Slogan = styled.h1`
+  color: black;
+  font-size: 4.063em;
+  font-family: "InterBold", sans-serif;
+  margin-top: 30px;
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  height: 100vh;
+
+  @media screen and (max-width: 768px) {
+    align-items: start;
+    text-align: center; /* styles for tablet screens */
+  }
+
+  @media screen and (max-width: 480px) {
+    /* styles for mobile screens */
+  }
+`;
+
+export const Rectangle1 = styled.div`
+  width: 226px;
+  height: 371px;
+
+  background-image: url(${girlExercising});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+
+  margin-top: 30px;
+  margin-right: 2.5%;
+
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 330px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+  }
+`;
+
+export const Rectangle2 = styled.div`
+  width: 222px;
+  height: 371px;
+
+  background-image: url(${nutritionist});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+
+  margin-bottom: 30px;
+  margin-right: 2.5%;
+
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 330px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+  }
+`;
+
+export const Rectangle3 = styled.div`
+  width: 222px;
+  height: 371px;
+
+  background-image: url(${cooking});
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+
+  margin-top: 30px;
+
+  @media (max-width: 1024px) {
+    width: 200px;
+    height: 330px;
+  }
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 250px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 170px;
+  }
+`;
+
+export const SloganDescription = styled.h3`
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 19px;
+  font-family: "InterRegular", sans-serif;
+  text-align: left;
+  margin-bottom: 49px;
+  margin-top: 49px;
+  line-height: 150.52%;
+  /* or 29px */
+
+  letter-spacing: 0.01em;
+`;
 
 export const Content = styled.div`
-  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  width: 40%;
+  padding-left: -20%;
+
+  /* Add your content styles here */
+
+  @media (max-width: 768px) {
+    padding-left: 48px;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    padding-left: 24px;
+  }
+`;
+
+export const ContentWrapper = styled.div`
   z-index: 2;
   display: flex;
   align-items: center;
-justify-content: center;
-flex-direction: column;
+  justify-content: center;
+  flex-direction: row !important;
+  width: 100%;
+
   /* Add your content styles here */
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    align-items: center;
+    text-align: center;
+  }
 `;
 
 export const GradientButton = styled.button`
-  background: linear-gradient(to bottom right, #ff5f6d, #ffc371);
-  border-radius: 20px;
-  color: #fff;
-  font-size: 16px;
-  padding: 10px 20px;
-  border: none;
-  outline: none;
+  background: linear-gradient(191.9deg, #ffffff -136.1%, #fffffe 176.52%);
+  border: 0.5px solid #4cef13;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 49px;
+  width: 189px;
+  height: 65px;
+  color: #4fd60f;
   cursor: pointer;
+  font-family: "InterBold", sans-serif;
   transition: all 0.3s ease-in-out;
 
   &:hover {
     transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.95);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   }
 `;
+
+const scrollDownAnimation = keyframes`
+  0% {
+    bottom: 20px;
+    right: 20px;
+    transform: translate(0, 0);
+  }
+  100% {
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);
+  }
+`;
+
+export const Button = styled.button<{ scrollDirection: 'down' | 'up' }>`
+position: fixed;
+bottom: 80px;
+right: 930px;
+z-index: 9999;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background-color: white;
+color: #fff;
+font-size: 16px;
+display: flex;
+justify-content: center;
+align-items: center;
+transition: all 0.3s ease-in-out;
+box-shadow: 0px 4px 4px gray;
+border: 1px solid darkblue; /* Added border color dark blue */
+
+${(props) =>
+  props.scrollDirection === 'up' &&
+  css`
+    bottom: 80px;
+    right: 40px;
+  `}
+
+
+`;
+
 
