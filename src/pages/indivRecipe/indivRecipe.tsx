@@ -1,29 +1,21 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import NavBar from "../../components/navBar/navBar";
 import {
-  BigDiv,
-  FloatingText,
-  DropdownMenu,
   Text,
   RightDiv,
   RecipeTitle,
-  DropdownText,
   Arrow,
   RecipeImage,
-  Dropdown,
   StyledDiv,
   StyledAccordion,
-  StyledTypography
+  StyledTypography,
 } from "../indivRecipe/indivRecipe.style";
 import arrow from "../../media/downArrow.png";
-import Footer from "../../components/footer/footer";
 import Loader from "../../components/loader/loader";
-import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
@@ -40,21 +32,7 @@ function IndivRecipe(props) {
 
   const { id } = useParams();
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const proteinAmount = searchParams.get("proteinAmount");
-  const protIng = searchParams.get("protIng");
-  const carbAmount = searchParams.get("carbAmount");
-  const carbIng = searchParams.get("carbIng");
-  const protein = searchParams.get("protein");
-  const carbs = searchParams.get("carbs");
-
   const [initialState, setInitialState] = React.useState<Recipe[]>([]);
-  const [dropdownStepsVisible, setDropdownStepsVisible] = React.useState(true);
-  const [dropdownIngredientsVisible, setDropdownIngredientsVisible] =
-    React.useState(true);
-  const [dropdownValuesVisible, setDropdownValuesVisible] =
-    React.useState(true);
 
   const [calorieIntake, setCalorieIntake] = useState("");
   const [carbsIntake, setCarbsIntake] = useState("");
@@ -104,7 +82,6 @@ function IndivRecipe(props) {
   }, []);
 
   const recipe = initialState.find((recipe) => recipe._id === id);
-  var maxCarbIntakeIngredient;
   var proteinInBreakfast;
   var carbsInBreakfast;
 
@@ -260,21 +237,9 @@ function IndivRecipe(props) {
     return <Loader />;
   }
 
-  const toggleDropdownSteps = () => {
-    setDropdownStepsVisible(!dropdownStepsVisible);
-  };
-
-  const toggleDropdownIngredients = () => {
-    setDropdownIngredientsVisible(!dropdownIngredientsVisible);
-  };
-
-  const toggleDropdownValues = () => {
-    setDropdownValuesVisible(!dropdownValuesVisible);
-  };
-
   function getIngredientParagraphs(recipe) {
     return recipe.ingredients.map((ingredient) => {
-      // Check if the ingredient name matches a specific condition
+      // Check if the ingredient name matches the protein or carb name
       if (ingredient.name === proteinIngredientName) {
         // Append the proteinAmount next to the ingredient name
         return (

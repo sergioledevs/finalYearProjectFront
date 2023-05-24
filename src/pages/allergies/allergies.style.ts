@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import wave from "../../media/wave.svg";
-import background from "../../media/figma_test.png";
 
 export const Wrapper = styled.div`
 

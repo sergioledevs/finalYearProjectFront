@@ -1,10 +1,12 @@
+This is the same text as the README.md file, just with a different file type
+
 # Install all the dependencies
-Use command "npm install" on the command line to install all the project
+Use command "npm install" on the command line to install all the project dependencies
 
 # How to start the project
 Use command "npm start" on the command line in order to start the project.
 
-# Hardware specification
+# Hardware specifications
 The application has been designed for 1920x1080 screen size (the usual size of a PC monitor). Run the application in this screen size
 
 # Web browser

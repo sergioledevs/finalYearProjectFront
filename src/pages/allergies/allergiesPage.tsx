@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import { useEffect } from "react";
 import {
   Wrapper,
   Grid,
@@ -18,9 +17,8 @@ import { GradientButton } from "../landingPage/landing.style";
 import eatingMan from "../../media/lunchMan.png";
 
 function AllergiesPage(props) {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [arrayAllergies, setArrayAlergies] = React.useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [arrayAllergies, setArrayAlergies] = useState<string[]>([]);
   const initialState = [
     "Celery",
     "Gluten",
@@ -36,7 +34,7 @@ function AllergiesPage(props) {
     "Sesame Seeds",
     "Soybeans",
     "Sulphites",
-  ];
+  ]; //14 allergens list
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,50 +61,57 @@ function AllergiesPage(props) {
     postAllergies();
   };
 
-  const filteredAllergens = initialState
-    .filter((allergen: string) => {
-      return allergen.toLowerCase().startsWith(searchTerm.toLowerCase());
-    })
-    .slice(0, 8);
+ // Filter the initial array of allergens based on the search term
+const filteredAllergens = initialState
+.filter((allergen: string) => {
+  return allergen.toLowerCase().startsWith(searchTerm.toLowerCase());
+})
+.slice(0, 8); // Take the first 8 filtered allergens
 
-  const AllergensGrid =
-    filteredAllergens.length === 0 ? (
-      <h3>Allergy doesn't exist</h3>
-    ) : (
-      filteredAllergens.map((allergen: string) => {
-        const isSelected = arrayAllergies.includes(allergen);
-        return (
-          <div key={allergen}>
-            <p
-              onClick={() => {
-                const newAllergies = isSelected
-                  ? arrayAllergies.filter((allergy) => allergy !== allergen)
-                  : [...arrayAllergies, allergen];
-                setArrayAlergies(newAllergies);
-                if (isSelected || props.allergyState.includes(allergen)) {
-                  dispatch({
-                    type: "ALLERGY_DELETE",
-                    payload: allergen,
-                  });
-                } else {
-                  dispatch({
-                    type: "ALLERGY_ADD",
-                    payload: allergen,
-                  });
-                }
-              }}
-              className={
-                props.allergyState.includes(allergen)
-                  ? "selected"
-                  : "notSelected"
-              }
-            >
-              {allergen}
-            </p>
-          </div>
-        );
-      })
+const AllergensGrid =
+filteredAllergens.length === 0 ? ( // If there are no filtered allergens
+  <h3>Allergy doesn't exist</h3> // Display a message indicating that the allergy doesn't exist
+) : (
+  filteredAllergens.map((allergen: string) => { // Map over the filtered allergens array
+    const isSelected = arrayAllergies.includes(allergen); // Check if the allergen is selected (included in arrayAllergies)
+    return (
+      <div key={allergen}>
+        <p
+          onClick={() => {
+            // Handle click event for selecting/deselecting allergens
+            const newAllergies = isSelected
+              ? arrayAllergies.filter((allergy) => allergy !== allergen) // If already selected, remove allergen from arrayAllergies
+              : [...arrayAllergies, allergen]; // If not selected, add allergen to arrayAllergies
+            setArrayAlergies(newAllergies); // Update the state with the new array of selected allergens
+
+            if (isSelected || props.allergyState.includes(allergen)) {
+              // If the allergen is already selected or included in the allergyState prop
+              dispatch({
+                type: "ALLERGY_DELETE", // Dispatch an action to delete the allergen from the state
+                payload: allergen,
+              });
+            } else {
+              // If the allergen is not selected or included in the allergyState prop
+              dispatch({
+                type: "ALLERGY_ADD", // Dispatch an action to add the allergen to the state
+                payload: allergen,
+              });
+            }
+          }}
+          className={
+            props.allergyState.includes(allergen)
+              ? "selected" // Apply "selected" class if the allergen is included in the allergyState prop
+              : "notSelected" // Apply "notSelected" class if the allergen is not included in the allergyState prop
+          }
+        >
+          
+          {allergen} {/*display the allergen name */}
+        </p> 
+      </div>
     );
+  })
+);
+
 
   return (
     <div>

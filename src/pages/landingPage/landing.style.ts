@@ -16,7 +16,7 @@ export const Slogan = styled.h1`
   margin-top: 30px;
 `;
 
-export const BigDiv = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;

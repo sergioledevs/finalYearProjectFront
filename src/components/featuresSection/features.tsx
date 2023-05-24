@@ -13,7 +13,6 @@ import {
 import checklist from "../../media/checklist.png";
 import calendar from "../../media/calendar.png";
 import cook from "../../media/cook.png";
-import Footer from "../footer/footer";
 
 const FeaturePage = () => {
   return (

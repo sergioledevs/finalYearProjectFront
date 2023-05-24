@@ -1,11 +1,9 @@
 import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
-  BigDiv,
+  Wrapper,
   FormDiv,
   StyledForm,
-  StyledInput,
   WeightInputGroupTextLeft,
   InputFormControl,
   WeightInputGroupTextRight,
@@ -14,17 +12,13 @@ import {
   AgeFormControl,
   ChefIcon,
   RunnerIcon,
-} from "./home.style";
-import InputGroup from "react-bootstrap/InputGroup";
+} from "./userForm.style";
 import Form from "react-bootstrap/Form";
-import Form2 from "../whatMeal/typeOfMeal";
-import Button from "react-bootstrap/Button";
 import { FormGroup } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useDispatch, connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
-import { userWeight } from "./home.actions";
 
 import NavBar from "../../components/navBar/navBar";
 import { GradientButton } from "../landingPage/landing.style";
@@ -44,8 +38,6 @@ type StyledInputs = {
 function HomePage(props: StyledInputs) {
   const {
     register,
-    handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<StyledInputs>();
 
@@ -123,8 +115,6 @@ function HomePage(props: StyledInputs) {
       }
       navigate("/allergies");
     }
-
-    //registerUser();
     setValidated(true);
   };
 
@@ -172,28 +162,28 @@ function HomePage(props: StyledInputs) {
 
     var proteinMultiplier; //calculate protein
     var caloryAdjustment;
-    if (userGoal == "Bulk") {
+    if (userGoal === "Bulk") {
       proteinMultiplier = 1.8;
-      caloryAdjustment=200;
-    } else if (userGoal == "Lose weight") {
+      caloryAdjustment = 200;
+    } else if (userGoal === "Lose weight") {
       proteinMultiplier = 1.2;
-      caloryAdjustment=-200;
+      caloryAdjustment = -200;
     } else if (userGoal === "Just want to eat healthy") {
       proteinMultiplier = 1.4;
-      caloryAdjustment=0;
+      caloryAdjustment = 0;
     }
 
-    calorieIntake = String(equation * levelOfActivityMultiplier+caloryAdjustment); //multiply user info by their level of activity
-
-   
+    calorieIntake = String(
+      equation * levelOfActivityMultiplier + caloryAdjustment
+    ); //multiply user info by their level of activity
 
     proteinIntake = String(parseInt(weight) * proteinMultiplier);
 
-    if (userGoal == "Bulk") {
+    if (userGoal === "Bulk") {
       carbsIntake = String(parseInt(calorieIntake) * 0.6 * 0.13); //if bulking, 60% of calories are carbs, which then convert to grams
-    } else if (userGoal == "Lose weight") {
+    } else if (userGoal === "Lose weight") {
       carbsIntake = String(parseInt(calorieIntake) * 0.4 * 0.13); //if losing weight, 40% of calories are carbs
-    } else if (userGoal == "Just want to eat healthy") {
+    } else if (userGoal === "Just want to eat healthy") {
       carbsIntake = String(parseInt(calorieIntake) * 0.55 * 0.13); //if mantaining weight, 55% of calories are carbs
     }
 
@@ -219,7 +209,7 @@ function HomePage(props: StyledInputs) {
     <div>
       <NavBar></NavBar>
 
-      <BigDiv>
+      <Wrapper>
         <FeatureTitle>Step 1 of 2</FeatureTitle>
         <FormDiv>
           <StyledForm noValidate validated={validated} onSubmit={handleSub}>
@@ -232,8 +222,8 @@ function HomePage(props: StyledInputs) {
                   size="sm"
                   value={gender}
                   isInvalid={
-                    (gender == "" && validated) ||
-                    (gender == "Select option" && validated)
+                    (gender === "" && validated) ||
+                    (gender === "Select option" && validated)
                   }
                   onChange={(e) => setGender(e.target.value)}
                 >
@@ -315,7 +305,7 @@ function HomePage(props: StyledInputs) {
                   isInvalid={
                     parseInt(age) < 12 ||
                     (parseInt(age) < 12 && validated) ||
-                    (age == "" && validated)
+                    (age === "" && validated)
                   }
                   onChange={(e) => setAge(e.target.value)}
                 />
@@ -380,8 +370,7 @@ function HomePage(props: StyledInputs) {
             </GradientButton>
           </StyledForm>
         </FormDiv>
-        {/*<Form2></Form2>*/}
-      </BigDiv>
+      </Wrapper>
       <ChefIcon src={chef}></ChefIcon>
       <RunnerIcon src={runner}></RunnerIcon>
     </div>

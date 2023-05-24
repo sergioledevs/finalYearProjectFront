@@ -6,7 +6,7 @@ export const CssTextField = styled(TextField)`
  margin-top: 30px !important;
 `;
 
-export const BigDiv= styled.div`
+export const Wrapper= styled.div`
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -23,7 +23,6 @@ justify-content: center;
 height: 20%;
 width:15%;
 border-radius: 12px;
-
 `
 
 export const StyledForm= styled.form`

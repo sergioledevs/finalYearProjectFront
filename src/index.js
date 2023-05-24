@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { combineReducers } from "redux";
-import UserInfo from "./pages/homePage/home.reducer";
+import UserInfo from "./pages/userForm/userForm.reducer";
 import allergyReducer from "./pages/allergies/allergies.reducer";
 import selectedRecipesReducer from "./pages/recipes/recipes.reducer";
 
@@ -39,7 +39,4 @@ root.render(
   </Provider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

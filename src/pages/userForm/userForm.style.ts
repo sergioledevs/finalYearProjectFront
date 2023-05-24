@@ -5,7 +5,7 @@ import background from "../../media/figma_test.png";
 
 import { Form } from "react-bootstrap";
 
-export const BigDiv = styled.div`
+export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

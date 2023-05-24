@@ -56,7 +56,7 @@ export const MealInfoHeader = styled.div`
   margin: 0;
 `;
 
-export const Div2 = styled.div`
+export const RecipeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,11 +119,11 @@ margin-bottom: 200px;
 export const RecipeCard = styled.div`
 position: relative;
   .notVisible {
-    opacity: 1; /* Initially hide the description */
+    opacity: 1; 
   }
 
   .visible {
-    /* Add a transition effect */
+    
   }
 `;
 
@@ -232,13 +232,10 @@ export const Ingredient = styled.p`
 
 export const Checkbox = styled.input.attrs({ type: "checkbox" })`
   /*https://moderncss.dev/pure-css-custom-checkbox-style/*/
-  /* Add if not using autoprefixer */
+  
   -webkit-appearance: none;
-  /* Remove most all native input styles */
   appearance: none;
-  /* For iOS < 15 */
   background-color: var(--form-background);
-  /* Not removed via appearance */
   margin: 0;
 
   position: absolute;
@@ -271,7 +268,6 @@ export const Checkbox = styled.input.attrs({ type: "checkbox" })`
     transform: scale(0);
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em var(--form-control-color);
-    /* Windows High Contrast Mode */
     background-color: green;
   }
 

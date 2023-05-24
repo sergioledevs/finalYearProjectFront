@@ -1,25 +1,14 @@
-import { useState } from "react";
-import RegistrationForm from "../register/register";
-import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+
 import {
-  Form,
-  Label,
-  Input,
-  Button,
-  RegisterButton,
-  BigDiv,
+  Wrapper,
 } from "../logIn/logIn.style";
 import NavBar from "../../components/navBar/navBar";
-import { BackButton, StyledButton } from "../profile/profile.styles";
-import { GradientButton } from "../landingPage/landing.style";
 import { Container, Heading, Section, Subheading, Paragraph, Link } from "./privacyPolicy.style";
-import Footer from "../../components/footer/footer";
 
 function PrivacyPolicy() {
   return (
     <div>
-    <BigDiv>
+    <Wrapper>
       <NavBar></NavBar>
       <Container>
       <Heading>CUKFIT Privacy policy</Heading>
@@ -100,7 +89,7 @@ function PrivacyPolicy() {
       <Paragraph>Last updated: May 2023</Paragraph>
     </Container>
    
-    </BigDiv>
+    </Wrapper>
 
      </div>
   );

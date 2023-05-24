@@ -1,11 +1,9 @@
 import React from "react";
 import { useState } from "react";
-import { Label, Form, Input, Wrapper, Button } from "./register.styled";
-
+import { Form, Wrapper, Button } from "./register.styled";
 import { TextField } from "@mui/material";
 import axios from "axios";
 import NavBar from "../../components/navBar/navBar";
-import { StyledButton } from "../profile/profile.styles";
 import { useNavigate } from "react-router-dom";
 import { CssTextField } from "../logIn/logIn.style";
 import { createTheme, ThemeProvider } from '@mui/material/styles'

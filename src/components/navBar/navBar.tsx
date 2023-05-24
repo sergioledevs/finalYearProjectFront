@@ -16,9 +16,7 @@ import axios from "axios";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FeaturePage from "../featuresSection/features";
-import { Link as ScrollLink, animateScroll as scroll } from 'react-scroll';
-import Landing from "../../pages/landingPage/landing";
+
 
 function NavBar(props) {
   const [isLogged, setIsLogged] = useState(false);

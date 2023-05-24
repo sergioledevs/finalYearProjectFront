@@ -1,7 +1,7 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  BigDiv,
+  Wrapper,
   Slogan,
   SloganDescription,
   GradientButton,
@@ -14,7 +14,7 @@ import {
   Button,
 } from "./landing.style";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { animateScroll as scroll } from "react-scroll";
 
@@ -115,7 +115,7 @@ function Landing() {
   return (
     <Container>
       <NavBar></NavBar>
-      <BigDiv>
+      <Wrapper>
         <ContentWrapper style={{ flexDirection: "row" }}>
           <Content>
             <Slogan>
@@ -124,7 +124,7 @@ function Landing() {
             <SloganDescription>
               CUKFIT will adapt food recipes to your <br></br>
               specific requirements and goals, from gaining weight <br></br> to
-              losing it, as well as staying healthy fitness goal
+              losing it, as well as staying healthy 
             </SloganDescription>
             <GradientButton onClick={handleSub}>Start cooking</GradientButton>
           </Content>
@@ -144,7 +144,7 @@ function Landing() {
             )}
           </Button>
         </ContentWrapper>
-      </BigDiv>
+      </Wrapper>
       <FeaturePage></FeaturePage>
       <Footer></Footer>
     </Container>

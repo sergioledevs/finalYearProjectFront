@@ -1,27 +1,22 @@
 import { useState } from "react";
-import RegistrationForm from "../register/register";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
-  Label,
-  Input,
   Button,
   RegisterButton,
-  BigDiv,
+  Wrapper,
   LogInDiv,
   CssTextField,
 } from "./logIn.style";
 import NavBar from "../../components/navBar/navBar";
-import { BackButton, StyledButton } from "../profile/profile.styles";
-import { GradientButton } from "../landingPage/landing.style";
 import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Loader from "../../components/loader/loader";
 
 
 
-function LoginButton() {
+function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +68,7 @@ function LoginButton() {
         }
       )
       .then((response) => {
-        // Clear token from client-side storage
+        // Clear token from storage
         localStorage.removeItem("token");
         console.log(response.data.message);
 
@@ -93,7 +88,7 @@ function LoginButton() {
     )
   }else{
   return (
-    <BigDiv>
+    <Wrapper>
       <NavBar></NavBar>
       <LogInDiv>
         <Form onSubmit={handleSubmit}>
@@ -129,9 +124,9 @@ function LoginButton() {
         {" "}
         Register
       </RegisterButton>
-    </BigDiv>
+    </Wrapper>
   );
 }
 }
 
-export default LoginButton;
+export default LogIn;

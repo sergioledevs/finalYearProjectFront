@@ -13,7 +13,7 @@ import {
   RecipeTitle,
   Ingredient,
   Checkbox,
-  Div2,
+  RecipeWrapper,
   BigWrapper,
   Header,
   FloatingText,
@@ -23,11 +23,9 @@ import {
   Text,
   MealInfoText,
   CreateCalendarButton,
-  LinkCalendar,
 } from "./recipes.style";
 import NavBar from "../../components/navBar/navBar";
-import Calendar from "../calendar/calendar";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Footer from "../../components/footer/footer";
 import Loader from "../../components/loader/loader";
@@ -42,7 +40,15 @@ function Recipes(props) {
   const [loading, setLoading] = useState(true);
   const [userAllergies, setUserAllergies] = React.useState<string[]>([]);
 
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+
+  const [calorieIntake, setCalorieIntake] = useState("");
+  const [carbsIntake, setCarbsIntake] = useState("");
+  const [proteinIntake, setProteinIntake] = useState("");
+
   const dispatch = useDispatch();
+
+  const token = localStorage.getItem("token");
 
   const fetchAllergies = async () => {
     if (token != null) {
@@ -59,10 +65,6 @@ function Recipes(props) {
       }
     }
   };
-
-  const [calorieIntake, setCalorieIntake] = useState("");
-  const [carbsIntake, setCarbsIntake] = useState("");
-  const [proteinIntake, setProteinIntake] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -135,7 +137,7 @@ function Recipes(props) {
   const postCalendar = () => {
     // Retrieve the token from the localStorage
     const token = localStorage.getItem("token");
-  
+
     // Check if a token is available
     if (token != null) {
       // Send a POST request to the server endpoint
@@ -158,9 +160,6 @@ function Recipes(props) {
       alert("You need to log in to create a weekly meal plan");
     }
   };
-  
-
-  const token = localStorage.getItem("token");
 
   let carbsInBreakfast;
   let proteinInBreakfast;
@@ -251,7 +250,7 @@ function Recipes(props) {
           proteinIngredientCalories + carbIngredientCalories;
 
         return (
-          <Div2>
+          <RecipeWrapper>
             <RecipeCard
               className={
                 selectedRecipes.includes(recipe._id)
@@ -279,9 +278,7 @@ function Recipes(props) {
                       });
                 }}
               />
-              <LinkDiv
-                to={`/indivRecipe/${recipe._id}`}
-              >
+              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
                 <ImageDiv>
                   <img src={recipe?.image} alt="image" />
                 </ImageDiv>
@@ -314,7 +311,7 @@ function Recipes(props) {
                 0
               )}`}</Ingredient>
             </Description>
-          </Div2>
+          </RecipeWrapper>
         );
       }
     });
@@ -406,7 +403,7 @@ function Recipes(props) {
           proteinIngredientCalories + carbIngredientCalories;
 
         return (
-          <Div2>
+          <RecipeWrapper>
             <RecipeCard className={isSelected ? "selected" : "notSelected"}>
               <Checkbox
                 checked={isSelected}
@@ -431,9 +428,7 @@ function Recipes(props) {
                       });
                 }}
               />
-              <LinkDiv
-                to={`/indivRecipe/${recipe._id}`}
-              >
+              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
@@ -466,7 +461,7 @@ function Recipes(props) {
                 0
               )}`}</Ingredient>
             </Description>
-          </Div2>
+          </RecipeWrapper>
         );
       }
     });
@@ -556,7 +551,7 @@ function Recipes(props) {
           proteinIngredientCalories + carbIngredientCalories;
 
         return (
-          <Div2>
+          <RecipeWrapper>
             <RecipeCard className={isSelected ? "selected" : "notSelected"}>
               <Checkbox
                 checked={isSelected}
@@ -582,9 +577,7 @@ function Recipes(props) {
                 }}
               />
 
-              <LinkDiv
-                to={`/indivRecipe/${recipe._id}`}
-              >
+              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
@@ -618,12 +611,12 @@ function Recipes(props) {
                 0
               )}`}</Ingredient>
             </Description>
-          </Div2>
+          </RecipeWrapper>
         );
       }
     });
 
-    const RecipesSnacks = initialState
+  const RecipesSnacks = initialState
     // Filter initial state of recipes based on user's allergies
     .filter((recipe: any) => {
       const allergyIngredients = recipe.allergens?.flatMap(
@@ -704,7 +697,7 @@ function Recipes(props) {
           proteinIngredientCalories + carbIngredientCalories;
 
         return (
-          <Div2>
+          <RecipeWrapper>
             <RecipeCard className={isSelected ? "selected" : "notSelected"}>
               <Checkbox
                 checked={isSelected}
@@ -730,9 +723,7 @@ function Recipes(props) {
                 }}
               />
 
-              <LinkDiv
-                to={`/indivRecipe/${recipe._id}`}
-              >
+              <LinkDiv to={`/indivRecipe/${recipe._id}`}>
                 <ImageDiv>
                   <img src={recipe?.image} alt="image"></img>
                 </ImageDiv>
@@ -766,12 +757,10 @@ function Recipes(props) {
                 0
               )}`}</Ingredient>
             </Description>
-          </Div2>
+          </RecipeWrapper>
         );
       }
     });
-
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
   var caloriesIntakeDropdown;
   var carbsIntakeDropdown;
@@ -791,6 +780,7 @@ function Recipes(props) {
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
+
   return (
     <div>
       <NavBar></NavBar>
@@ -869,6 +859,7 @@ function Recipes(props) {
   );
 }
 
+//connect to the Redux state
 interface RootState {
   UserInfo: any;
   allergyReducer: any;

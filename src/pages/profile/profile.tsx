@@ -13,7 +13,7 @@ import {
   SelectStyle,
 } from "./profile.styles";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/navBar/navBar";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -58,8 +58,7 @@ function Profile() {
     "Sulphites",
   ];
 
-  const navigate = useNavigate();
-
+  //used for material UI components
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -139,17 +138,16 @@ function Profile() {
       }
       setIsEditing(false);
     }
-    //registerUser();
     setValidated(true);
   };
 
+  //change allergies
   const handleChange = (event: SelectChangeEvent<typeof allergicTo>) => {
     const {
       target: { value },
     } = event;
     setAllergicTo(
       typeof value === "string" ? value.split(",") : value
-      // On autofill we get a stringified value.
     );
   };
 
@@ -181,7 +179,7 @@ function Profile() {
         4.675 * parseInt(age);
     }
 
-    var proteinMultiplier; //calculate protein t
+    var proteinMultiplier; //calculate protein
     var caloryAdjustment; //add more calories if bulking to go over BMR, and less if losing weight to go under BMR
     if (userGoal === "Bulk") {
       proteinMultiplier = 1.8;
@@ -198,11 +196,11 @@ function Profile() {
 
     proteinIntake = String(parseInt(weight) * proteinMultiplier);
 
-    if (userGoal == "Bulk") {
+    if (userGoal === "Bulk") { //calculate carbs
       carbsIntake = String(parseInt(calorieIntake) * 0.6 * 0.13); //if bulking, 60% of calories are carbs, which then convert to grams
-    } else if (userGoal == "Lose weight") {
+    } else if (userGoal === "Lose weight") {
       carbsIntake = String(parseInt(calorieIntake) * 0.4 * 0.13); //if losing weight, 40% of calories are carbs
-    } else if (userGoal == "Just want to eat healthy") {
+    } else if (userGoal === "Just want to eat healthy") {
       carbsIntake = String(parseInt(calorieIntake) * 0.55 * 0.13); //if mantaining weight, 55% of calories are carbs
     }
 
